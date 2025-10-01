@@ -1,0 +1,113 @@
+# VS Code個人設定
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# ローカル履歴
+.history/
+
+# 組み込み拡張機能
+*.vsix
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# 環境変数
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+.docker/
+
+# OS固有のファイル
+.DS_Store
+Thumbs.db
+
+# ログファイル
+*.log
+
+# 一時ファイル
+*.tmp
+*.swp
+*.swo
+
+# VSCode extension
+
+# Store launch config in repo but not settings
+.vscode/settings.json
+/.favorites.json
+
+# TypeScript incremental build states
+*.tsbuildinfo
+
+# Local state files & OS specifics
+.DS_Store
+node_modules/
+lerna-debug.log
+dist/
+pack/
+.BUILD_COMPLETED
+.local-npm/
+.tools/
+coverage/
+.nyc_output
+.nycrc
+.LAST_BUILD
+*.sw[a-z]
+*~
+.idea
+*.iml
+junit.xml
+
+# We don't want tsconfig at the root
+/tsconfig.json
+
+# CDK Context & Staging files
+cdk.context.json
+.cdk.staging/
+cdk.out/
+*.tabl.json
+cdk-integ.out.*/
+
+# Yarn error log
+yarn-error.log
+
+# VSCode history plugin
+.vscode/.history/
+
+# Cloud9
+.c9
+.nzm-*
+
+/.versionrc.json
+RELEASE_NOTES.md
+
+# Produced by integ tests
+read*lock
+
+# VSCode jest plugin
+.test-output
+
+# Nx cache
+.nx/
+
+*.js
+!server.js
+!s3Service.js
+!file-browser.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out

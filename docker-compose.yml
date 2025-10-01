@@ -1,0 +1,145 @@
+services:
+  app-server-1:
+    build:
+      context: ./app-server
+    container_name: app-server-1
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=db-server
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=employee_db
+      - MINIO_HOST=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - LDAP_SERVER=ldap-server
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+      - AWS_REGION=ap-northeast-1
+      - S3_BUCKET_NAME=strongsystem-files-default
+      # - AWS_SDK_LOAD_CONFIG=0
+      - AWS_EC2_METADATA_DISABLED=true
+      - USE_AWS_S3=false
+      - CLOUDFRONT_DOMAIN=
+      - CLOUDFRONT_DISTRIBUTION_ID=
+      - CLOUDFRONT_KEY_PAIR_ID=
+      - CLOUDFRONT_PRIVATE_KEY=
+    volumes:
+      - ./app-server/public:/app/public
+    depends_on:
+      - db-server
+      - minio
+      - ldap-server
+    networks:
+      - employee-network
+
+  app-server-2:
+    build:
+      context: ./app-server
+    container_name: app-server-2
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=db-server
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=employee_db
+      - MINIO_HOST=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - LDAP_SERVER=ldap-server
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+      - AWS_REGION=ap-northeast-1
+      - S3_BUCKET_NAME=strongsystem-files-default
+      # - AWS_SDK_LOAD_CONFIG=0
+      - AWS_EC2_METADATA_DISABLED=true
+      - USE_AWS_S3=false
+      - CLOUDFRONT_DOMAIN=
+      - CLOUDFRONT_DISTRIBUTION_ID=
+      - CLOUDFRONT_KEY_PAIR_ID=
+      - CLOUDFRONT_PRIVATE_KEY=
+    volumes:
+      - ./app-server/public:/app/public
+    depends_on:
+      - db-server
+      - minio
+      - ldap-server
+    networks:
+      - employee-network
+
+  db-server:
+    build:
+      context: ./db-server
+    container_name: db-server
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=employee_db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - employee-network
+
+  minio:
+    image: minio/minio:RELEASE.2025-06-13T11-33-47Z-cpuv1
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    ports:
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # Web Console
+    volumes:
+      - minio-data:/data
+    networks:
+      - employee-network
+
+  ldap-server:
+    image: bitnami/openldap:2.6.10-debian-12-r3
+    container_name: ldap-server
+    environment:
+      - LDAP_ROOT=dc=strongsystem,dc=local
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=admin
+      - LDAP_CONFIG_ADMIN_ENABLED=yes
+      - LDAP_CONFIG_ADMIN_USERNAME=config
+      - LDAP_CONFIG_ADMIN_PASSWORD=config
+      - LDAP_USERS=admin,user1,testuser,demo
+      - LDAP_PASSWORDS=admin,password,password123,demo
+      - LDAP_USER_OU=users
+      - LDAP_GROUP_OU=groups
+      - LDAP_GROUP=readers
+      - LDAP_ALLOW_ANON_BINDING=yes
+      - LDAP_LOGLEVEL=256
+      - LDAP_PASSWORD_HASH={CLEARTEXT}
+      - LDAP_SKIP_DEFAULT_TREE=no
+    volumes:
+      - ldap-data:/bitnami/openldap
+    networks:
+      - employee-network
+
+networks:
+  employee-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  minio-data:
+    driver: local
+  ldap-data:
+    driver: local
+  ldap-config:
+    driver: local
