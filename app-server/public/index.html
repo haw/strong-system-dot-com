@@ -660,7 +660,6 @@
                         <span class="breadcrumb-item" data-folder-id="00000000-0000-0000-0000-000000000000">ホーム</span>
                     </div>
                     <div class="file-actions">
-                        <button id="create-folder-btn" class="btn">新規フォルダ</button>
                         <button id="upload-file-btn" class="btn">ファイルアップロード</button>
                         <button id="refresh-files-btn" class="btn">更新</button>
                     </div>
@@ -693,21 +692,6 @@
                         <div class="file-grid" id="file-grid"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- フォルダ作成モーダル -->
-        <div id="create-folder-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>新規フォルダ作成</h2>
-                <form id="create-folder-form">
-                    <div class="form-group">
-                        <label for="folder-name">フォルダ名</label>
-                        <input type="text" id="folder-name" name="folderName" required>
-                    </div>
-                    <button type="submit" class="btn">作成</button>
-                </form>
             </div>
         </div>
 
@@ -813,10 +797,10 @@
                     throw new Error('Failed to load folder contents');
                 }
 
-                const folders = await foldersResponse.json();
+                await foldersResponse.json();
                 const files = await filesResponse.json();
 
-                displayFolderContents(folders, files);
+                displayFolderContents(files);
             } catch (error) {
                 console.error('Error loading folder contents:', error);
                 showErrorMessage('フォルダの内容を読み込めませんでした');
@@ -824,54 +808,24 @@
         }
 
         // フォルダとファイルを表示する関数
-        function displayFolderContents(folders, files) {
+        function displayFolderContents(files) {
             const fileGrid = document.getElementById('file-grid');
             const emptyState = document.getElementById('empty-state');
             
             fileGrid.innerHTML = '';
             
-            if (folders.length === 0 && files.length === 0) {
+            if (files.length === 0) {
                 emptyState.style.display = 'block';
                 return;
             }
             
             emptyState.style.display = 'none';
             
-            // フォルダを表示
-            folders.forEach(folder => {
-                const folderElement = createFolderElement(folder);
-                fileGrid.appendChild(folderElement);
-            });
-            
             // ファイルを表示
             files.forEach(file => {
                 const fileElement = createFileElement(file);
                 fileGrid.appendChild(fileElement);
             });
-        }
-
-        // フォルダ要素を作成する関数
-        function createFolderElement(folder) {
-            const folderDiv = document.createElement('div');
-            folderDiv.className = 'folder-item';
-            folderDiv.dataset.folderId = folder.id;
-            
-            folderDiv.innerHTML = `
-                <div class="folder-icon">📁</div>
-                <div class="folder-name">${folder.name}</div>
-            `;
-            
-            folderDiv.addEventListener('dblclick', () => {
-                folderHistory.push({ id: folder.id, name: folder.name });
-                navigateToFolder(folder.id);
-            });
-            
-            folderDiv.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                showContextMenu(e, 'folder', folder.id);
-            });
-            
-            return folderDiv;
         }
 
         // ファイル要素を作成する関数
@@ -1019,35 +973,6 @@
             }
         }
 
-        // フォルダを作成する関数
-        async function createFolder(folderName) {
-            const token = localStorage.getItem('auth_token');
-            
-            try {
-                const response = await fetch('/api/folders', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        name: folderName,
-                        parentFolderId: currentFolderId
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Create folder failed');
-                }
-                
-                showSuccessMessage('フォルダが作成されました');
-                loadFolderContents(currentFolderId);
-            } catch (error) {
-                console.error('Error creating folder:', error);
-                showErrorMessage('フォルダの作成に失敗しました');
-            }
-        }
-
         // ファイルをアップロードする関数
         async function uploadFiles(files) {
             const token = localStorage.getItem('auth_token');
@@ -1154,25 +1079,6 @@
                 }
             });
 
-            // フォルダ作成
-            const createFolderBtn = document.getElementById('create-folder-btn');
-            const createFolderModal = document.getElementById('create-folder-modal');
-            const createFolderForm = document.getElementById('create-folder-form');
-
-            createFolderBtn.addEventListener('click', () => {
-                createFolderModal.style.display = 'block';
-            });
-
-            createFolderForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const folderName = document.getElementById('folder-name').value;
-                if (folderName.trim()) {
-                    createFolder(folderName.trim());
-                    createFolderModal.style.display = 'none';
-                    createFolderForm.reset();
-                }
-            });
-
             // ファイル更新
             const refreshFilesBtn = document.getElementById('refresh-files-btn');
             refreshFilesBtn.addEventListener('click', () => {
@@ -1185,7 +1091,6 @@
                 button.addEventListener('click', function () {
                     document.getElementById('add-employee-modal').style.display = 'none';
                     document.getElementById('edit-employee-modal').style.display = 'none';
-                    document.getElementById('create-folder-modal').style.display = 'none';
                 });
             });
 

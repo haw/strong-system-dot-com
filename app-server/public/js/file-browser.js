@@ -63,11 +63,6 @@ function setupTabSwitching() {
 
 // Set up event listeners for file browser actions
 function setupEventListeners() {
-    // Create folder button
-    document.getElementById('create-folder-btn').addEventListener('click', () => {
-        showCreateFolderModal();
-    });
-    
     // Upload file button
     document.getElementById('upload-file-btn').addEventListener('click', () => {
         toggleUploadArea();
@@ -77,13 +72,7 @@ function setupEventListeners() {
     document.getElementById('refresh-files-btn').addEventListener('click', () => {
         loadFolderContents(currentFolderId);
     });
-    
-    // Create folder form submission
-    document.getElementById('create-folder-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        createFolder();
-    });
-    
+
     // File input change
     document.getElementById('file-input').addEventListener('change', (e) => {
         handleFileSelection(e.target.files);
@@ -166,14 +155,14 @@ async function loadFolderContents(folderId) {
             throw new Error('Failed to load folder contents');
         }
         
-        const folders = await foldersResponse.json();
+        await foldersResponse.json();
         const files = await filesResponse.json();
         
         // Update current folder ID
         currentFolderId = folderId;
         
         // Display folder contents
-        displayFolderContents(folders, files);
+        displayFolderContents(files);
         
         // Update breadcrumb
         updateBreadcrumb();
@@ -186,28 +175,22 @@ async function loadFolderContents(folderId) {
 }
 
 // Display folder contents
-function displayFolderContents(folders, files) {
+function displayFolderContents(files) {
     const fileGrid = document.getElementById('file-grid');
     const emptyState = document.getElementById('empty-state');
-    
+
     // Clear existing content
     fileGrid.innerHTML = '';
-    
-    // Show empty state if no folders or files
-    if (folders.length === 0 && files.length === 0) {
+
+    // Show empty state if no files
+    if (files.length === 0) {
         emptyState.style.display = 'block';
         return;
     }
-    
+
     // Hide empty state
     emptyState.style.display = 'none';
-    
-    // Display folders
-    folders.forEach(folder => {
-        const folderElement = createFolderElement(folder);
-        fileGrid.appendChild(folderElement);
-    });
-    
+
     // Display files
     files.forEach(file => {
         const fileElement = createFileElement(file);
@@ -329,67 +312,6 @@ function hideContextMenu() {
     const contextMenu = document.getElementById('context-menu');
     contextMenu.style.display = 'none';
     contextMenuTarget = null;
-}
-
-// Show create folder modal
-function showCreateFolderModal() {
-    const modal = document.getElementById('create-folder-modal');
-    const folderNameInput = document.getElementById('folder-name');
-    
-    // Clear previous input
-    folderNameInput.value = '';
-    
-    // Show modal
-    modal.style.display = 'block';
-    
-    // Focus on input
-    folderNameInput.focus();
-}
-
-// Create a new folder
-async function createFolder() {
-    const folderName = document.getElementById('folder-name').value.trim();
-    
-    if (!folderName) {
-        showErrorMessage('フォルダ名を入力してください');
-        return;
-    }
-    
-    showLoading();
-    
-    try {
-        const token = localStorage.getItem('auth_token');
-        
-        const response = await fetch('/api/folders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                name: folderName,
-                parentFolderId: currentFolderId
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to create folder');
-        }
-        
-        // Hide modal
-        document.getElementById('create-folder-modal').style.display = 'none';
-        
-        // Reload folder contents
-        loadFolderContents(currentFolderId);
-        
-        // Show success message
-        showSuccessMessage(`フォルダ "${folderName}" を作成しました`);
-    } catch (error) {
-        console.error('Error creating folder:', error);
-        showErrorMessage('フォルダの作成に失敗しました');
-    } finally {
-        hideLoading();
-    }
 }
 
 // Toggle upload area visibility

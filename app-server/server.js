@@ -545,9 +545,7 @@ app.post('/api/files/upload', authenticateToken, upload.single('file'), async (r
         const rawFileName = req.file.originalname;
         const fileName = Buffer.from(rawFileName, 'latin1').toString('utf8');
         const mimeType = req.file.mimetype;
-        const ownerId = req.user.id || 1; // Default to user ID 1 if not available
-        
-        const file = await s3Service.uploadFile(fileBuffer, fileName, mimeType, ownerId, folderId);
+        const file = await s3Service.uploadFile(fileBuffer, fileName, mimeType, null, folderId);
         res.status(201).json(file);
     } catch (error) {
         console.error('Error uploading file:', error);
