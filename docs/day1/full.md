@@ -4,6 +4,10 @@
 
 DockerコンテナをEC2で動作させ、VPC、EC2、セキュリティグループの基本を理解する。
 
+## 構成図
+
+![Day 1 アーキテクチャ](./images/architecture.png)
+
 ## 前提条件
 
 - AWSアカウント
