@@ -98,24 +98,24 @@ DockerコンテナをEC2で動作させ、クラウドの基本を体験する�
 4. **接続** ボタンをクリック
 5. 以下のコマンドでログを確認：
 
-```bash
-sudo su - ubuntu
-sudo cat /var/log/cloud-init-output.log
-```
+    ```bash
+    sudo su - ubuntu
+    sudo cat /var/log/cloud-init-output.log
+    ```
 
 6. 末尾に以下のメッセージが表示される：
 
-```
-==========================================
-Day 1: EC2 Setup Script Completed
-Timestamp: ...
-==========================================
-
-Application URLs:
-  - Employee Management System: http://xx.xx.xx.xx:3000
-  - Employee Management System (Replica): http://xx.xx.xx.xx:3001
-  - MinIO Console: http://xx.xx.xx.xx:9001
-```
+    ```
+    ==========================================
+    Day 1: EC2 Setup Script Completed
+    Timestamp: ...
+    ==========================================
+    
+    Application URLs:
+      - Employee Management System: http://xx.xx.xx.xx:3000
+      - Employee Management System (Replica): http://xx.xx.xx.xx:3001
+      - MinIO Console: http://xx.xx.xx.xx:9001
+    ```
 
 ### 3. アプリケーションへのアクセス
 
@@ -182,4 +182,4 @@ Application URLs:
 
 ## 参考
 
-全手順を学びたい方は [フルスペック版](./README.md) をご覧ください。
+全手順を学びたい方は [フルスペック版](./full.md) をご覧ください。
