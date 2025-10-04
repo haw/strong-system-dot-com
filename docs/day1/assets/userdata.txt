@@ -10,7 +10,7 @@ echo "Day 1: EC2 Setup Script Started"
 echo "Timestamp: $(date)"
 echo "=========================================="
 
-# SWAPファイルの作成（t2.micro用メモリ対策）
+# SWAPファイルの作成（t3.micro用メモリ対策）
 echo "[1/7] Creating SWAP file for t2.micro instance..."
 dd if=/dev/zero of=/swapfile bs=128M count=16
 chmod 600 /swapfile
