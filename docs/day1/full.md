@@ -83,7 +83,7 @@ DockerコンテナをEC2で動作させ、VPC、EC2、セキュリティグル�
     | カスタムTCP | TCP | 9000 | Anywhere-IPv4 (0.0.0.0/0) | MinIO API |
     | カスタムTCP | TCP | 9001 | Anywhere-IPv4 (0.0.0.0/0) | MinIO Console |
 
-6. **インバウンドルール**
+6. **アウトバウンドルール**
 
     VPCを選択したときに下記の設定になっている。  
 
