@@ -13,9 +13,6 @@ const mysql = require('mysql2/promise');
 const path = require('path');
 const crypto = require('crypto');
 
-// Disable AWS metadata service
-process.env.AWS_EC2_METADATA_DISABLED = 'true';
-
 // Database connection pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'db-server',
