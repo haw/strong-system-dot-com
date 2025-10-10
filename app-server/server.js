@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
@@ -7,7 +9,6 @@ const ldap = require('ldapjs');
 const s3Service = require('./s3Service');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
-require('dotenv').config();
 
 // JWT Secret Key
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
