@@ -21,7 +21,6 @@ services:
       - AWS_SECRET_ACCESS_KEY=minioadmin
       - AWS_REGION=ap-northeast-1
       - S3_BUCKET_NAME=strongsystem-files-default
-      # - AWS_SDK_LOAD_CONFIG=0
       - AWS_EC2_METADATA_DISABLED=true
       - USE_AWS_S3=false
       - CLOUDFRONT_DOMAIN=
@@ -59,7 +58,6 @@ services:
       - AWS_SECRET_ACCESS_KEY=minioadmin
       - AWS_REGION=ap-northeast-1
       - S3_BUCKET_NAME=strongsystem-files-default
-      # - AWS_SDK_LOAD_CONFIG=0
       - AWS_EC2_METADATA_DISABLED=true
       - USE_AWS_S3=false
       - CLOUDFRONT_DOMAIN=

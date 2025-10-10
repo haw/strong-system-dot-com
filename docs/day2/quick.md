@@ -160,8 +160,13 @@ Day 1で作成したEC2インスタンスにアクセスし、アプリケーシ
 
     変更前:
     ```yaml
-    - S3_BUCKET_NAME=strongsystem-files-default
-    - USE_AWS_S3=false
+      - AWS_ACCESS_KEY_ID=minioadmin (削除)
+      - AWS_SECRET_ACCESS_KEY=minioadmin (削除)
+      - AWS_REGION=ap-northeast-1 (S3バケットを作ったリージョンに合わせる)
+      - S3_BUCKET_NAME=strongsystem-files-default (変更)
+      # - AWS_SDK_LOAD_CONFIG=0
+      - AWS_EC2_METADATA_DISABLED=true (削除)
+      - USE_AWS_S3=false (変更)
     ```
 
     変更後:
