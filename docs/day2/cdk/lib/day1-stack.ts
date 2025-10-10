@@ -17,7 +17,6 @@ export class Day1Stack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, 'Day1Vpc', {
       vpcName: `${userName}-day1-vpc`,
       ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
-      maxAzs: 2,
       availabilityZones: [`${this.region}a`, `${this.region}c`],
       subnetConfiguration: [
         {
