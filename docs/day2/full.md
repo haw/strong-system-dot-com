@@ -139,124 +139,18 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
 
 ---
 
-### 3. Day 2環境をCDKでデプロイ
+### 3. 以降の手順
 
-1. CDKデプロイを実行：
+ここから先の手順は、クイックスタート版と共通です。
 
-    ```bash
-    npx cdk deploy -c userName={あなたの名前}
-    ```
+**👉 [quick.md の「6. Day 2スタート環境をCDKでデプロイ」](quick.md#6-day-2スタート環境をcdkでデプロイ)** に進んでください。
 
-    例: `npx cdk deploy -c userName=tanaka`
-
-2. デプロイ確認プロンプトで `y` を入力
-
-3. デプロイ完了まで待つ（約5-10分）
-
-4. デプロイ完了後、Outputsに表示される情報を確認：
-    - ApplicationUrl
-    - InstanceId
-    - InstancePublicIp
-    - S3EndpointId
-    - VpcId
-
-5. さらにEC2インスタンスのセットアップが完了するまで待つ（約3-5分）  
-
-    ![](images/builded-ec2.png)
-
----
-
-### 4. アプリケーションの動作確認（MinIOモード）
-
-1. Outputsの `ApplicationUrl` (例 http://123.123.123.123:3000) をブラウザで開く
-
-2. ログイン画面が表示されることを確認
-
-    - ユーザー名: `admin`
-    - パスワード: `admin`
-
-3. アプリケーションが正常に動作することを確認
-
----
-
-### 5. S3バケット作成
-
-MinIOの代わりにS3を使用するため、S3バケットを作成します。
-
-1. AWSマネジメントコンソールで **S3** サービスを開く
-2. **バケットを作成** ボタンをクリック
-3. 以下の設定を入力：
-    - **バケット名**: `{あなたの名前}-day2-files` (例: `tanaka-day2-files`)
-      - グローバルで一意である必要があります
-      - 小文字、数字、ハイフンのみ使用可能
-    - **AWS リージョン**: ap-northeast-1 (東京)
-    - **パブリックアクセスをすべてブロック**: チェックを入れたまま
-    - その他の設定はデフォルトのまま
-4. **バケットを作成** ボタンをクリック
-
----
-
-### 6. アプリケーションをS3モードに切り替え
-
-> **注意**: MinIO使用時にアップロードしたファイルは、S3切り替え後はダウンロードできません。S3切り替え後に新規アップロードしたファイルで動作確認してください。
-
-1. EC2コンソールで、CDKで作成されたインスタンス (`day1-app-server-{あなたの名前}`) を選択
-2. **接続** → **セッションマネージャー** で接続
-3. アプリケーションディレクトリに移動：
-
-    ```bash
-    sudo su - ubuntu
-    cd /home/ubuntu/strong-system-dot-com/app-server
-    ```
-
-4. .envファイルを編集：
-
-    ```bash
-    nano .env
-    ```
-
-5. 以下の行を変更：
-
-    **変更前:**
-    ```
-    AWS_ACCESS_KEY_ID=minioadmin
-    AWS_SECRET_ACCESS_KEY=minioadmin
-    AWS_REGION=ap-northeast-1
-    S3_BUCKET_NAME=strongsystem-files-default
-    USE_AWS_S3=false
-    ```
-
-    **変更後:**
-    ```
-    (AWS_ACCESS_KEY_IDの行を削除)
-    (AWS_SECRET_ACCESS_KEYの行を削除)
-    AWS_REGION=ap-northeast-1 （※ S3バケットを作成したリージョンにあわせる）
-    S3_BUCKET_NAME={あなたの名前}-day2-files
-    USE_AWS_S3=true
-    ```
-
-    nanoの操作：
-    - Ctrl + O で保存
-    - Enter でファイル名確認
-    - Ctrl + X で終了
-
-6. PM2でアプリを再起動：
-
-    ```bash
-    pm2 restart app
-    pm2 logs app
-    ```
-
----
-
-### 7. S3への移行確認
-
-1. ブラウザでアプリケーション（`ApplicationUrl` (例 http://123.123.123.123:3000)）にアクセス
-2. 新しいファイルをアップロード
-3. S3コンソールで `{あなたの名前}-day2-files` バケットを確認
-4. アップロードしたファイルがS3に保存されていることを確認
-5. アプリケーションから右クリックでダウンロードが正常に動作することを確認
-6. アプリケーションから右クリックで削除が正常に動作することを確認 (S3からも消えていることを確認)
+以下の手順が含まれます：
+- Day 2スタート環境をCDKでデプロイ
+- アプリケーションの動作確認（MinIOモード）
+- S3バケット作成
+- アプリケーションをS3モードに切り替え
+- S3への移行確認
 
 ---
 

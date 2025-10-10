@@ -102,7 +102,7 @@ npx cdk bootstrap -c userName={あなたの名前}
 
 ---
 
-### 6. Day 2環境をCDKでデプロイ
+### 6. Day 2スタート環境をCDKでデプロイ
 
 1. CDKデプロイを実行：
 
