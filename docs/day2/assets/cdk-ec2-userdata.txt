@@ -10,8 +10,18 @@ echo "CDK Execution EC2 Setup Started"
 echo "Timestamp: $(date)"
 echo "=========================================="
 
+# Swap領域の作成（メモリ不足対策）
+echo "[0/4] Creating 2GB swap space..."
+dd if=/dev/zero of=/swapfile bs=1M count=2048
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+echo "Swap space created and enabled"
+free -m
+
 # Node.js 22.x インストール
-echo "[1/3] Installing Node.js 22.x..."
+echo "[1/4] Installing Node.js 22.x..."
 curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
 dnf install -y nodejs
 
@@ -20,14 +30,14 @@ echo "Node.js version: $(node --version)"
 echo "npm version: $(npm --version)"
 
 # AWS CDK CLI インストール
-echo "[2/3] Installing AWS CDK CLI..."
+echo "[2/4] Installing AWS CDK CLI..."
 npm install -g aws-cdk
 
 # CDK バージョン確認
 echo "CDK version: $(cdk --version)"
 
 # Git インストール（既にインストール済みの可能性が高いが念のため）
-echo "[3/3] Ensuring Git is installed..."
+echo "[3/4] Ensuring Git is installed..."
 dnf install -y git
 
 echo "=========================================="
