@@ -76,20 +76,40 @@ npm install
 CDKがAWS環境にデプロイするために必要なリソース（S3バケット、ECRリポジトリ、IAMロール）を事前準備するプロセスです。AWSアカウント×リージョンの組み合わせごとに1回だけ実行します。
 
 ```bash
-npx cdk bootstrap
+npx cdk bootstrap -c userName={あなたの名前}
 ```
 
-> **注意**: 既にbootstrap済みの場合は「already bootstrapped」と表示されますが、問題ありません。
+> `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka`
+> **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。
 
 ---
 
 ### 6. Day 1完成形をCDKでデプロイ
 
-```bash
-npx cdk deploy -c userName={あなたの名前}
-```
+1. CDKデプロイを実行：
 
-デプロイ完了まで約5-10分待つ。
+    ```bash
+    npx cdk deploy -c userName={あなたの名前}
+    ```
+
+    例: `npx cdk deploy -c userName=tanaka`
+
+2. デプロイ確認プロンプトで `y` を入力（`"--require-approval" is enabled and stack includes security-sensitive updates: 'Do you wish to deploy these changes' (y/n)`）
+
+3. デプロイ完了まで待つ（約5-10分）
+
+4. デプロイ完了後、Outputsに表示される情報を確認：
+    - ApplicationUrl
+    - InstanceId
+    - InstancePublicIp
+    - MinIOConsoleUrl
+    - S3EndpointId
+    - VpcId
+
+
+5. さらにEC2インスタンスのステータスチェックが「完了」するまで待つ。  
+
+★絵を挿入
 
 ---
 
@@ -105,9 +125,9 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 ### 8. S3バケット作成
 
 1. S3コンソールで **バケットを作成**
-2. **バケット名**: `{あなたの名前}-day2-files`
+2. **バケット名**: `{あなたの名前}-day2-files` ※ グローバルで一意である必要があります
 3. **リージョン**: ap-northeast-1
-4. **作成** ボタンをクリック
+4. **バケットを作成** ボタンをクリック
 
 ---
 
@@ -115,28 +135,52 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 
 > **注意**: MinIO使用時にアップロードしたファイルは、S3切り替え後はダウンロードできません。S3切り替え後に新規アップロードしたファイルで動作確認してください。
 
-1. CDKで作成されたEC2 (`day1-app-server-{あなたの名前}`) に Session Manager で接続
-2. 設定変更：
+Day 1で作成したEC2インスタンスにアクセスし、アプリケーションの設定を変更します。
+
+1. EC2コンソールで、CDKで作成されたインスタンス (`day1-app-server-{あなたの名前}`) を選択
+2. **接続** → **セッションマネージャー** で接続
+3. アプリケーションディレクトリに移動：
 
     ```bash
+    sudo su - ubuntu
     cd /home/ubuntu/strong-system-dot-com
-    sudo vi docker-compose.yml
     ```
 
-    `app-server-1` と `app-server-2` の環境変数を変更：
-    
+4. docker-compose.yml を編集(nano推奨)：
+
+    ```bash
+    nano docker-compose.yml
+
+    or
+
+    vi docker-compose.yml
+    ```
+
+5. `app-server-1` と `app-server-2` の環境変数を変更：
+
+    変更前:
     ```yaml
-    - USE_AWS_S3=true
-    - S3_BUCKET_NAME={あなたの名前}-day2-files
+    - S3_BUCKET_NAME=strongsystem-files-default
+    - USE_AWS_S3=false
     ```
 
-3. 再起動：
+    変更後:
+    ```yaml
+    - S3_BUCKET_NAME={あなたの名前}-day2-files
+    - USE_AWS_S3=true
+    ```
+
+    `nano`で編集する場合は、以下の操作で保存・終了してください。  
+    1. Ctl + O (保存)
+    2. Enter (ファイル名の確認)
+    3. Ctl + C (終了)
+
+6. コンテナを再起動：
 
     ```bash
     docker compose down
     docker compose up -d
     ```
-
 ---
 
 ### 10. S3への移行確認

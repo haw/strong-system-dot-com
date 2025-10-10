@@ -113,10 +113,12 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
     CDKがAWS環境にデプロイするために必要なリソース（S3バケット、ECRリポジトリ、IAMロール）を事前準備するプロセスです。AWSアカウント×リージョンの組み合わせごとに1回だけ実行します。
 
     ```bash
-    npx cdk bootstrap
+    npx cdk bootstrap -c userName={あなたの名前}
     ```
 
-    > **注意**: 既にbootstrap済みの場合は「already bootstrapped」と表示されますが、問題ありません。
+    > `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka`
+    > **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。
+
 
 ---
 
@@ -130,16 +132,21 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
 
     例: `npx cdk deploy -c userName=tanaka`
 
-2. デプロイ確認プロンプトで `y` を入力
+2. デプロイ確認プロンプトで `y` を入力（`"--require-approval" is enabled and stack includes security-sensitive updates: 'Do you wish to deploy these changes' (y/n)`）
 
 3. デプロイ完了まで待つ（約5-10分）
 
 4. デプロイ完了後、Outputsに表示される情報を確認：
-    - VpcId
+    - ApplicationUrl
     - InstanceId
     - InstancePublicIp
-    - ApplicationUrl
     - MinIOConsoleUrl
+    - S3EndpointId
+    - VpcId
+
+5. さらにEC2インスタンスのステータスチェックが「完了」するまで待つ。  
+
+★絵を挿入
 
 ---
 
@@ -193,28 +200,38 @@ Day 1で作成したEC2インスタンスにアクセスし、アプリケーシ
 3. アプリケーションディレクトリに移動：
 
     ```bash
+    sudo su - ubuntu
     cd /home/ubuntu/strong-system-dot-com
     ```
 
-4. docker-compose.yml を編集：
+4. docker-compose.yml を編集(nano推奨)：
 
     ```bash
-    sudo vi docker-compose.yml
+    nano docker-compose.yml
+
+    or
+
+    vi docker-compose.yml
     ```
 
 5. `app-server-1` と `app-server-2` の環境変数を変更：
 
     変更前:
     ```yaml
-    - USE_AWS_S3=false
     - S3_BUCKET_NAME=strongsystem-files-default
+    - USE_AWS_S3=false
     ```
 
     変更後:
     ```yaml
-    - USE_AWS_S3=true
     - S3_BUCKET_NAME={あなたの名前}-day2-files
+    - USE_AWS_S3=true
     ```
+
+    `nano`で編集する場合は、以下の操作で保存・終了してください。  
+    1. Ctl + O (保存)
+    2. Enter (ファイル名の確認)
+    3. Ctl + C (終了)
 
 6. コンテナを再起動：
 
