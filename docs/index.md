@@ -26,7 +26,9 @@
 
 ### [Day 5: Amazon Q Developer CLI](./day5/)
 - 生成AI入門
-- AI支援開発の体験
+- AI開発支援の体験
+
+![](images/course-overview.png)
 
 ---
 
