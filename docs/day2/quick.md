@@ -43,6 +43,8 @@ Docker Compose:
 
 > **重要**: CloudShellを起動する前に、必ず**東京リージョン（ap-northeast-1）**を選択してください。
 
+![](images/cloudshell.png)
+
 1. AWSマネジメントコンソールにログイン
 2. **画面右上のリージョン選択**で「**アジアパシフィック（東京）ap-northeast-1**」を選択
 3. **画面左下のCloudShellアイコン**（ターミナルのようなアイコン）をクリック
