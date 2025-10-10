@@ -576,7 +576,7 @@ app.get('/api/files/:fileId/download', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error downloading file:', error);
 
-        if (error.message === 'File not found') {
+        if (error.message === 'File not found' || error.code === 'FILE_NOT_FOUND') {
             return res.status(404).json({ error: 'File not found' });
         }
 

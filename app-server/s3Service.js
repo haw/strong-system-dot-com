@@ -388,6 +388,14 @@ const downloadFile = async (fileId, useSignedUrl = false) => {
     };
   } catch (error) {
     console.error('Error downloading file from S3:', error);
+    
+    // Handle S3 NoSuchKey error (file exists in DB but not in S3/MinIO)
+    if (error.code === 'NoSuchKey') {
+      const notFoundError = new Error('File not found in storage');
+      notFoundError.code = 'FILE_NOT_FOUND';
+      throw notFoundError;
+    }
+    
     throw error;
   }
 };
@@ -429,6 +437,14 @@ const getFileStream = async (fileId) => {
     };
   } catch (error) {
     console.error('Error creating S3 file stream:', error);
+    
+    // Handle S3 NoSuchKey error (file exists in DB but not in S3/MinIO)
+    if (error.code === 'NoSuchKey') {
+      const notFoundError = new Error('File not found in storage');
+      notFoundError.code = 'FILE_NOT_FOUND';
+      throw notFoundError;
+    }
+    
     throw error;
   }
 };
