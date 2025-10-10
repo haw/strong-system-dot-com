@@ -31,8 +31,6 @@ const pool = mysql.createPool({
 
 // Configure AWS SDK for MinIO or AWS S3
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.MINIO_ACCESS_KEY || 'minioadmin',
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.MINIO_SECRET_KEY || 'minioadmin',
   region: process.env.AWS_REGION || 'ap-northeast-1'
 });
 
@@ -44,9 +42,7 @@ const s3 = new AWS.S3({
   endpoint: isUsingMinIO ? `http://${process.env.MINIO_HOST || 'minio'}:${process.env.MINIO_PORT || 9000}` : undefined,
   s3ForcePathStyle: isUsingMinIO, // Required for MinIO
   signatureVersion: 'v4',
-  region: process.env.AWS_REGION || 'ap-northeast-1',
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.MINIO_ACCESS_KEY || 'minioadmin',
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.MINIO_SECRET_KEY || 'minioadmin'
+  region: process.env.AWS_REGION || 'ap-northeast-1'
 });
 
 // CloudFront configuration
