@@ -64,13 +64,19 @@ export class Day1Stack extends cdk.Stack {
       'MinIO Console'
     );
 
-    // IAMロール作成（SSM用）
+    // IAMロール作成（SSM + S3アクセス用）
     const role = new iam.Role(this, 'Day1Ec2Role', {
       roleName: `day1-ec2-role-${userName}`,
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'),
+        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
       ],
+    });
+
+    // S3用Gateway型VPCエンドポイント作成（無料、セキュリティ向上）
+    const s3Endpoint = vpc.addGatewayEndpoint('S3Endpoint', {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
     });
 
     // Ubuntu 24.04 LTS AMI
@@ -187,6 +193,11 @@ export class Day1Stack extends cdk.Stack {
     new cdk.CfnOutput(this, 'VpcId', {
       value: vpc.vpcId,
       description: 'VPC ID',
+    });
+
+    new cdk.CfnOutput(this, 'S3EndpointId', {
+      value: s3Endpoint.vpcEndpointId,
+      description: 'S3 Gateway VPC Endpoint ID',
     });
 
     new cdk.CfnOutput(this, 'InstanceId', {
