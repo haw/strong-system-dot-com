@@ -4,10 +4,11 @@
 
 - Day 1完成形をCDKで自動構築
 - MinIOからS3への移行を体験
+- IAMロールによるセキュアなS3アクセスを理解
 
 ## 所要時間
 
-約15分
+約20分
 
 ---
 
@@ -16,6 +17,23 @@
 - IAMユーザーに以下の権限が付与されていること：
   - `PowerUserAccess`
   - `IAMFullAccess`
+
+---
+
+## Day 2の構成
+
+Day 2では、アプリケーションをEC2で直接実行します：
+
+```
+EC2直接実行:
+└── app-server (Node.js) ← IAMロールでS3アクセス
+
+Docker Compose:
+├── db-server (MySQL)
+└── ldap-server (LDAP認証)
+```
+
+**メリット**: IAMロールが自動的に使えるため、認証情報の管理が不要
 
 ---
 
@@ -84,7 +102,7 @@ npx cdk bootstrap -c userName={あなたの名前}
 
 ---
 
-### 6. Day 1完成形をCDKでデプロイ
+### 6. Day 2環境をCDKでデプロイ
 
 1. CDKデプロイを実行：
 
@@ -94,7 +112,7 @@ npx cdk bootstrap -c userName={あなたの名前}
 
     例: `npx cdk deploy -c userName=tanaka`
 
-2. デプロイ確認プロンプトで `y` を入力（`"--require-approval" is enabled and stack includes security-sensitive updates: 'Do you wish to deploy these changes' (y/n)`）
+2. デプロイ確認プロンプトで `y` を入力
 
 3. デプロイ完了まで待つ（約5-10分）
 
@@ -102,20 +120,18 @@ npx cdk bootstrap -c userName={あなたの名前}
     - ApplicationUrl
     - InstanceId
     - InstancePublicIp
-    - MinIOConsoleUrl
     - S3EndpointId
     - VpcId
 
-
-5. さらにEC2インスタンスのステータスチェックが「完了」するまで待つ。  
+5. さらにEC2インスタンスのセットアップが完了するまで待つ（約3-5分）
 
     ![](images/builded-ec2.png)
 
 ---
 
-### 7. Day 1アプリケーションの動作確認
+### 7. アプリケーションの動作確認（MinIOモード）
 
-Outputsの `ApplicationUrl` をブラウザで開く。
+Outputsの `ApplicationUrl` (例 http://123.123.123.123:3000) をブラウザで開く。
 
 - ユーザー名: `admin`
 - パスワード: `admin`
@@ -131,11 +147,9 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 
 ---
 
-### 9. アプリケーションのS3設定変更
+### 9. アプリケーションをS3モードに切り替え
 
 > **注意**: MinIO使用時にアップロードしたファイルは、S3切り替え後はダウンロードできません。S3切り替え後に新規アップロードしたファイルで動作確認してください。
-
-Day 1で作成したEC2インスタンスにアクセスし、アプリケーションの設定を変更します。
 
 1. EC2コンソールで、CDKで作成されたインスタンス (`day1-app-server-{あなたの名前}`) を選択
 2. **接続** → **セッションマネージャー** で接続
@@ -143,55 +157,57 @@ Day 1で作成したEC2インスタンスにアクセスし、アプリケーシ
 
     ```bash
     sudo su - ubuntu
-    cd /home/ubuntu/strong-system-dot-com
+    cd /home/ubuntu/strong-system-dot-com/app-server
     ```
 
-4. docker-compose.yml を編集(nano推奨)：
+4. .envファイルを編集：
 
     ```bash
-    nano docker-compose.yml
-
-    or
-
-    vi docker-compose.yml
+    nano .env
     ```
 
-5. `app-server-1` と `app-server-2` の環境変数を変更：
+5. 以下の行を変更：
 
-    変更前:
-    ```yaml
-      - AWS_ACCESS_KEY_ID=minioadmin (削除)
-      - AWS_SECRET_ACCESS_KEY=minioadmin (削除)
-      - AWS_REGION=ap-northeast-1 (S3バケットを作ったリージョンに合わせる)
-      - S3_BUCKET_NAME=strongsystem-files-default (変更)
-      # - AWS_SDK_LOAD_CONFIG=0
-      - AWS_EC2_METADATA_DISABLED=true (削除)
-      - USE_AWS_S3=false (変更)
+    **変更前:**
+    ```
+    AWS_ACCESS_KEY_ID=minioadmin
+    AWS_SECRET_ACCESS_KEY=minioadmin
+    AWS_REGION=ap-northeast-1
+    S3_BUCKET_NAME=strongsystem-files-default
+    USE_AWS_S3=false
     ```
 
-    変更後:
-    ```yaml
-    - S3_BUCKET_NAME={あなたの名前}-day2-files
-    - USE_AWS_S3=true
+    **変更後:**
+    ```
+    (AWS_ACCESS_KEY_IDの行を削除)
+    (AWS_SECRET_ACCESS_KEYの行を削除)
+    AWS_REGION=ap-northeast-1 （※ S3バケットを作成したリージョンにあわせる）
+    S3_BUCKET_NAME={あなたの名前}-day2-files
+    USE_AWS_S3=true
     ```
 
-    `nano`で編集する場合は、以下の操作で保存・終了してください。  
-    1. Ctl + O (保存)
-    2. Enter (ファイル名の確認)
-    3. Ctl + C (終了)
+    nanoの操作：
+    - Ctrl + O で保存
+    - Enter でファイル名確認
+    - Ctrl + X で終了
 
-6. コンテナを再起動：
+6. PM2でアプリを再起動：
 
     ```bash
-    docker compose down
-    docker compose up -d
+    pm2 restart app
+    pm2 logs app
     ```
+
 ---
 
 ### 10. S3への移行確認
 
-1. アプリケーションでファイルアップロード
-2. S3コンソールでファイルを確認
+1. ブラウザでアプリケーション（`ApplicationUrl` (例 http://123.123.123.123:3000)）にアクセス
+2. 新しいファイルをアップロード
+3. S3コンソールで `{あなたの名前}-day2-files` バケットを確認
+4. アップロードしたファイルがS3に保存されていることを確認
+5. アプリケーションから右クリックでダウンロードが正常に動作することを確認
+6. アプリケーションから右クリックで削除が正常に動作することを確認 (S3からも消えていることを確認)
 
 ---
 
@@ -203,13 +219,14 @@ Day 1で作成したEC2インスタンスにアクセスし、アプリケーシ
 2. **空にする** ボタンをクリック
 3. 確認後、**削除** ボタンをクリック
 
-### 2. CDKスタック削除
+### 2. CDKスタックの削除
+
+CloudShellで実行：
 
 ```bash
 cd ~/strong-system-dot-com/docs/day2/cdk
 npx cdk destroy -c userName={あなたの名前}
 ```
-
 
 ---
 
@@ -217,6 +234,7 @@ npx cdk destroy -c userName={あなたの名前}
 
 - CloudShellでCDK実行環境を即座に構築
 - CDKでインフラ自動構築
+- app-serverをEC2で直接実行（IAMロールでS3アクセス）
 - MinIO → S3 移行完了
 
 次回（Day 3）は、データベースをRDSに移行します。
