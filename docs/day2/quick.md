@@ -79,8 +79,8 @@ CDKがAWS環境にデプロイするために必要なリソース（S3バケッ
 npx cdk bootstrap -c userName={あなたの名前}
 ```
 
-> `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka`
-> **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。
+- `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka`  
+- **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。  
 
 ---
 
@@ -109,7 +109,7 @@ npx cdk bootstrap -c userName={あなたの名前}
 
 5. さらにEC2インスタンスのステータスチェックが「完了」するまで待つ。  
 
-★絵を挿入
+    ![](images/builded-ec2.png)
 
 ---
 
