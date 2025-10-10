@@ -176,6 +176,8 @@ cd ~/strong-system-dot-com/docs/day2/cdk
 npx cdk destroy -c userName={あなたの名前}
 ```
 
+※ `ec2-user`で実施してください。（`ec2-user`ではない場合は、`sudo su - ec2-user`）
+
 ### 3. CDK実行用EC2の削除
 
 1. EC2コンソールで `cdk-exec-ec2-{あなたの名前}` を選択
