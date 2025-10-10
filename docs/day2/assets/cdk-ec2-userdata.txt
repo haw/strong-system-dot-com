@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e
+
+# ログファイル設定
+LOG_FILE="/var/log/userdata.log"
+exec > >(tee -a ${LOG_FILE}) 2>&1
+
+echo "=========================================="
+echo "CDK Execution EC2 Setup Started"
+echo "Timestamp: $(date)"
+echo "=========================================="
+
+# Node.js 22.x インストール
+echo "[1/3] Installing Node.js 22.x..."
+curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+dnf install -y nodejs
+
+# Node.js バージョン確認
+echo "Node.js version: $(node --version)"
+echo "npm version: $(npm --version)"
+
+# AWS CDK CLI インストール
+echo "[2/3] Installing AWS CDK CLI..."
+npm install -g aws-cdk
+
+# CDK バージョン確認
+echo "CDK version: $(cdk --version)"
+
+# Git インストール（既にインストール済みの可能性が高いが念のため）
+echo "[3/3] Ensuring Git is installed..."
+dnf install -y git
+
+echo "=========================================="
+echo "CDK Execution EC2 Setup Completed"
+echo "Timestamp: $(date)"
+echo "=========================================="
+echo ""
+echo "Next steps:"
+echo "1. Connect via Session Manager"
+echo "2. Clone the repository"
+echo "3. Run: cd containers/docs/day2/cdk && npm install"
+echo "4. Run: npx cdk bootstrap"
+echo "5. Run: npx cdk deploy -c userName=your-name"
