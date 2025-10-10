@@ -112,7 +112,7 @@ app.post('/api/auth/login', async (req, res) => {
 async function authenticateWithLDAP(username, password) {
     return new Promise((resolve) => {
         const client = ldap.createClient({
-            url: `ldap://${process.env.LDAP_SERVER || 'ldap-server'}:1389`,
+            url: `ldap://${process.env.LDAP_SERVER || 'ldap-server'}:${process.env.LDAP_PORT || '1389'}`,
             timeout: 5000,
             connectTimeout: 5000,
             reconnect: false
