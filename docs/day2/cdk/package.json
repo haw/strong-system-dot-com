@@ -1,0 +1,23 @@
+{
+  "name": "day2-cdk",
+  "version": "1.0.0",
+  "description": "Day 1 complete infrastructure for Day 2 hands-on",
+  "bin": {
+    "day2-cdk": "bin/day2-cdk.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.172.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.172.0",
+    "constructs": "^10.4.2"
+  }
+}
