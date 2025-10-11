@@ -117,7 +117,7 @@ cd ../..
 
 ```bash
 # あなたの名前を指定してブートストラップ（例: yamada）
-cdk bootstrap -c userName=yamada
+cdk bootstrap -c userName=yamada --verbose
 ```
 
 > **重要**: `userName`は**半角英数字のみ**で指定してください。日本語や記号は使用できません。
@@ -128,7 +128,7 @@ cdk bootstrap -c userName=yamada
 
 ```bash
 # あなたの名前を指定してデプロイ（例: yamada）
-cdk deploy -c userName=yamada
+cdk deploy -c userName=yamada --verbose
 ```
 
 > **重要**: `userName`は**半角英数字のみ**で指定してください。日本語や記号は使用できません。
@@ -148,12 +148,20 @@ cdk deploy -c userName=yamada
 
 デプロイが完了すると、以下の情報が表示されます：
 
+#### Outputs例
+
 ```
 Outputs:
-Day4Stack-yamada.CloudFrontUrl = https://d1234567890abc.cloudfront.net
-Day4Stack-yamada.ApiUrl = https://abcdefghij.execute-api.ap-northeast-1.amazonaws.com/prod/
-Day4Stack-yamada.UserPoolId = ap-northeast-1_XXXXXXXXX
-Day4Stack-yamada.UserPoolClientId = 1234567890abcdefghijklmnop
+Day4Stack-yamauchi.ApiEndpoint4F160690 = https://1d5gubtnja.execute-api.us-east-1.amazonaws.com/prod/
+Day4Stack-yamauchi.ApiUrl = https://1d5gubtnja.execute-api.us-east-1.amazonaws.com/prod/
+Day4Stack-yamauchi.CloudFrontUrl = https://dxybt5mgl9ojb.cloudfront.net
+Day4Stack-yamauchi.EmployeeTableName = day4-employees-yamauchi
+Day4Stack-yamauchi.FilesBucketName = day4stack-yamauchi-filesbucket16450113-pauamfwpa82t
+Day4Stack-yamauchi.FilesTableName = day4-files-yamauchi
+Day4Stack-yamauchi.UserPoolClientId = 7n27c44fm25e2u76bb85o79n0q
+Day4Stack-yamauchi.UserPoolId = us-east-1_ZUuUZjFQf
+Stack ARN:
+arn:aws:cloudformation:us-east-1:711951283832:stack/Day4Stack-yamauchi/d4491ea0-a658-11f0-a289-0affcf84f6bb
 ```
 
 **CloudFrontUrl**をブラウザで開いてください。
@@ -177,21 +185,17 @@ Day4Stack-yamada.UserPoolClientId = 1234567890abcdefghijklmnop
 サインアップ後、ユーザーは「未確認」状態です。以下の手順で自分自身を承認してください：
 
 1. **Cognito User Pools コンソール**を開く
-   ```
-   https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools
-   ```
+    ```
+    https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools
+    ```
 
 2. `day4-user-pool-{あなたの名前}` を選択
-
 3. **ユーザー（Users）** をクリック (左方メニュー)
-
 4. 自分のユーザー名（例: yamada）をクリック
-
-5. **アクション（Actions）** → **ユーザーの確認（Confirm account）** をクリック
-
+5. **アクション（Actions）** → **アカウントの確認（Confirm account）** をクリック
 6. 確認ステータスが「確認済（Confirmed）」になったことを確認
 
-> **Note**: 管理者が承認を体験します。
+    > **Note**: 管理者が承認を体験します。
 
 ### 3. ログイン
 
@@ -266,7 +270,7 @@ Day4Stack-yamada.UserPoolClientId = 1234567890abcdefghijklmnop
 
 ```bash
 cd strong-system-dot-com/docs/day4/cdk
-cdk destroy -c userName=yamada
+cdk destroy -c userName=yamada --verbose
 ```
 
 > **Note**: CloudFrontの削除には15-20分かかります。
