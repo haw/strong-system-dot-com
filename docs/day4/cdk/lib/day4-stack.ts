@@ -94,11 +94,8 @@ export class Day4ServerlessStack extends cdk.Stack {
     // ========================================
     // 3. S3 Bucket for File Storage
     // ========================================
-    const timestamp = Date.now();
-    const randomSuffix = Math.random().toString(36).substring(2, 8);
     
     const filesBucket = new s3.Bucket(this, 'FilesBucket', {
-      bucketName: `day4-files-${userName}-${timestamp}-${randomSuffix}`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       cors: [
@@ -258,7 +255,6 @@ export class Day4ServerlessStack extends cdk.Stack {
     // 7. S3 Bucket for Static Website
     // ========================================
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
-      bucketName: `day4-website-${userName}-${timestamp}-${randomSuffix}`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
