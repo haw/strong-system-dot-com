@@ -425,6 +425,13 @@ async function uploadFile() {
         return;
     }
     
+    // Show loading state
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadStatus = document.getElementById('uploadStatus');
+    uploadBtn.disabled = true;
+    uploadBtn.style.opacity = '0.5';
+    uploadStatus.style.display = 'flex';
+    
     try {
         // Step 1: Get presigned upload URL
         const urlResponse = await fetch(`${API_URL}/files/upload-url`, {
@@ -487,6 +494,11 @@ async function uploadFile() {
         loadFiles();
     } catch (error) {
         alert(error.message);
+    } finally {
+        // Hide loading state
+        uploadBtn.disabled = false;
+        uploadBtn.style.opacity = '1';
+        uploadStatus.style.display = 'none';
     }
 }
 

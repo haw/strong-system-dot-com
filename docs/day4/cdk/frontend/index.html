@@ -236,6 +236,26 @@
         .btn-upload:hover {
             transform: translateY(-2px);
         }
+        .upload-status {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -333,7 +353,11 @@
                         <input type="file" id="fileInput" style="display: none;" onchange="updateFileSelection()">
                         <button class="btn-add" onclick="document.getElementById('fileInput').click()">📤 ファイルを選択</button>
                         <span id="selectedFileName" style="color: #666; font-size: 14px;"></span>
-                        <button class="btn-upload" onclick="uploadFile()">⬆️ アップロード</button>
+                        <button class="btn-upload" id="uploadBtn" onclick="uploadFile()">⬆️ アップロード</button>
+                        <div id="uploadStatus" class="upload-status">
+                            <div class="spinner"></div>
+                            <span>アップロード中...</span>
+                        </div>
                     </div>
                     
                     <div id="fileLoadingMessage" class="loading" style="display: none;">読み込み中...</div>
