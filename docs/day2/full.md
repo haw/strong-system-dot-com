@@ -139,10 +139,10 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
     CDKがAWS環境にデプロイするために必要なリソース（S3バケット、ECRリポジトリ、IAMロール）を事前準備するプロセスです。AWSアカウント×リージョンの組み合わせごとに1回だけ実行します。
 
     ```bash
-    npx cdk bootstrap -c userName={あなたの名前}
+    npx cdk bootstrap -c userName={あなたの名前} --verbose
     ```
 
-    > `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka`
+    > `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka --verbose`
     > **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。
 
 
@@ -179,7 +179,7 @@ CDK実行用EC2で実行：
 
 ```bash
 cd ~/strong-system-dot-com/docs/day2/cdk
-npx cdk destroy -c userName={あなたの名前}
+npx cdk destroy -c userName={あなたの名前} --verbose
 ```
 
 ※ `ec2-user`で実施してください。（`ec2-user`ではない場合は、`sudo su - ec2-user`）

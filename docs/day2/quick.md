@@ -100,10 +100,10 @@ npm install
 CDKがAWS環境にデプロイするために必要なリソース（S3バケット、ECRリポジトリ、IAMロール）を事前準備するプロセスです。AWSアカウント×リージョンの組み合わせごとに1回だけ実行します。
 
 ```bash
-npx cdk bootstrap -c userName={あなたの名前}
+npx cdk bootstrap -c userName={あなたの名前} --verbose
 ```
 
-- `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka`  
+- `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka --verbose`  
 - **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。  
 
 ---
@@ -113,10 +113,10 @@ npx cdk bootstrap -c userName={あなたの名前}
 1. CDKデプロイを実行：
 
     ```bash
-    npx cdk deploy -c userName={あなたの名前}
+    npx cdk deploy -c userName={あなたの名前} --verbose
     ```
 
-    例: `npx cdk deploy -c userName=tanaka`
+    例: `npx cdk deploy -c userName=tanaka` --verbose
 
 2. デプロイ確認プロンプトで `y` を入力
 
@@ -241,7 +241,7 @@ CloudShellで実行：
 
 ```bash
 cd ~/strong-system-dot-com/docs/day2/cdk
-npx cdk destroy -c userName={あなたの名前}
+npx cdk destroy -c userName={あなたの名前} --verbose
 ```
 
 ---
