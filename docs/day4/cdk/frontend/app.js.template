@@ -483,6 +483,7 @@ async function uploadFile() {
         
         alert('ファイルをアップロードしました');
         fileInput.value = '';
+        document.getElementById('selectedFileName').textContent = '';
         loadFiles();
     } catch (error) {
         alert(error.message);
@@ -547,4 +548,19 @@ function formatFileSize(bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+function updateFileSelection() {
+    const fileInput = document.getElementById('fileInput');
+    const selectedFileName = document.getElementById('selectedFileName');
+    
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const fileSize = formatFileSize(file.size);
+        selectedFileName.textContent = `選択中: ${file.name} (${fileSize})`;
+        selectedFileName.style.color = '#667eea';
+        selectedFileName.style.fontWeight = '600';
+    } else {
+        selectedFileName.textContent = '';
+    }
 }

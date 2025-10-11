@@ -421,6 +421,7 @@ async function handleGetDownloadUrl(id) {
     const s3Command = new GetObjectCommand({
       Bucket: FILES_BUCKET_NAME,
       Key: result.Item.s3Key,
+      ResponseContentDisposition: `attachment; filename="${result.Item.fileName}"`,
     });
 
     const downloadUrl = await getSignedUrl(s3Client, s3Command, { expiresIn: 3600 });
