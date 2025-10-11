@@ -418,10 +418,15 @@ async function handleGetDownloadUrl(id) {
       return response(404, { error: 'File not found' });
     }
 
+    // RFC 2231: UTF-8 filename encoding for non-ASCII characters
+    const fileName = result.Item.fileName;
+    const encodedFileName = encodeURIComponent(fileName);
+    const contentDisposition = `attachment; filename="${fileName.replace(/[^\x00-\x7F]/g, '_')}"; filename*=UTF-8''${encodedFileName}`;
+
     const s3Command = new GetObjectCommand({
       Bucket: FILES_BUCKET_NAME,
       Key: result.Item.s3Key,
-      ResponseContentDisposition: `attachment; filename="${result.Item.fileName}"`,
+      ResponseContentDisposition: contentDisposition,
     });
 
     const downloadUrl = await getSignedUrl(s3Client, s3Command, { expiresIn: 3600 });
