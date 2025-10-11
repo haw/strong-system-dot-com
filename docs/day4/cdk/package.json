@@ -1,0 +1,23 @@
+{
+  "name": "day4-serverless-cdk",
+  "version": "1.0.0",
+  "description": "Day 4: Serverless Architecture with CloudFront + S3 + Lambda + DynamoDB + Cognito",
+  "bin": {
+    "day4-cdk": "bin/day4-cdk.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.170.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.170.0",
+    "constructs": "^10.0.0"
+  }
+}

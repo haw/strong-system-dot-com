@@ -1,0 +1,550 @@
+// Configuration - Will be replaced by CDK deployment
+const API_URL = 'API_GATEWAY_URL_PLACEHOLDER';
+const USER_POOL_ID = 'USER_POOL_ID_PLACEHOLDER';
+const CLIENT_ID = 'CLIENT_ID_PLACEHOLDER';
+
+// State
+let currentUser = null;
+let idToken = null;
+let editingEmployeeId = null;
+let currentView = 'employees'; // 'employees' or 'files'
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+});
+
+// ========================================
+// Auth Functions
+// ========================================
+
+function toggleAuth() {
+    const signInForm = document.getElementById('signInForm');
+    const signUpForm = document.getElementById('signUpForm');
+    
+    if (signInForm.style.display === 'none') {
+        signInForm.style.display = 'block';
+        signUpForm.style.display = 'none';
+    } else {
+        signInForm.style.display = 'none';
+        signUpForm.style.display = 'block';
+    }
+    
+    hideMessages();
+}
+
+async function signUp() {
+    const name = document.getElementById('signUpName').value;
+    const username = document.getElementById('signUpUsername').value;
+    const password = document.getElementById('signUpPassword').value;
+    
+    if (!name || !username || !password) {
+        showError('すべての項目を入力してください');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/auth/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, name }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || '登録に失敗しました');
+        }
+        
+        showSuccess('登録成功！すぐにログインできます。');
+        setTimeout(() => {
+            toggleAuth();
+        }, 2000);
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+async function signIn() {
+    const username = document.getElementById('signInUsername').value;
+    const password = document.getElementById('signInPassword').value;
+    
+    if (!username || !password) {
+        showError('ユーザー名とパスワードを入力してください');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/auth/signin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'ログインに失敗しました');
+        }
+        
+        // Save tokens
+        localStorage.setItem('idToken', data.idToken);
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        
+        idToken = data.idToken;
+        currentUser = parseJwt(data.idToken);
+        
+        showEmployeeList();
+        loadEmployees();
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+function logout() {
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    
+    idToken = null;
+    currentUser = null;
+    
+    document.getElementById('authContainer').style.display = 'block';
+    document.getElementById('employeeList').style.display = 'none';
+}
+
+function checkAuth() {
+    const token = localStorage.getItem('idToken');
+    
+    if (token) {
+        try {
+            const decoded = parseJwt(token);
+            
+            // Check if token is expired
+            if (decoded.exp * 1000 < Date.now()) {
+                logout();
+                return;
+            }
+            
+            idToken = token;
+            currentUser = decoded;
+            showEmployeeList();
+            loadEmployees();
+        } catch (error) {
+            logout();
+        }
+    }
+}
+
+function showEmployeeList() {
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('employeeList').style.display = 'block';
+    document.getElementById('userName').textContent = currentUser.name || currentUser.email;
+}
+
+// ========================================
+// Employee Functions
+// ========================================
+
+async function loadEmployees() {
+    document.getElementById('loadingMessage').style.display = 'block';
+    
+    try {
+        const response = await fetch(`${API_URL}/employees`, {
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || '従業員一覧の取得に失敗しました');
+        }
+        
+        displayEmployees(data.employees);
+    } catch (error) {
+        console.error('Load employees error:', error);
+        if (error.message.includes('Unauthorized')) {
+            logout();
+        }
+    } finally {
+        document.getElementById('loadingMessage').style.display = 'none';
+    }
+}
+
+function displayEmployees(employees) {
+    const tbody = document.getElementById('employeeTableBody');
+    tbody.innerHTML = '';
+    
+    if (employees.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">従業員が登録されていません</td></tr>';
+        return;
+    }
+    
+    employees.forEach(employee => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${employee.name}</td>
+            <td>${employee.email}</td>
+            <td>${employee.department}</td>
+            <td>${employee.position}</td>
+            <td>${employee.hireDate}</td>
+            <td class="actions">
+                <button class="btn-edit" onclick="editEmployee('${employee.id}')">編集</button>
+                <button class="btn-delete" onclick="deleteEmployee('${employee.id}')">削除</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function showAddModal() {
+    editingEmployeeId = null;
+    document.getElementById('modalTitle').textContent = '従業員を追加';
+    document.getElementById('employeeName').value = '';
+    document.getElementById('employeeEmail').value = '';
+    document.getElementById('employeeDepartment').value = '';
+    document.getElementById('employeePosition').value = '';
+    document.getElementById('employeeHireDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('employeeModal').style.display = 'flex';
+}
+
+async function editEmployee(id) {
+    try {
+        const response = await fetch(`${API_URL}/employees/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+            },
+        });
+        
+        const employee = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(employee.error || '従業員情報の取得に失敗しました');
+        }
+        
+        editingEmployeeId = id;
+        document.getElementById('modalTitle').textContent = '従業員を編集';
+        document.getElementById('employeeName').value = employee.name;
+        document.getElementById('employeeEmail').value = employee.email;
+        document.getElementById('employeeDepartment').value = employee.department;
+        document.getElementById('employeePosition').value = employee.position;
+        document.getElementById('employeeHireDate').value = employee.hireDate;
+        document.getElementById('employeeModal').style.display = 'flex';
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function saveEmployee() {
+    const name = document.getElementById('employeeName').value;
+    const email = document.getElementById('employeeEmail').value;
+    const department = document.getElementById('employeeDepartment').value;
+    const position = document.getElementById('employeePosition').value;
+    const hireDate = document.getElementById('employeeHireDate').value;
+    
+    if (!name || !email || !department || !position) {
+        alert('すべての項目を入力してください');
+        return;
+    }
+    
+    try {
+        const url = editingEmployeeId 
+            ? `${API_URL}/employees/${editingEmployeeId}`
+            : `${API_URL}/employees`;
+        
+        const method = editingEmployeeId ? 'PUT' : 'POST';
+        
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({ name, email, department, position, hireDate }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || '保存に失敗しました');
+        }
+        
+        closeModal();
+        loadEmployees();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function deleteEmployee(id) {
+    if (!confirm('この従業員を削除してもよろしいですか？')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/employees/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || '削除に失敗しました');
+        }
+        
+        loadEmployees();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function closeModal() {
+    document.getElementById('employeeModal').style.display = 'none';
+}
+
+// ========================================
+// Utility Functions
+// ========================================
+
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    
+    return JSON.parse(jsonPayload);
+}
+
+function showError(message) {
+    hideMessages();
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+}
+
+function showSuccess(message) {
+    hideMessages();
+    const successDiv = document.getElementById('successMessage');
+    successDiv.textContent = message;
+    successDiv.style.display = 'block';
+}
+
+function hideMessages() {
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('successMessage').style.display = 'none';
+}
+
+// ========================================
+// File Functions
+// ========================================
+
+function switchView(view) {
+    currentView = view;
+    
+    if (view === 'employees') {
+        document.getElementById('employeeView').style.display = 'block';
+        document.getElementById('fileView').style.display = 'none';
+        document.getElementById('btnEmployees').classList.add('active');
+        document.getElementById('btnFiles').classList.remove('active');
+        loadEmployees();
+    } else {
+        document.getElementById('employeeView').style.display = 'none';
+        document.getElementById('fileView').style.display = 'block';
+        document.getElementById('btnEmployees').classList.remove('active');
+        document.getElementById('btnFiles').classList.add('active');
+        loadFiles();
+    }
+}
+
+async function loadFiles() {
+    document.getElementById('fileLoadingMessage').style.display = 'block';
+    
+    try {
+        const response = await fetch(`${API_URL}/files`, {
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'ファイル一覧の取得に失敗しました');
+        }
+        
+        displayFiles(data.files);
+    } catch (error) {
+        console.error('Load files error:', error);
+        alert(error.message);
+    } finally {
+        document.getElementById('fileLoadingMessage').style.display = 'none';
+    }
+}
+
+function displayFiles(files) {
+    const tbody = document.getElementById('fileTableBody');
+    tbody.innerHTML = '';
+    
+    if (files.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">ファイルがアップロードされていません</td></tr>';
+        return;
+    }
+    
+    files.forEach(file => {
+        const tr = document.createElement('tr');
+        const fileSize = formatFileSize(file.fileSize);
+        const uploadDate = new Date(file.createdAt).toLocaleString('ja-JP');
+        
+        tr.innerHTML = `
+            <td>${file.fileName}</td>
+            <td>${file.mimeType || 'unknown'}</td>
+            <td>${fileSize}</td>
+            <td>${uploadDate}</td>
+            <td class="actions">
+                <button class="btn-edit" onclick="downloadFile('${file.id}', '${file.fileName}')">ダウンロード</button>
+                <button class="btn-delete" onclick="deleteFile('${file.id}')">削除</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+async function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('ファイルを選択してください');
+        return;
+    }
+    
+    try {
+        // Step 1: Get presigned upload URL
+        const urlResponse = await fetch(`${API_URL}/files/upload-url`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({
+                fileName: file.name,
+                fileSize: file.size,
+                mimeType: file.type,
+            }),
+        });
+        
+        const urlData = await urlResponse.json();
+        
+        if (!urlResponse.ok) {
+            throw new Error(urlData.error || 'アップロードURLの取得に失敗しました');
+        }
+        
+        // Step 2: Upload to S3
+        const uploadResponse = await fetch(urlData.uploadUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': file.type || 'application/octet-stream',
+            },
+            body: file,
+        });
+        
+        if (!uploadResponse.ok) {
+            throw new Error('S3へのアップロードに失敗しました');
+        }
+        
+        // Step 3: Save metadata to DynamoDB
+        const metadataResponse = await fetch(`${API_URL}/files`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({
+                fileId: urlData.fileId,
+                fileName: file.name,
+                fileSize: file.size,
+                mimeType: file.type,
+                s3Key: urlData.s3Key,
+            }),
+        });
+        
+        const metadataData = await metadataResponse.json();
+        
+        if (!metadataResponse.ok) {
+            throw new Error(metadataData.error || 'メタデータの保存に失敗しました');
+        }
+        
+        alert('ファイルをアップロードしました');
+        fileInput.value = '';
+        loadFiles();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function downloadFile(fileId, fileName) {
+    try {
+        const response = await fetch(`${API_URL}/files/${fileId}/download-url`, {
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'ダウンロードURLの取得に失敗しました');
+        }
+        
+        // Download using presigned URL
+        const link = document.createElement('a');
+        link.href = data.downloadUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function deleteFile(fileId) {
+    if (!confirm('このファイルを削除してもよろしいですか？')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/files/${fileId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || '削除に失敗しました');
+        }
+        
+        alert('ファイルを削除しました');
+        loadFiles();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}

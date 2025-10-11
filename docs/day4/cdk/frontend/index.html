@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>従業員管理システム - Day 4 Serverless</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .toggle-auth {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        .toggle-auth a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .employee-list {
+            display: none;
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .user-info {
+            color: #666;
+        }
+        .btn-logout {
+            width: auto;
+            padding: 8px 20px;
+            background: #dc3545;
+        }
+        .btn-add {
+            width: auto;
+            padding: 10px 24px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .actions button {
+            width: auto;
+            padding: 6px 12px;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        .btn-edit {
+            background: #28a745;
+        }
+        .btn-delete {
+            background: #dc3545;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            color: #333;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .view-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover {
+            color: #667eea;
+        }
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+        .file-upload-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-upload {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .btn-upload:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 従業員管理システム</h1>
+            <p>Day 4: Serverless Architecture (CloudFront + API Gateway + Lambda + DynamoDB + Cognito)</p>
+        </div>
+        
+        <div class="content">
+            <!-- Auth Container -->
+            <div id="authContainer" class="auth-container">
+                <div id="errorMessage" class="error" style="display: none;"></div>
+                <div id="successMessage" class="success" style="display: none;"></div>
+                
+                <!-- Sign In Form -->
+                <div id="signInForm">
+                    <h2 style="margin-bottom: 20px; color: #333;">ログイン</h2>
+                    <div class="form-group">
+                        <label>ユーザー名</label>
+                        <input type="text" id="signInUsername" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <label>パスワード</label>
+                        <input type="password" id="signInPassword" placeholder="パスワード">
+                    </div>
+                    <button onclick="signIn()">ログイン</button>
+                    <div class="toggle-auth">
+                        アカウントをお持ちでない方は <a href="#" onclick="toggleAuth(); return false;">新規登録</a>
+                    </div>
+                </div>
+                
+                <!-- Sign Up Form -->
+                <div id="signUpForm" style="display: none;">
+                    <h2 style="margin-bottom: 20px; color: #333;">新規登録</h2>
+                    <div class="form-group">
+                        <label>名前</label>
+                        <input type="text" id="signUpName" placeholder="山田 太郎">
+                    </div>
+                    <div class="form-group">
+                        <label>ユーザー名</label>
+                        <input type="text" id="signUpUsername" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <label>パスワード</label>
+                        <input type="password" id="signUpPassword" placeholder="8文字以上（大文字・小文字・数字を含む）">
+                    </div>
+                    <button onclick="signUp()">登録</button>
+                    <div class="toggle-auth">
+                        既にアカウントをお持ちの方は <a href="#" onclick="toggleAuth(); return false;">ログイン</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Employee List -->
+            <div id="employeeList" class="employee-list">
+                <div class="toolbar">
+                    <div class="user-info">
+                        ログイン中: <strong id="userName"></strong>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">ログアウト</button>
+                </div>
+                
+                <!-- View Tabs -->
+                <div class="view-tabs">
+                    <button id="btnEmployees" class="tab-btn active" onclick="switchView('employees')">👥 従業員管理</button>
+                    <button id="btnFiles" class="tab-btn" onclick="switchView('files')">📁 ファイル共有</button>
+                </div>
+                
+                <!-- Employee View -->
+                <div id="employeeView">
+                    <button class="btn-add" onclick="showAddModal()">➕ 従業員を追加</button>
+                    
+                    <div id="loadingMessage" class="loading" style="display: none;">読み込み中...</div>
+                    
+                    <table id="employeeTable">
+                        <thead>
+                            <tr>
+                                <th>名前</th>
+                                <th>メールアドレス</th>
+                                <th>部署</th>
+                                <th>役職</th>
+                                <th>入社日</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- File View -->
+                <div id="fileView" style="display: none;">
+                    <div class="file-upload-section">
+                        <input type="file" id="fileInput" style="display: none;">
+                        <button class="btn-add" onclick="document.getElementById('fileInput').click()">📤 ファイルを選択</button>
+                        <button class="btn-upload" onclick="uploadFile()">⬆️ アップロード</button>
+                    </div>
+                    
+                    <div id="fileLoadingMessage" class="loading" style="display: none;">読み込み中...</div>
+                    
+                    <table id="fileTable">
+                        <thead>
+                            <tr>
+                                <th>ファイル名</th>
+                                <th>タイプ</th>
+                                <th>サイズ</th>
+                                <th>アップロード日時</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fileTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Employee Modal -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">従業員を追加</h2>
+            </div>
+            <div class="form-group">
+                <label>名前</label>
+                <input type="text" id="employeeName">
+            </div>
+            <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" id="employeeEmail">
+            </div>
+            <div class="form-group">
+                <label>部署</label>
+                <input type="text" id="employeeDepartment">
+            </div>
+            <div class="form-group">
+                <label>役職</label>
+                <input type="text" id="employeePosition">
+            </div>
+            <div class="form-group">
+                <label>入社日</label>
+                <input type="date" id="employeeHireDate">
+            </div>
+            <button onclick="saveEmployee()">保存</button>
+            <button onclick="closeModal()" style="background: #6c757d; margin-top: 10px;">キャンセル</button>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
