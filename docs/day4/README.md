@@ -186,8 +186,9 @@ arn:aws:cloudformation:us-east-1:711951283832:stack/Day4Stack-yamauchi/d4491ea0-
 
 1. **Cognito User Pools コンソール**を開く
     ```
-    https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools
+    https://console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1
     ```
+    > **Note**: リージョンはリソースを作成したリージョンに合わせてください（例: `us-east-1`, `ap-northeast-1`）
 
 2. `day4-user-pool-{あなたの名前}` を選択
 3. **ユーザー（Users）** をクリック (左方メニュー)
