@@ -72,7 +72,9 @@ export class Day4ServerlessStack extends cdk.Stack {
       },
       billing: dynamodb.Billing.onDemand(),
       removalPolicy: cdk.RemovalPolicy.DESTROY,
-      pointInTimeRecovery: false,
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: false,
+      },
     });
 
     // Files Table
@@ -84,7 +86,9 @@ export class Day4ServerlessStack extends cdk.Stack {
       },
       billing: dynamodb.Billing.onDemand(),
       removalPolicy: cdk.RemovalPolicy.DESTROY,
-      pointInTimeRecovery: false,
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: false,
+      },
     });
 
     // ========================================
