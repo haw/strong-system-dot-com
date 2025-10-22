@@ -70,5 +70,5 @@ npx cdk destroy -c userName=tanaka
 aws ssm start-session --target <instance-id>
 
 # ログ確認
-sudo tail -f /var/log/cloud-init-output.log
+sudo tail -f /var/log/userdata.log
 ```
