@@ -37,7 +37,7 @@ Docker Compose:
 
 **すべてのリソース名に `-{あなたの名前}` を付けてください。**
 
-例: `cdk-exec-ec2-tanaka`, `Day1Stack-suzuki`
+例: `cdk-exec-ec2-tanaka`, `Day2Stack-suzuki`
 
 共有AWSアカウントを使用するため、名前の重複を避ける必要があります。
 
