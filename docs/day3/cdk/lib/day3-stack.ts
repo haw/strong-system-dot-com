@@ -4,12 +4,12 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
-export interface Day2StackProps extends cdk.StackProps {
+export interface Day3StackProps extends cdk.StackProps {
   readonly userName: string;
 }
 
-export class Day2Stack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props: Day2StackProps) {
+export class Day3Stack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: Day3StackProps) {
     super(scope, id, props);
 
     const { userName } = props;
@@ -25,8 +25,8 @@ export class Day2Stack extends cdk.Stack {
     });
 
     // VPC作成
-    const vpc = new ec2.Vpc(this, 'Day2Vpc', {
-      vpcName: `${userName}-day2-vpc`,
+    const vpc = new ec2.Vpc(this, 'Day3Vpc', {
+      vpcName: `${userName}-day3-vpc`,
       ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
       availabilityZones: [`${this.region}a`, `${this.region}c`],
       subnetConfiguration: [
@@ -45,9 +45,9 @@ export class Day2Stack extends cdk.Stack {
     });
 
     // セキュリティグループ作成
-    const securityGroup = new ec2.SecurityGroup(this, 'Day2AppSg', {
+    const securityGroup = new ec2.SecurityGroup(this, 'Day3AppSg', {
       vpc,
-      securityGroupName: `day2-app-sg-${userName}`,
+      securityGroupName: `day3-app-sg-${userName}`,
       description: 'Security group for Day 3 application',
       allowAllOutbound: true,
     });
@@ -60,8 +60,8 @@ export class Day2Stack extends cdk.Stack {
     );
 
     // IAMロール作成（SSM + S3アクセス用）
-    const role = new iam.Role(this, 'Day2Ec2Role', {
-      roleName: `day2-ec2-role-${userName}`,
+    const role = new iam.Role(this, 'Day3Ec2Role', {
+      roleName: `day3-ec2-role-${userName}`,
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'),
@@ -193,8 +193,8 @@ export class Day2Stack extends cdk.Stack {
     );
 
     // EC2インスタンス作成
-    const instance = new ec2.Instance(this, 'Day2AppServer', {
-      instanceName: `day2-app-server-${userName}`,
+    const instance = new ec2.Instance(this, 'Day3AppServer', {
+      instanceName: `day3-app-server-${userName}`,
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC,

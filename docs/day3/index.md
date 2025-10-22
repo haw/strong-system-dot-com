@@ -12,6 +12,6 @@ CloudShellを使用してCDKを実行します。Day 2完了時点（MinIO→S3�
 
 **すべてのリソース名に `-{あなたの名前}` を付けてください。**
 
-例: `tanaka-day3-db`, `Day2Stack-suzuki`
+例: `tanaka-day3-db`, `Day3Stack-suzuki`
 
 共有AWSアカウントを使用するため、名前の重複を避ける必要があります。

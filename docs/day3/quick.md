@@ -161,7 +161,7 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 4. 以下の設定を入力：
     - **名前**: `{あなたの名前}-day3-db-subnet-group` (例: `tanaka-day3-db-subnet-group`)
     - **説明**: `Day 3 RDS subnet group`
-    - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day2-vpc`）を選択
+    - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day3-vpc`）を選択
     - **アベイラビリティーゾーン**: 
       - `ap-northeast-1a` を選択
       - `ap-northeast-1c` を選択
@@ -180,11 +180,11 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 4. 以下の設定を入力：
     - **セキュリティグループ名**: `{あなたの名前}-day3-rds-sg` (例: `tanaka-day3-rds-sg`)
     - **説明**: `Security group for Day 3 RDS`
-    - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day2-vpc`）を選択
+    - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day3-vpc`）を選択
 5. **インバウンドルール** セクションで **ルールを追加** をクリック：
     - **タイプ**: MySQL/Aurora (3306)
     - **ソース**: カスタム
-    - **ソースの選択**: EC2のセキュリティグループ（`day2-app-sg-{あなたの名前}`）を選択
+    - **ソースの選択**: EC2のセキュリティグループ（`day3-app-sg-{あなたの名前}`）を選択
     - **説明**: `Allow MySQL from EC2`
 6. **セキュリティグループを作成** ボタンをクリック
 
@@ -227,7 +227,7 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     **接続:**
     - **コンピューティングリソース**: EC2コンピューティングリソースに接続しない
     - **ネットワークタイプ**: IPv4
-    - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day2-vpc`）を選択
+    - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day3-vpc`）を選択
     - **DBサブネットグループ**: 作成したサブネットグループを選択
     - **パブリックアクセス**: なし
     - **VPCセキュリティグループ**: 既存の選択
@@ -266,7 +266,7 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 
 ### 11. MySQLコンテナからデータをダンプ
 
-1. EC2コンソールで、CDKで作成されたインスタンス (`day2-app-server-{あなたの名前}`) を選択
+1. EC2コンソールで、CDKで作成されたインスタンス (`day3-app-server-{あなたの名前}`) を選択
 2. **接続** → **セッションマネージャー** で接続
 3. ubuntuユーザーに切り替え：
 
