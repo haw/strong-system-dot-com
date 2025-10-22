@@ -22,6 +22,8 @@
 
 ## Day 2の構成
 
+![](images/architecture.png)
+
 Day 2では、アプリケーションをEC2で直接実行します：
 
 ```
@@ -32,8 +34,6 @@ Docker Compose:
 ├── db-server (MySQL)
 └── ldap-server (LDAP認証)
 ```
-
-![](images/architecture.png)
 
 **メリット**: IAMロールが自動的に使えるため、認証情報の管理が不要
 
