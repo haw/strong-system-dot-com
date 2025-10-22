@@ -1,9 +1,9 @@
 {
-  "name": "day2-cdk",
+  "name": "day3-cdk",
   "version": "1.0.0",
-  "description": "Day 1 complete infrastructure for Day 2 hands-on",
+  "description": "Day 2 complete infrastructure for Day 3 hands-on starting point",
   "bin": {
-    "day2-cdk": "bin/day2-cdk.js"
+    "day3-cdk": "bin/day3-cdk.js"
   },
   "scripts": {
     "build": "tsc",
