@@ -113,7 +113,7 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
 
     ```bash
     sudo su - ec2-user
-    sudo cat /var/log/cloud-init-output.log
+    sudo cat /var/log/userdata.log
     ```
 
     「CDK Execution EC2 Setup Completed」が表示されるまで待つ（約3分）
