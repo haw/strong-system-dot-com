@@ -22,6 +22,8 @@
 
 ## Day 3の構成
 
+![](images/architecture.png)
+
 Day 3では、データベースをRDSに移行します：
 
 **スタート時点（Day 2完了状態）:**
@@ -52,12 +54,18 @@ AWS RDS:
 
 ### 1. CloudShellを起動
 
-> **重要**: CloudShellを起動する前に、必ず**東京リージョン（ap-northeast-1）**を選択してください。
+> **重要**: CloudShellを起動する前に、必ず **東京リージョン（ap-northeast-1）** を選択してください。
 
 1. AWSマネジメントコンソールにログイン
 2. **画面右上のリージョン選択**で「**アジアパシフィック（東京）ap-northeast-1**」を選択
 3. **画面左下のCloudShellアイコン**（ターミナルのようなアイコン）をクリック
 4. CloudShellが起動するまで待つ（初回は1-2分）
+
+もし、`ls`をして前回の`strong-system-dot-com`ディレクトリが残っているようであれば、一度CloudShellを消して、立ち上げ直してください（下記図参照）。(ディスク容量不足が発生する場合があるため)  
+
+![](images/delete-cloudshell.png)
+
+![](images/open-ap-northeast-1-environment.png)
 
 ---
 
@@ -99,10 +107,10 @@ npm install
 ### 5. CDK環境のBootstrap（Day 2で実施済みの場合はスキップ可）
 
 ```bash
-npx cdk bootstrap -c userName={あなたの名前}
+npx cdk bootstrap -c userName={あなたの名前} --verbose
 ```
 
-- Day 2で既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されます
+- Day 2で既にbootstrap済みのため「bootstrapped (no changes).」と表示されます
 
 ---
 
@@ -111,10 +119,10 @@ npx cdk bootstrap -c userName={あなたの名前}
 1. CDKデプロイを実行：
 
     ```bash
-    npx cdk deploy -c userName={あなたの名前}
+    npx cdk deploy -c userName={あなたの名前} --verbose
     ```
 
-    例: `npx cdk deploy -c userName=tanaka`
+    例: `npx cdk deploy -c userName=tanaka --verbose`
 
 2. デプロイ確認プロンプトで `y` を入力
 
@@ -127,6 +135,10 @@ npx cdk bootstrap -c userName={あなたの名前}
     - VpcId
 
 5. EC2インスタンスのセットアップが完了するまで待つ（約3-5分）
+
+    - EC2インスタンスの一覧で「ステータスチェック」が完了するのを待つ
+    - 時間が経てば完了するはずなので、待っている間に以降の手順8, 9, 10を進めてよい
+    ![](images/ec2-instance-setup.png)
 
 ---
 
@@ -143,7 +155,7 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 
 ### 8. RDS用サブネットグループの作成
 
-1. AWSマネジメントコンソールで **RDS** サービスを開く
+1. AWSマネジメントコンソールで **Aurora and RDS** サービスを開く
 2. 左メニューから **サブネットグループ** を選択
 3. **DBサブネットグループを作成** ボタンをクリック
 4. 以下の設定を入力：
@@ -184,18 +196,25 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 2. **データベースの作成** ボタンをクリック
 3. 以下の設定を入力：
 
+    **データベース作成方法を選択:**
+    - **標準作成**
+
     **エンジンのオプション:**
     - **エンジンのタイプ**: MySQL
-    - **エンジンのバージョン**: MySQL 8.0.40（最新の8.0系）
+    - **エンジンのバージョン**: MySQL 8.4.5
 
     **テンプレート:**
     - **無料利用枠** を選択
 
+    **可用性と耐久性**
+    - **シングル AZ DB インスタンスデプロイ (1 インスタンス)**
+
     **設定:**
     - **DBインスタンス識別子**: `{あなたの名前}-day3-db` (例: `tanaka-day3-db`)
     - **マスターユーザー名**: `admin`
+    - **認証情報管理**: `セルフマネージド`
     - **マスターパスワード**: `password123`（研修用、本番では強力なパスワードを使用）
-    - **パスワードの確認**: `password123`
+    - **マスターパスワードを確認**: `password123`
 
     **インスタンスの設定:**
     - **DBインスタンスクラス**: db.t3.micro
@@ -203,10 +222,11 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     **ストレージ:**
     - **ストレージタイプ**: 汎用SSD (gp3)
     - **割り当てられたストレージ**: 20 GiB
-    - **ストレージの自動スケーリングを有効にする**: チェックを外す
+    - **追加のストレージ設定 > ストレージの自動スケーリングを有効にする**: チェックを外す
 
     **接続:**
     - **コンピューティングリソース**: EC2コンピューティングリソースに接続しない
+    - **ネットワークタイプ**: IPv4
     - **VPC**: CDKで作成されたVPC（`{あなたの名前}-day2-vpc`）を選択
     - **DBサブネットグループ**: 作成したサブネットグループを選択
     - **パブリックアクセス**: なし
@@ -218,20 +238,26 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     **データベース認証:**
     - **パスワード認証** を選択
 
+    **モニタリング**
+    - デフォルトのまま
+
     **追加設定:**
     - **最初のデータベース名**: `employee_db`
+    - **DBパラメータグループ**: デフォルトのまま
+    - **オプショングループ**: デフォルトのまま
     - **バックアップ**: 
       - **自動バックアップを有効にする**: チェックを外す（研修用）
     - **暗号化**: 
       - **暗号化を有効にする**: チェックを入れたまま（推奨）
       - セキュリティベストプラクティスとして暗号化を有効化
-    - **ログのエクスポート**: すべてチェックを外す
-    - **マイナーバージョン自動アップグレードの有効化**: チェックを外す
+    - **マイナーバージョン自動アップグレードの有効化**: デフォルトのまま
+    - **メンテナンスウィンドウ**: デフォルトのまま
     - **削除保護の有効化**: チェックを外す
 
 4. **データベースの作成** ボタンをクリック
 
 5. RDSインスタンスが **利用可能** になるまで待つ（約5-10分）
+    - 待っている間に、次の手順「11. MySQLコンテナからデータをダンプ」へ進んでもよい
 
 6. RDSインスタンスの **エンドポイント** をメモする
    - 例: `tanaka-day3-db.xxxxxxxxxx.ap-northeast-1.rds.amazonaws.com`
@@ -252,7 +278,9 @@ Outputsの `ApplicationUrl` をブラウザで開く。
 4. MySQLコンテナからデータをダンプ：
 
     ```bash
-    docker exec db-server-1 mysqldump -uroot -ppassword employee_db > employee_db_dump.sql
+    cd /home/ubuntu/strong-system-dot-com
+
+    docker compose exec db-server mysqldump -uroot -ppassword employee_db > employee_db_dump.sql
     ```
 
 5. ダンプファイルが作成されたことを確認：
@@ -345,7 +373,15 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     pm2 logs app
     ```
 
-5. ログに `Database connected successfully` が表示されることを確認
+    「Ctl + C」でログ表示を終了
+
+
+5. ログに `Database host: {RDSエンドポイント}` が表示されることを確認
+
+    例:  
+    ```
+    Database host: tanaka-day3-db.xxxxxxxxxx.ap-northeast-1.rds.amazonaws.com
+    ```
 
 ---
 
@@ -378,21 +414,25 @@ docker compose stop db-server
 1. RDSコンソールで自分のRDSインスタンスを選択
 2. **アクション** → **削除** をクリック
 3. 確認画面で：
-   - **最終スナップショットを作成しますか？**: いいえ
-   - **自動バックアップを保持しますか？**: いいえ
+   - **最終スナップショットを作成**: チェックを外す
+   - **私は、インスタンスの削除後、システムスナップショットとポイントインタイムの復元を含む自動バックアップが利用不可となることを了承します。**: チェック
    - 確認テキストを入力
 4. **削除** ボタンをクリック
 
 ### 2. RDS用セキュリティグループの削除
 
-1. VPCコンソールで自分のRDS用セキュリティグループを選択
+1. VPCコンソールで自分のRDS用セキュリティグループ（例： `tanaka-day3-rds-sg`）を選択
 2. **アクション** → **セキュリティグループの削除** をクリック
+
+※ RDS インスタンスのネットワークインターフェースと関連付いていて削除できない場合がありますが、少し間をあけると消せるようになります。
 
 ### 3. RDS用サブネットグループの削除
 
 1. RDSコンソールで **サブネットグループ** を選択
-2. 自分のサブネットグループを選択
+2. 自分のサブネットグループ（例: `tanaka-day3-db-subnet-group`）を選択
 3. **削除** ボタンをクリック
+
+※ RDS インスタンスが消えるまで、消せないですし、料金が発生するものでもないので、エラーが出た場合は次の手順へ進んでください。  
 
 ### 4. CDKスタックの削除
 
@@ -400,7 +440,7 @@ CloudShellで実行：
 
 ```bash
 cd ~/strong-system-dot-com/docs/day3/cdk
-npx cdk destroy -c userName={あなたの名前}
+npx cdk destroy -c userName={あなたの名前} --verbose
 ```
 
 > **Note**: S3バケットは `cdk destroy` で自動的に削除されます（`autoDeleteObjects: true` 設定により、バケット内のオブジェクトも自動削除）。手動削除は不要です。
