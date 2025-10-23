@@ -231,7 +231,7 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     - **DBサブネットグループ**: 作成したサブネットグループを選択
     - **パブリックアクセス**: なし
     - **VPCセキュリティグループ**: 既存の選択
-      - デフォルトのセキュリティグループを削除
+      - `default` セキュリティグループを削除
       - 作成したRDS用セキュリティグループ（`{あなたの名前}-day3-rds-sg`）を選択
     - **アベイラビリティーゾーン**: ap-northeast-1a
 
@@ -345,26 +345,32 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     DB_NAME=employee_db
     ```
 
-    **変更後:**
+    **変更箇所:**
     ```
     DB_HOST={RDSエンドポイント}
     DB_USER=admin
     DB_PASSWORD=password123
-    DB_NAME=employee_db
-    ```
-
-    例:
-    ```
-    DB_HOST=tanaka-day3-db.xxxxxxxxxx.ap-northeast-1.rds.amazonaws.com
-    DB_USER=admin
-    DB_PASSWORD=password123
-    DB_NAME=employee_db
     ```
 
     nanoの操作：
     - Ctrl + O で保存
     - Enter でファイル名確認
     - Ctrl + X で終了
+
+    **変更後の例(`.env`全文例):**
+    ```txt:.env
+    NODE_ENV=production
+    PORT=3000
+    DB_HOST=tanaka-day3-db.c0k6wja688gb.ap-northeast-1.rds.amazonaws.com
+    DB_USER=admin
+    DB_PASSWORD=password123
+    DB_NAME=employee_db
+    LDAP_SERVER=127.0.0.1
+    LDAP_PORT=389
+    AWS_REGION=ap-northeast-1
+    S3_BUCKET_NAME=day3stack-tanaka-filesbucket16450113-wvdrili2hpzp
+    USE_AWS_S3=true
+    ```
 
 4. PM2でアプリを再起動：
 
@@ -373,15 +379,17 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     pm2 logs app
     ```
 
-    「Ctl + C」でログ表示を終了
-
-
 5. ログに `Database host: {RDSエンドポイント}` が表示されることを確認
 
     例:  
     ```
     Database host: tanaka-day3-db.xxxxxxxxxx.ap-northeast-1.rds.amazonaws.com
     ```
+
+    「Ctl + C」でログ表示を終了
+
+    ![](images/pm2-logs-app-day3.jpg)  
+    ※ `/home/ubuntu/.pm2/logs/app-error.log` にエラーが記録されていますが、同じ内容でしたら、研修の進行に影響はありません。ログの表示は、Ctl + Cで終了できます。  
 
 ---
 
@@ -418,6 +426,8 @@ docker compose stop db-server
    - **私は、インスタンスの削除後、システムスナップショットとポイントインタイムの復元を含む自動バックアップが利用不可となることを了承します。**: チェック
    - 確認テキストを入力
 4. **削除** ボタンをクリック
+
+※ 削除に5分ほどかかるので次の手順へ進んでよい。  
 
 ### 2. RDS用セキュリティグループの削除
 
