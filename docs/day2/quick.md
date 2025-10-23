@@ -189,7 +189,7 @@ Outputsの `ApplicationUrl` (例 http://123.123.123.123:3000) をブラウザで
     USE_AWS_S3=false
     ```
 
-    **変更後:**
+    **編集箇所:**
     ```
     (AWS_ACCESS_KEY_IDの行を削除)
     (AWS_SECRET_ACCESS_KEYの行を削除)
@@ -203,12 +203,32 @@ Outputsの `ApplicationUrl` (例 http://123.123.123.123:3000) をブラウザで
     - Enter でファイル名確認
     - Ctrl + X で終了
 
+    **変更後の例(`.env`全文例):**
+    ```txt:.env
+    NODE_ENV=production
+    PORT=3000
+    DB_HOST=127.0.0.1
+    DB_USER=root
+    DB_PASSWORD=password
+    DB_NAME=employee_db
+    LDAP_SERVER=127.0.0.1
+    LDAP_PORT=389
+    MINIO_HOST=127.0.0.1
+    MINIO_PORT=9000
+    AWS_REGION=ap-northeast-1
+    S3_BUCKET_NAME=tanaka-day2-files
+    USE_AWS_S3=true
+    ```
+
 6. PM2でアプリを再起動：
 
     ```bash
     pm2 restart app
     pm2 logs app
     ```
+
+    ![](images/pm2-logs-app.png)  
+    ※ `/home/ubuntu/.pm2/logs/app-error.log` にエラーが記録されていますが、同じ内容でしたら、研修の進行に影響はありません。ログの表示は、Ctl + Cで終了できます。  
 
 ---
 
@@ -232,8 +252,10 @@ Outputsの `ApplicationUrl` (例 http://123.123.123.123:3000) をブラウザで
 ### 1. S3バケットの削除
 
 1. S3コンソールで自分のバケットを選択
-2. **空にする** ボタンをクリック
+2. **空にする** ボタンをクリック（「10. S3への移行確認」ですべてのファイルを削除している場合は、実施不要）
 3. 確認後、**削除** ボタンをクリック
+
+![](images/delete-s3-bucket.png)
 
 ### 2. CDKスタックの削除
 
