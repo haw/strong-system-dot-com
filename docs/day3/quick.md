@@ -375,7 +375,7 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     USE_AWS_S3=true
     ```
 
-4. PM2でアプリを再起動：
+4. [PM2](https://github.com/Unitech/pm2)でアプリを再起動：
 
     ```bash
     pm2 restart app
