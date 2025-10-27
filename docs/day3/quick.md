@@ -357,6 +357,9 @@ Outputsの `ApplicationUrl` をブラウザで開く。
     - Enter でファイル名確認
     - Ctrl + X で終了
 
+    **参考** nanoコマンドの使い方を動画でみる：
+    [![nanoコマンドの使い方を動画でみる](https://img.youtube.com/vi/4eHJ1JQBuxA/0.jpg)](https://www.youtube.com/watch?v=4eHJ1JQBuxA)
+
     **変更後の例(`.env`全文例):**
     ```txt:.env
     NODE_ENV=production
