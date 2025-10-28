@@ -56,6 +56,14 @@ Docker Compose:
 
 > **なぜ東京リージョン？**: CloudShellを起動したリージョンで、CDKがインフラを作成します。東京リージョンを選択することで、日本からのアクセスが高速になります。
 
+#### **最近、120日以内にCloudShellを利用された方**
+
+`ls`をして、もし前回のファイル等が残っていると、ディスク容量不足が発生する場合があるため、一度CloudShellを消して、立ち上げ直してください（下記図参照）。どうしてもCloudShellを消したくない事情がある場合は、[フルスペック版](./full.md)にて進めてください。  
+
+![](../day3/images/delete-cloudshell.png)
+
+![](../day3/images/open-ap-northeast-1-environment.png)
+
 ---
 
 ### 2. Node.js 22のセットアップ
