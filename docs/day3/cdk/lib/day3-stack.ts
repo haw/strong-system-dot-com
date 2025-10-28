@@ -155,7 +155,7 @@ export class Day3Stack extends cdk.Stack {
       'DB_NAME=employee_db',
       'LDAP_SERVER=127.0.0.1',
       'LDAP_PORT=389',
-      'AWS_REGION=ap-northeast-1',
+      `AWS_REGION=${this.region}`,
       `S3_BUCKET_NAME=${filesBucket.bucketName}`,
       'USE_AWS_S3=true',
       'EOF',
