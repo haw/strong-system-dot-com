@@ -110,6 +110,8 @@ npm install
 npx cdk bootstrap -c userName={あなたの名前} --verbose
 ```
 
+- 例: `npx cdk bootstrap -c userName=tanaka --verbose`
+- `userName`の値は半角英字のみを使用してください  
 - Day 2で既にbootstrap済みのため「bootstrapped (no changes).」と表示されます
 
 ---

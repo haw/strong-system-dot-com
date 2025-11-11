@@ -122,7 +122,7 @@ cd ../..
 cdk bootstrap -c userName=yamada --verbose
 ```
 
-> **重要**: `userName`は**半角英数字のみ**で指定してください。日本語や記号は使用できません。
+> **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。
 
 ---
 
@@ -133,7 +133,7 @@ cdk bootstrap -c userName=yamada --verbose
 cdk deploy -c userName=yamada --verbose
 ```
 
-> **重要**: `userName`は**半角英数字のみ**で指定してください。日本語や記号は使用できません。
+> **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。
 
 デプロイには約10-15分かかります。以下のリソースが作成されます：
 

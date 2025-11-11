@@ -143,6 +143,7 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
     ```
 
     > `userName`の値は重複しないように指定してください。例: `npx cdk bootstrap -c userName=tanaka --verbose`
+    > `userName`の値は半角英字のみを使用してください  
     > **注意**: 既にbootstrap済みの場合は「bootstrapped (no changes).」と表示されますが、問題ありません。
 
 
