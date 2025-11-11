@@ -277,6 +277,8 @@ cd strong-system-dot-com/docs/day4/cdk
 cdk destroy -c userName=yamada --verbose
 ```
 
+削除確認があるので、`y` + Enter でスタックの削除が開始される。  
+
 > **Note**: CloudFrontの削除には15-20分かかります。
 
 ---

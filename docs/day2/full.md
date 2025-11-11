@@ -184,7 +184,8 @@ cd ~/strong-system-dot-com/docs/day2/cdk
 npx cdk destroy -c userName={あなたの名前} --verbose
 ```
 
-※ `ec2-user`で実施してください。（`ec2-user`ではない場合は、`sudo su - ec2-user`）
+※ `ec2-user`で実施してください。（`ec2-user`ではない場合は、`sudo su - ec2-user`）  
+削除確認があるので、`y` + Enter でスタックの削除が開始される。  
 
 ### 3. CDK実行用EC2の削除
 

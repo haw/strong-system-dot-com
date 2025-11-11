@@ -280,6 +280,8 @@ cd ~/strong-system-dot-com/docs/day2/cdk
 npx cdk destroy -c userName={あなたの名前} --verbose
 ```
 
+削除確認があるので、`y` + Enter でスタックの削除が開始される。  
+
 ---
 
 ## まとめ

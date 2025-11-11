@@ -461,6 +461,8 @@ cd ~/strong-system-dot-com/docs/day3/cdk
 npx cdk destroy -c userName={あなたの名前} --verbose
 ```
 
+削除確認があるので、`y` + Enter でスタックの削除が開始される。  
+
 > **Note**: S3バケットは `cdk destroy` で自動的に削除されます（`autoDeleteObjects: true` 設定により、バケット内のオブジェクトも自動削除）。手動削除は不要です。
 
 ---
