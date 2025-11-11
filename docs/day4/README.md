@@ -58,6 +58,12 @@ Day 4では、完全サーバーレスアーキテクチャに移行します：
 3. **画面左下のCloudShellアイコン**（ターミナルのようなアイコン）をクリック
 4. CloudShellが起動するまで待つ（初回は1-2分）
 
+もし、`ls`をして前回の`strong-system-dot-com`ディレクトリが残っているようであれば、一度CloudShellを消して、立ち上げ直してください（下記図参照）。(ディスク容量不足が発生する場合があるため)  
+
+![](../day3/images/delete-cloudshell.png)
+
+![](../day3/images/open-ap-northeast-1-environment.png)
+
 > **なぜ東京リージョン？**: CloudShellを起動したリージョンで、CDKがインフラを作成します。東京リージョンを選択することで、日本からのアクセスが高速になります。
 
 ---
