@@ -1,0 +1,21 @@
+{
+  "name": "day5-cdk",
+  "version": "1.0.0",
+  "bin": {
+    "day5-cdk": "bin/day5-cdk.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.0.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.0.0",
+    "constructs": "^10.0.0"
+  }
+}
