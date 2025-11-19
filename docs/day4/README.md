@@ -83,16 +83,7 @@ node -v  # v22.x.x と表示されることを確認
 
 ---
 
-### 3. AWS CDK CLIのインストール
-
-```bash
-npm install -g aws-cdk
-cdk --version  # バージョンが表示されることを確認
-```
-
----
-
-### 4. リポジトリのクローン
+### 3. リポジトリのクローン
 
 ```bash
 git clone https://github.com/haw/strong-system-dot-com.git
@@ -101,7 +92,7 @@ cd strong-system-dot-com/docs/day4/cdk
 
 ---
 
-### 5. 依存関係のインストール
+### 4. 依存関係のインストール
 
 ```bash
 # CDKプロジェクトの依存関係
@@ -120,24 +111,24 @@ cd ../..
 
 ---
 
-### 6. CDKのブートストラップ（初回のみ）
+### 5. CDKのブートストラップ（初回のみ）
 
 > **Note**: 同じAWSアカウント・リージョンで初めてCDKを使う場合のみ実行してください。
 
 ```bash
 # あなたの名前を指定してブートストラップ（例: yamada）
-cdk bootstrap -c userName=yamada --verbose
+npx cdk bootstrap -c userName=yamada --verbose
 ```
 
 > **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。
 
 ---
 
-### 7. デプロイ
+### 6. デプロイ
 
 ```bash
 # あなたの名前を指定してデプロイ（例: yamada）
-cdk deploy -c userName=yamada --verbose
+npx cdk deploy -c userName=yamada --verbose
 ```
 
 > **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。
@@ -281,7 +272,7 @@ arn:aws:cloudformation:us-east-1:711951283832:stack/Day4Stack-yamauchi/d4491ea0-
 
 ```bash
 cd strong-system-dot-com/docs/day4/cdk
-cdk destroy -c userName=yamada --verbose
+npx cdk destroy -c userName=yamada --verbose
 ```
 
 削除確認があるので、`y` + Enter でスタックの削除が開始される。  
