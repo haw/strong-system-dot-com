@@ -268,7 +268,7 @@ npx cdk destroy -c userName=yamada --verbose
 
 削除確認があるので、 **`y` + Enter でスタックの削除** が開始される。  
 
-> **Note**: CloudFrontの削除には15-20分かかります。
+> **Note**: リソースの削除には5-15分かかります。
 
 ---
 
