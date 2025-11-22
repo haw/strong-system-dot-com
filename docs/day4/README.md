@@ -262,7 +262,7 @@ arn:aws:cloudformation:us-east-1:711951283832:stack/Day4Stack-yamauchi/d4491ea0-
 研修終了後、CloudShellで以下のコマンドでリソースを削除してください：
 
 ```bash
-cd /home/cloudshell-user/strong-system-dot-com/docs/day4/cdk
+cd ~/strong-system-dot-com/docs/day4/cdk
 npx cdk destroy -c userName=yamada --verbose
 ```
 
