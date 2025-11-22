@@ -94,19 +94,11 @@ cd strong-system-dot-com/docs/day4/cdk
 ### 4. 依存関係のインストール
 
 ```bash
-# CDKプロジェクトの依存関係
+# CDKプロジェクトの依存関係のみインストール
 npm install
-
-# API Lambda関数の依存関係
-cd lambda/api
-npm install
-cd ../..
-
-# Seed Lambda関数の依存関係
-cd lambda/seed
-npm install
-cd ../..
 ```
+
+> **Note**: Lambda関数（`lambda/api`、`lambda/seed`）での`npm install`は不要です。Node.js 22 Runtimeに必要なAWS SDK v3がすべて含まれています。
 
 ---
 
@@ -132,7 +124,7 @@ npx cdk deploy -c userName=yamada --verbose
 
 > **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。
 
-デプロイには約10-15分かかります。以下のリソースが作成されます：
+デプロイには約7-15分かかります。以下のリソースが作成されます：
 
 - Cognito User Pool（認証）
 - DynamoDB Tables（従業員・ファイルメタデータ）
