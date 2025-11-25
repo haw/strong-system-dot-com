@@ -217,6 +217,15 @@ arn:aws:cloudformation:us-east-1:711951283832:stack/Day4Stack-yamauchi/d4491ea0-
     - **ダウンロード**: 「ダウンロード」ボタン
     - **削除**: 「削除」ボタン
 
+### 6. 補足
+
+- アプリケーションのURLが、Day 3までは**HTTP**でしたが、**HTTPS**になっています
+  - CloudFrontが自動的にSSL/TLS証明書を提供
+  - セキュアな通信が標準で実現
+- ドメインはRoute 53を使って、カスタムドメインに変更することができます
+  - 例: `https://my-app.example.com`
+  - 例: `https://my-app.aws.autoracex.dev`
+
 ---
 
 ## Day 1-3との比較
