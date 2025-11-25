@@ -111,7 +111,9 @@ npm install
 npx cdk bootstrap -c userName=yamada --verbose
 ```
 
-> **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。
+> **重要**: `userName`は**半角英字のみ**で指定してください。日本語や記号は使用できません。  
+
+> 「'Do you wish to deploy these changes' (y/n) 」の確認には `y` を入力してエンター。  
 
 ---
 
