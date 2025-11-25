@@ -193,7 +193,7 @@ arn:aws:cloudformation:us-east-1:711951283832:stack/Day4Stack-yamauchi/d4491ea0-
 
 ### 3. ログイン
 
-1. アプリケーション画面に戻る
+1. アプリケーション画面に戻る (**CloudFrontUrl**)
 2. 登録したユーザー名とパスワードでログイン
 3. 従業員管理画面が表示されます
 
