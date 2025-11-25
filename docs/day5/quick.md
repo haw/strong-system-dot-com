@@ -18,7 +18,7 @@
 - IAMユーザーに以下の権限が付与されていること：
   - `PowerUserAccess`
   - `IAMFullAccess`
-- Amazon Builder IDアカウント（無料）
+- AWS Builder IDアカウント（無料）
   - 持っていない場合は事前に作成してください
   - https://docs.aws.amazon.com/ja_jp/signin/latest/userguide/sign-in-aws_builder_id.html
 
@@ -165,7 +165,7 @@ kiro-cli login --use-device-flow
 
 
 1. **「Use with Builder ID」** を選択（エンター）
-2. 認証用のURLが払い出されるため、コピーして別タブで開く（必要に応じて、Amazon Builder IDでサインインする）
+2. 認証用のURLが払い出されるため、コピーして別タブで開く（必要に応じて、AWS Builder IDでサインインする）
     ![](images/open-this-url.png)
 3. 画面の指示に従って、認証フローを実行する（「**確認して続行**」）
     ![](images/open-this-url2.png)
@@ -313,7 +313,7 @@ Kiro CLIで作成したS3バケットは手動で削除する必要がありま�
 
 ### Kiro CLIのログインができない
 
-- Amazon Builder IDのアカウントを確認
+- AWS Builder IDのアカウントを確認
 - デバイスコードの有効期限（15分）を確認
 - ブラウザのキャッシュをクリア
 
