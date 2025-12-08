@@ -24,7 +24,7 @@
 - クラウドネイティブへの振り切り
 - 運用コストと可用性の比較
 
-### [Day 5: Amazon Q Developer CLI](./day5/)
+### [Day 5: Kiro CLI（旧Amazon Q Developer CLI）](./day5/)
 - 生成AI入門
 - AI開発支援の体験
 

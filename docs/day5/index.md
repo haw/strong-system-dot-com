@@ -1,4 +1,4 @@
-# Day 5: Kiro CLI による Vibe Coding 体験
+# Day 5: Kiro CLI（旧Amazon Q Developer CLI） による Vibe Coding 体験
 
 ## 受講方法
 
