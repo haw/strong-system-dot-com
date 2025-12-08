@@ -119,6 +119,10 @@ npx cdk bootstrap -c userName={あなたの名前} --verbose
     - InstanceId
     - VpcId
 
+    ※ 以下のようなを出力を確認したら、CloudShellは一旦、閉じておいてよい（CloudShell内右上の☓）。
+
+    ![](images/cdk-deployed.png)
+
 5. EC2インスタンスのセットアップが完了するまで待つ（約3-5分）
     - EC2インスタンスの一覧で「ステータスチェック」が完了するのを待つ
 
@@ -128,7 +132,7 @@ npx cdk bootstrap -c userName={あなたの名前} --verbose
 
 1. AWSマネジメントコンソールでEC2サービスを開く
 
-2. インスタンス一覧から **`Day5Stack-{あなたの名前}-Instance`** を選択
+2. インスタンス一覧から **`kiro-cli-{あなたの名前}`** を選択
 
 3. **「接続」** ボタンをクリック
 
@@ -136,9 +140,9 @@ npx cdk bootstrap -c userName={あなたの名前} --verbose
 
 5. **「接続」** ボタンをクリック
 
-6. ブラウザ内でターミナルが開きます
+    ![](images/connect-using-sessions-manager.png)
 
-![](images/connect-using-sessions-manager.png)
+6. ブラウザ内でターミナルが開きます
 
 ---
 
