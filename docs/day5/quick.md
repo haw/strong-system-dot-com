@@ -264,6 +264,8 @@ Kiro CLIとの対話で以下のような改善を試してみましょう：
 ありがとうございます。いいサイトができました。もっとモダンで刺激的なサイトに作り変えてください。
 ```
 
+任意: ここまでできたら、サイトのURLとスクリーンショットをチャットに投稿してください。  
+
 #### 改善例
 
 ![](https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F131808%2Fa1a68e6a-eb3f-4786-a9c5-978bae3f752c.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=c899770f8c665defd92b05e2f61613a9)
