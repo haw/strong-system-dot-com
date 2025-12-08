@@ -117,7 +117,6 @@ npx cdk bootstrap -c userName={あなたの名前} --verbose
 
 4. デプロイ完了後、Outputsに表示される情報を確認：
     - InstanceId
-    - VpcId
 
     ※ 以下のようなを出力を確認したら、CloudShellは一旦、閉じておいてよい（CloudShell内右上の☓）。
 
