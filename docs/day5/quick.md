@@ -45,6 +45,13 @@ Amazon S3:
 
 ## 手順
 
+### 0. AWS Builder IDにログインする
+[https://profile.aws.amazon.com/](https://profile.aws.amazon.com/)
+
+- ※ IAMユーザーとは別のアカウント
+- AWS Builder IDを持っていない場合は、画面の指示に従って取得を進める
+- 「8.1 Kiro CLIにログイン」で必要になる
+
 ### 1. CloudShellを起動
 
 > **重要**: CloudShellを起動する前に、基本的に **東京リージョン（ap-northeast-1）** を選択してください。  
