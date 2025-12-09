@@ -194,6 +194,7 @@ kiro-cli login --use-device-flow
 ### 9. Vibe Coding: AIとの対話でウェブサイト構築
 
 #### 9.1 Kiro CLI Chatを起動
+**セッションマネージャーで操作。**
 
 ```bash
 kiro-cli chat
