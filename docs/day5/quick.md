@@ -200,6 +200,8 @@ kiro-cli login --use-device-flow
 kiro-cli chat
 ```
 
+![](images/kiro.png)
+
 #### 9.2 Tips
 
 - `/usage`コマンドで、Kiro CLIの残使用量を見ることができます。ハンズオンのプロンプト例(9.3)をモデルでデフォルトの`Auto (current)`で一回流して、`y`を複数回押したとして、だいたい1 credit未満です(無料プランでは、月50 creditsまで使えます。初回利用時にはボーナスクレジットをもらえる場合があります)
