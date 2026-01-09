@@ -148,12 +148,12 @@ sequenceDiagram
 - ステータスが `CREATE_COMPLETE` になるまで待機（5〜10分）
 - 「出力」タブで以下を確認:
   - **FunctionUrl**: API エンドポイント
-  - **CloudFrontUrl**: フロントエンドURL
+  - **WebsiteUrl**: フロントエンドURL
   - **WebsiteBucketName**: フロントエンドアップロード先
 
 ## 動作確認（API）
 
-CloudShellで以下を実行（URLは「出力」タブの FunctionUrl に置き換え）:
+CloudShellで以下を実行（URLは「出力」タブの FunctionUrl に置き換え、末尾に `/employees` を追加）:
 
 ```bash
 # 従業員一覧取得
@@ -192,7 +192,7 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 ### Step 3: フロントエンド動作確認
 
-1. 「出力」タブの **CloudFrontUrl** にアクセス
+1. 「出力」タブの **WebsiteUrl** にアクセス
 2. 従業員の追加・編集・削除ができることを確認
 3. ファイルのアップロード・ダウンロード・削除ができることを確認
 
