@@ -113,11 +113,6 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
    - api.zipがアップロードされていない
    - リージョンがus-east-1以外
 
-### CloudFrontでアクセスできない場合
-
-- CloudFrontの反映には数分かかることがあります
-- キャッシュが原因の場合は、ブラウザのキャッシュをクリアしてください
-
 ### CORSエラーが出る場合
 
 - app.jsのAPI_URLが正しいか確認
