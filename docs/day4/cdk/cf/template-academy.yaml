@@ -38,6 +38,21 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub 'day4-files-${AWS::AccountId}'
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+              - HEAD
+            AllowedHeaders:
+              - '*'
+            ExposedHeaders:
+              - ETag
+            MaxAge: 3000
 
   ApiFunction:
     Type: AWS::Lambda::Function
