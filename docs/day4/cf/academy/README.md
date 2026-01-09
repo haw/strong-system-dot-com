@@ -122,18 +122,18 @@ sequenceDiagram
 4. リージョン: us-east-1
 5. 他はデフォルトのまま「バケットを作成」
 
-### Step 2: [api.zip](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/api.zip)をアップロード
+### Step 2: [api.zip](https://github.com/haw/strong-system-dot-com/raw/main/docs/day4/cf/academy/api.zip)をアップロード
 
 1. 作成したバケットを開く
 2. 「アップロード」をクリック
-3. [api.zip](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/api.zip) をアップロード
+3. [api.zip](https://github.com/haw/strong-system-dot-com/raw/main/docs/day4/cf/academy/api.zip) をアップロード
 
 ### Step 3: CloudFormationスタック作成
 
 1. CloudFormationコンソールを開く
 2. 「スタックの作成」→「新しいリソースを使用（標準）」
 3. 「テンプレートファイルのアップロード」を選択
-4. [template.yaml](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/template.yaml) をアップロード
+4. [template.yaml](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/template.yaml) をアップロード
 5. 「次へ」
 
 ### Step 4: パラメータ入力
@@ -145,7 +145,7 @@ sequenceDiagram
 
 ### Step 5: デプロイ完了を待つ
 
-- ステータスが `CREATE_COMPLETE` になるまで待機（5〜10分）
+- ステータスが `CREATE_COMPLETE` になるまで待機（2〜3分）
 - 「出力」タブで以下を確認:
   - **FunctionUrl**: API エンドポイント
   - **WebsiteUrl**: フロントエンドURL
@@ -170,9 +170,15 @@ curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
 
 ## フロントエンドのデプロイ
 
-### Step 1: app.jsのAPI URL設定
+### Step 1: ファイルをダウンロード
 
-[frontend/app.js](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/frontend/app.js) の4行目を編集:
+以下のリンクから2つのファイルをダウンロード（リンクを右クリック →「名前を付けてリンク先を保存」）:
+- [index.html](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/frontend/index.html)
+- [app.js](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/frontend/app.js)
+
+### Step 2: app.jsのAPI URL設定
+
+ダウンロードした `app.js` の4行目を編集:
 
 ```javascript
 // 変更前
@@ -182,15 +188,15 @@ const API_URL = 'FUNCTION_URL_PLACEHOLDER';
 const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 ```
 
-### Step 2: フロントエンドをS3にアップロード
+### Step 3: フロントエンドをS3にアップロード
 
 1. S3コンソールで **WebsiteBucketName** のバケットを開く
 2. 「アップロード」をクリック
 3. 以下をアップロード:
-   - [index.html](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/frontend/index.html)
-   - `app.js`（Step 1で編集したもの）
+   - `index.html`（Step 1でダウンロードしたもの）
+   - `app.js`（Step 2で編集したもの）
 
-### Step 3: フロントエンド動作確認
+### Step 4: フロントエンド動作確認
 
 1. 「出力」タブの **WebsiteUrl** にアクセス
 2. 従業員の追加・編集・削除ができることを確認
@@ -198,8 +204,15 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 ## クリーンアップ
 
-1. CloudFormationコンソールでスタックを削除
-2. S3バケット（Lambda用）を空にして削除
+1. **S3バケットを空にする**（中身があるとスタック削除が失敗します）:
+   - S3コンソールで `day4-website-XXXX` バケットを開く → 全選択 →「削除」
+   - S3コンソールで `day4-files-XXXX` バケットを開く → 全選択 →「削除」
+
+2. **CloudFormationスタックを削除**:
+   - CloudFormationコンソールでスタックを選択 →「削除」
+
+3. **api.zipを置いたS3バケットを削除**（任意）:
+   - S3コンソールでバケットを空にして削除
 
 ## トラブルシューティング
 
