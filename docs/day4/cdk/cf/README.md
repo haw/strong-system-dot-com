@@ -54,14 +54,25 @@
 
 ## 動作確認
 
-### APIテスト（curl）
+### APIテスト（CloudShell）
+
+1. AWSコンソール右上の CloudShell アイコンをクリック
+2. 以下のコマンドを実行（URLは「出力」タブの ApiUrl に置き換え）
 
 ```bash
 # ユーザー登録
 curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signup \
   -H "Content-Type: application/json" \
   -d '{"username": "testuser", "password": "Password123", "name": "Test User"}'
+```
 
+3. Cognitoコンソールでユーザーを確認
+   - Cognito → ユーザープール → `day4-user-pool-test` → ユーザー
+   - `testuser` を選択 →「アクション」→「アカウントを確認」
+
+4. サインイン
+
+```bash
 # サインイン
 curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signin \
   -H "Content-Type: application/json" \
