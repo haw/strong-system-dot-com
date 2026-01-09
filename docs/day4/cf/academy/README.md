@@ -73,7 +73,7 @@ curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
 
 ### Step 1: app.jsのAPI URL設定
 
-[frontend/app.js](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/frontend/app.js) の1行目を編集:
+[frontend/app.js](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/frontend/app.js) の4行目を編集:
 
 ```javascript
 // 変更前

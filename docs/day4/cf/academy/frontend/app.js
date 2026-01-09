@@ -1,4 +1,6 @@
 // Configuration - Replace with your Lambda Function URL
+// 例: const API_URL = 'https://p55dobiu3bok77c6p222t6w22y0pvenb.lambda-url.us-east-1.on.aws';
+// ※ 末尾に / を入れないこと！ 入れると動きません
 const API_URL = 'FUNCTION_URL_PLACEHOLDER';
 
 let editingEmployeeId = null;
