@@ -82,28 +82,31 @@ curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signin
 ### Step 6: app.jsの作成
 
 1. [frontend/app.js.template](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cdk/frontend/app.js.template) をダウンロードして `app.js` を作成
-2. 以下の2箇所を置換（CloudFormationの「出力」タブの値を使用）:
+2. 以下の3箇所を置換（CloudFormationの「出力」タブの値を使用）:
 
 ```javascript
 // 変更前
 const API_URL = 'API_GATEWAY_URL_PLACEHOLDER';
 const USER_POOL_ID = 'USER_POOL_ID_PLACEHOLDER';
+const CLIENT_ID = 'CLIENT_ID_PLACEHOLDER';
 
 // 変更後（例）
 const API_URL = 'https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod';
 const USER_POOL_ID = 'us-east-1_XXXXXXXXX';
+const CLIENT_ID = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
 ```
 
 ※ API_URLの末尾に `/` は付けない
+※ CLIENT_ID は「出力」タブの UserPoolClientId の値
 
 ### Step 7: フロントエンドをS3にアップロード
 
 1. CloudFormationの「出力」タブで **WebsiteBucketName** を確認
    - ※出力にない場合は「リソース」タブで `WebsiteBucket` を探す
 2. S3コンソールでそのバケットを開く
-3. 以下のファイルをアップロード:
-   - `frontend/index.html`
-   - `frontend/app.js`（Step 6で作成したもの）
+3. 以下のファイルをバケット直下にアップロード:
+   - `index.html`（[ダウンロード](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cdk/frontend/index.html)）
+   - `app.js`（Step 6で作成したもの）
 
 ### Step 8: CloudFrontでアクセス
 
