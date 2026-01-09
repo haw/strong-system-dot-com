@@ -4,11 +4,11 @@
 
 サーバーレスアーキテクチャ（Lambda Function URL + DynamoDB + S3 + CloudFront）をCloudFormationでデプロイします。
 
-※ AWS Academy Sandboxの制限により、API Gateway/Cognitoは使用しません。Lambda Function URLで代替します。
+※ AWS Academy Learner Labの制限により、API Gateway/Cognitoは使用しません。Lambda Function URLで代替します。
 
 ## 事前準備
 
-1. AWS Academy Sandboxにログイン
+1. AWS Academy Learner Labを起動
 2. リージョンが **us-east-1（バージニア北部）** であることを確認
 3. LabRoleのARNを確認: IAMコンソール → ロール → `LabRole` → ARNをコピー
    - 形式: `arn:aws:iam::XXXXXXXXXXXX:role/LabRole`
