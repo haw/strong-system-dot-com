@@ -81,7 +81,7 @@ curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signin
 
 ### Step 6: app.jsの作成
 
-1. `frontend/app.js.template` をコピーして `app.js` を作成
+1. [frontend/app.js.template](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cdk/frontend/app.js.template) をダウンロードして `app.js` を作成
 2. 以下の2箇所を置換（CloudFormationの「出力」タブの値を使用）:
 
 ```javascript
