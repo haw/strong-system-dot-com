@@ -412,7 +412,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -431,7 +433,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/POST/auth/signup
     Metadata:
@@ -508,7 +512,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -527,7 +533,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/POST/auth/signin
     Metadata:
@@ -606,7 +614,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -625,7 +635,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/GET/employees
     Metadata:
@@ -666,7 +678,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -685,7 +699,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/POST/employees
     Metadata:
@@ -764,7 +780,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -783,7 +801,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/GET/employees/*
     Metadata:
@@ -824,7 +844,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -843,7 +865,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/PUT/employees/*
     Metadata:
@@ -884,7 +908,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -903,7 +929,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/DELETE/employees/*
     Metadata:
@@ -984,7 +1012,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -1003,7 +1033,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/GET/files
     Metadata:
@@ -1044,7 +1076,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -1063,7 +1097,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/POST/files
     Metadata:
@@ -1142,7 +1178,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -1161,7 +1199,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/POST/files/upload-url
     Metadata:
@@ -1240,7 +1280,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -1259,7 +1301,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/DELETE/files/*
     Metadata:
@@ -1338,7 +1382,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /
           - Ref: ApiDeploymentStageprod3EB9684E
@@ -1357,7 +1403,9 @@ Resources:
       SourceArn:
         Fn::Join:
         - ''
-        - - 'arn:aws:execute-api:us-east-1:108592891928:'
+        - - 'arn:aws:execute-api:us-east-1:'
+          - Ref: AWS::AccountId
+          - ':'
           - Ref: ApiF70053CD
           - /test-invoke-stage/GET/files/*/download-url
     Metadata:

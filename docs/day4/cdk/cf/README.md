@@ -38,8 +38,10 @@
 
 - スタック名: `day4-stack`
 - LambdaCodeBucket: Step 1で作成したバケット名（例: `day4-lambda-20260109-taro`）
-
-「次へ」→「次へ」→「送信」
+- 「次へ」
+- 「AWS CloudFormation によって IAM リソースが作成される場合があることを承認します。」にチェック
+- 「次へ」
+- 「送信」
 
 ### Step 5: デプロイ完了を待つ
 
@@ -58,7 +60,7 @@
 # ユーザー登録
 curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signup \
   -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "password": "Password123"}'
+  -d '{"username": "testuser", "password": "Password123", "name": "Test User"}'
 
 # サインイン
 curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signin \
