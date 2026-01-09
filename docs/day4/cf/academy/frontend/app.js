@@ -6,6 +6,15 @@ const API_URL = 'FUNCTION_URL_PLACEHOLDER';
 let editingEmployeeId = null;
 let currentView = 'employees';
 
+// Loading Overlay
+function showLoading(text = '処理中...') {
+    document.getElementById('loadingText').textContent = text;
+    document.getElementById('loadingOverlay').style.display = 'flex';
+}
+function hideLoading() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadEmployees();
@@ -93,6 +102,7 @@ async function saveEmployee() {
         alert('すべての項目を入力してください');
         return;
     }
+    showLoading(editingEmployeeId ? '更新中...' : '登録中...');
     try {
         const url = editingEmployeeId ? `${API_URL}/employees/${editingEmployeeId}` : `${API_URL}/employees`;
         const method = editingEmployeeId ? 'PUT' : 'POST';
@@ -107,11 +117,14 @@ async function saveEmployee() {
         loadEmployees();
     } catch (error) {
         alert(error.message);
+    } finally {
+        hideLoading();
     }
 }
 
 async function deleteEmployee(id) {
     if (!confirm('この従業員を削除してもよろしいですか？')) return;
+    showLoading('削除中...');
     try {
         const response = await fetch(`${API_URL}/employees/${id}`, { method: 'DELETE' });
         const data = await response.json();
@@ -119,6 +132,8 @@ async function deleteEmployee(id) {
         loadEmployees();
     } catch (error) {
         alert(error.message);
+    } finally {
+        hideLoading();
     }
 }
 
@@ -194,10 +209,9 @@ async function uploadFile() {
     const file = fileInput.files[0];
     if (!file) { alert('ファイルを選択してください'); return; }
 
+    showLoading('アップロード中...');
     const uploadBtn = document.getElementById('uploadBtn');
-    const uploadStatus = document.getElementById('uploadStatus');
     uploadBtn.disabled = true;
-    uploadStatus.style.display = 'flex';
 
     try {
         // Get presigned URL
@@ -233,7 +247,7 @@ async function uploadFile() {
         alert(error.message);
     } finally {
         uploadBtn.disabled = false;
-        uploadStatus.style.display = 'none';
+        hideLoading();
     }
 }
 
@@ -255,6 +269,7 @@ async function downloadFile(fileId, fileName) {
 
 async function deleteFile(fileId) {
     if (!confirm('このファイルを削除してもよろしいですか？')) return;
+    showLoading('削除中...');
     try {
         const response = await fetch(`${API_URL}/files/${fileId}`, { method: 'DELETE' });
         const data = await response.json();
@@ -263,6 +278,8 @@ async function deleteFile(fileId) {
         loadFiles();
     } catch (error) {
         alert(error.message);
+    } finally {
+        hideLoading();
     }
 }
 
