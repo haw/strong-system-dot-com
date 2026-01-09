@@ -113,3 +113,4 @@ node_modules
 cdk.out
 
 *.sql
+!docs/day4/cdk/frontend-academy/app.js
