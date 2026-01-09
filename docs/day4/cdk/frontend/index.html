@@ -256,6 +256,85 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Loading Overlay - 小宇宙（コスモ）版 */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0015 50%, #000 100%);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            overflow: hidden;
+        }
+        .loading-overlay::before {
+            content: '';
+            position: absolute;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+                radial-gradient(2px 2px at 40% 70%, #ffd700, transparent),
+                radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+                radial-gradient(2px 2px at 60% 20%, #87ceeb, transparent),
+                radial-gradient(1px 1px at 70% 60%, #fff, transparent),
+                radial-gradient(2px 2px at 80% 40%, #ffd700, transparent),
+                radial-gradient(1px 1px at 90% 80%, #fff, transparent),
+                radial-gradient(1px 1px at 10% 90%, #87ceeb, transparent),
+                radial-gradient(2px 2px at 30% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 85% 15%, #ffd700, transparent);
+            background-size: 250px 250px;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-10px); }
+        }
+        .loading-box {
+            position: relative;
+            padding: 60px 80px;
+            text-align: center;
+        }
+        .loading-spinner {
+            width: 120px; height: 120px;
+            margin: 0 auto 30px;
+            position: relative;
+            animation: cosmo-burn 2s ease-in-out infinite;
+        }
+        @keyframes cosmo-burn {
+            0%, 100% { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff6b00); }
+            50% { filter: drop-shadow(0 0 40px #ffd700) drop-shadow(0 0 80px #ff6b00) drop-shadow(0 0 120px #ff0000); }
+        }
+        .loading-spinner::before {
+            content: '☆';
+            font-size: 80px;
+            color: #ffd700;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation: star-pulse 1s ease-in-out infinite;
+        }
+        @keyframes star-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            50% { transform: translate(-50%, -50%) scale(1.2) rotate(180deg); }
+        }
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: -20px; left: -20px;
+            right: -20px; bottom: -20px;
+            border: 3px solid transparent;
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+        .loading-text {
+            color: #ffd700;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6b00, 0 0 30px #ff0000;
+            letter-spacing: 4px;
+        }
     </style>
 </head>
 <body>
@@ -408,6 +487,14 @@
             </div>
             <button onclick="saveEmployee()">保存</button>
             <button onclick="closeModal()" style="background: #6c757d; margin-top: 10px;">キャンセル</button>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-box">
+            <div class="loading-spinner"></div>
+            <div id="loadingText" class="loading-text">処理中...</div>
         </div>
     </div>
     
