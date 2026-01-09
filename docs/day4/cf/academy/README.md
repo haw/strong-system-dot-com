@@ -4,6 +4,15 @@
 
 サーバーレスアーキテクチャ（Lambda Function URL + DynamoDB + S3）をCloudFormationでデプロイします。
 
+---
+
+![](../../images/employees.png)
+
+---
+![](../../images/files.png)
+
+---
+
 ## 使用するAWSサービス
 
 ### AWS Lambda
