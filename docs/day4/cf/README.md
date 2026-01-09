@@ -6,7 +6,7 @@
 
 ## 事前準備
 
-1. AWS Academy Sandboxにログイン
+1. AWSアカウントにログイン（通常のAWSアカウントが必要です）
 2. リージョンが **us-east-1（バージニア北部）** であることを確認
 
 ## 手順
@@ -20,18 +20,18 @@
 4. リージョン: us-east-1
 5. 他はデフォルトのまま「バケットを作成」
 
-### Step 2: api.zipをアップロード
+### Step 2: [api.zip](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/api.zip)をアップロード
 
 1. 作成したバケットを開く
 2. 「アップロード」をクリック
-3. `api.zip` をアップロード
+3. [api.zip](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/api.zip) をアップロード
 
 ### Step 3: CloudFormationスタック作成
 
 1. CloudFormationコンソールを開く
 2. 「スタックの作成」→「新しいリソースを使用（標準）」
 3. 「テンプレートファイルのアップロード」を選択
-4. `template.yaml` をアップロード
+4. [template.yaml](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/template.yaml) をアップロード
 5. 「次へ」
 
 ### Step 4: パラメータ入力
