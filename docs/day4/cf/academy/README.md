@@ -23,18 +23,18 @@
 4. リージョン: us-east-1
 5. 他はデフォルトのまま「バケットを作成」
 
-### Step 2: api-academy.zipをアップロード
+### Step 2: api.zipをアップロード
 
 1. 作成したバケットを開く
 2. 「アップロード」をクリック
-3. `api-academy.zip` をアップロード
+3. `api.zip` をアップロード
 
 ### Step 3: CloudFormationスタック作成
 
 1. CloudFormationコンソールを開く
 2. 「スタックの作成」→「新しいリソースを使用（標準）」
 3. 「テンプレートファイルのアップロード」を選択
-4. `template-academy.yaml` をアップロード
+4. `template.yaml` をアップロード
 5. 「次へ」
 
 ### Step 4: パラメータ入力
@@ -73,7 +73,7 @@ curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
 
 ### Step 1: app.jsのAPI URL設定
 
-`frontend-academy/app.js` の1行目を編集:
+`frontend/app.js` の1行目を編集:
 
 ```javascript
 // 変更前
@@ -87,7 +87,7 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 1. S3コンソールで **WebsiteBucketName** のバケットを開く
 2. 「アップロード」をクリック
-3. `frontend-academy/` フォルダ内の以下をアップロード:
+3. `frontend/` フォルダ内の以下をアップロード:
    - `index.html`
    - `app.js`
 
@@ -110,7 +110,7 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 2. よくある原因:
    - LabRoleArnが間違っている
    - S3バケット名が間違っている
-   - api-academy.zipがアップロードされていない
+   - api.zipがアップロードされていない
    - リージョンがus-east-1以外
 
 ### CloudFrontでアクセスできない場合

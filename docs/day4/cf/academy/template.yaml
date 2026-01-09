@@ -7,7 +7,7 @@ Parameters:
     Description: ARN of the LabRole
   LambdaCodeBucket:
     Type: String
-    Description: S3 bucket containing api-academy.zip
+    Description: S3 bucket containing api.zip
 
 Resources:
   EmployeeTable:
@@ -65,7 +65,7 @@ Resources:
       Role: !Ref LabRoleArn
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: api-academy.zip
+        S3Key: api.zip
       Environment:
         Variables:
           EMPLOYEE_TABLE_NAME: !Ref EmployeeTable
