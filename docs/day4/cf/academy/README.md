@@ -13,6 +13,8 @@
 3. LabRoleのARNを確認: IAMコンソール → ロール → `LabRole` → ARNをコピー
    - 形式: `arn:aws:iam::XXXXXXXXXXXX:role/LabRole`
 
+![](../../images/iam-role-LabRole.png)
+
 ## 手順
 
 ### Step 1: S3バケット作成（Lambda用）
