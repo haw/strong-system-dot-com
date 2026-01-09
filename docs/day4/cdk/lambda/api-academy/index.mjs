@@ -12,17 +12,10 @@ const EMPLOYEE_TABLE_NAME = process.env.EMPLOYEE_TABLE_NAME;
 const FILES_TABLE_NAME = process.env.FILES_TABLE_NAME;
 const FILES_BUCKET_NAME = process.env.FILES_BUCKET_NAME;
 
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
-  'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-};
-
-// Response helper
+// Response helper (CORS is handled by Function URL configuration)
 const response = (statusCode, body) => ({
   statusCode,
-  headers: corsHeaders,
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(body),
 });
 
