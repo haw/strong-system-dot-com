@@ -2,9 +2,31 @@
 
 ## 概要
 
-サーバーレスアーキテクチャ（Lambda Function URL + DynamoDB + S3 + CloudFront）をCloudFormationでデプロイします。
+サーバーレスアーキテクチャ（Lambda Function URL + DynamoDB + S3）をCloudFormationでデプロイします。
 
-※ AWS Academy Learner Labの制限により、API Gateway/Cognitoは使用しません。Lambda Function URLで代替します。
+## 使用するAWSサービス
+
+### AWS Lambda
+- サーバーレスの中核サービス
+- サーバー管理不要、コードをアップロードするだけ
+- 標準ランタイム: Node.js, Python, Java, Go, .NET など
+- 実行した分だけ課金（リクエスト数 + 実行時間）
+- 今回は Function URL でHTTPエンドポイントを公開
+
+### Amazon DynamoDB
+- フルマネージドNoSQLデータベース
+- Key-Valueストア + ドキュメントDB
+- 水平方向にスケール（データ量・リクエスト数に応じて自動拡張）
+- ミリ秒単位のレイテンシ
+- 今回は従業員データとファイルメタデータを保存
+
+### Amazon S3
+- オブジェクトストレージ
+- 99.999999999%（イレブンナイン）の耐久性
+- 通常はプライベート（公開しない）
+- 今回の用途:
+  - **FilesBucket**: アップロードファイル保存（非公開、署名付きURLでアクセス）
+  - **WebsiteBucket**: 静的ウェブサイトホスティング（フロントエンド公開用）
 
 ## 事前準備
 
@@ -14,6 +36,69 @@
    - 形式: `arn:aws:iam::XXXXXXXXXXXX:role/LabRole`
 
 ![](../../images/iam-role-LabRole.png)
+
+## 構成図
+
+```mermaid
+graph LR
+    subgraph Client
+        Browser[ブラウザ]
+    end
+    subgraph AWS
+        S3Web[S3<br/>静的ウェブサイト<br/>index.html / app.js]
+        Lambda[Lambda<br/>Function URL]
+        DynamoDB[(DynamoDB)]
+        S3Files[S3<br/>ファイル保存]
+    end
+    Browser --> S3Web
+    Browser --> Lambda
+    Lambda --> DynamoDB
+    Lambda --> S3Files
+```
+
+## シーケンス図
+
+### 従業員一覧取得（GET /employees）
+
+```mermaid
+sequenceDiagram
+    participant B as ブラウザ
+    participant L as Lambda
+    participant D as DynamoDB
+    B->>L: GET /employees
+    L->>D: Scan
+    D-->>L: 従業員リスト
+    L-->>B: JSON
+```
+
+### 従業員登録（POST /employees）
+
+```mermaid
+sequenceDiagram
+    participant B as ブラウザ
+    participant L as Lambda
+    participant D as DynamoDB
+    B->>L: POST /employees
+    L->>D: PutItem
+    D-->>L: OK
+    L-->>B: 登録完了
+```
+
+### ファイルアップロード
+
+```mermaid
+sequenceDiagram
+    participant B as ブラウザ
+    participant L as Lambda
+    participant D as DynamoDB
+    participant S as S3
+    B->>L: POST /files（メタデータ）
+    L->>D: PutItem
+    L->>S: 署名付きURL生成
+    L-->>B: 署名付きURL
+    B->>S: PUT（ファイル本体）
+    S-->>B: OK
+```
 
 ## 手順
 
