@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>従業員管理システム - Day 4 Serverless (Academy版)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 14px; }
+        .content { padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input:focus { outline: none; border-color: #667eea; }
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover { transform: translateY(-2px); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        .actions button { padding: 6px 12px; margin-right: 8px; font-size: 14px; }
+        .btn-edit { background: #28a745; }
+        .btn-delete { background: #dc3545; }
+        .btn-add { margin-bottom: 20px; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .modal-header { margin-bottom: 20px; }
+        .modal-header h2 { color: #333; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .view-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+        }
+        .tab-btn.active { color: #667eea; border-bottom-color: #667eea; font-weight: 600; }
+        .file-upload-section { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .upload-status { display: none; align-items: center; gap: 8px; color: #667eea; }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px; height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 従業員管理システム</h1>
+            <p>Day 4: Serverless Architecture - AWS Academy版 (CloudFront + Lambda Function URL + DynamoDB)</p>
+        </div>
+        
+        <div class="content">
+            <div class="view-tabs">
+                <button id="btnEmployees" class="tab-btn active" onclick="switchView('employees')">👥 従業員管理</button>
+                <button id="btnFiles" class="tab-btn" onclick="switchView('files')">📁 ファイル共有</button>
+            </div>
+            
+            <!-- Employee View -->
+            <div id="employeeView">
+                <button class="btn-add" onclick="showAddModal()">➕ 従業員を追加</button>
+                <div id="loadingMessage" class="loading" style="display: none;">読み込み中...</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>名前</th>
+                            <th>メールアドレス</th>
+                            <th>部署</th>
+                            <th>役職</th>
+                            <th>入社日</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody"></tbody>
+                </table>
+            </div>
+            
+            <!-- File View -->
+            <div id="fileView" style="display: none;">
+                <div class="file-upload-section">
+                    <input type="file" id="fileInput" style="display: none;" onchange="updateFileSelection()">
+                    <button onclick="document.getElementById('fileInput').click()">📤 ファイルを選択</button>
+                    <span id="selectedFileName"></span>
+                    <button id="uploadBtn" onclick="uploadFile()">⬆️ アップロード</button>
+                    <div id="uploadStatus" class="upload-status">
+                        <div class="spinner"></div>
+                        <span>アップロード中...</span>
+                    </div>
+                </div>
+                <div id="fileLoadingMessage" class="loading" style="display: none;">読み込み中...</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ファイル名</th>
+                            <th>タイプ</th>
+                            <th>サイズ</th>
+                            <th>アップロード日時</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fileTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Employee Modal -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">従業員を追加</h2>
+            </div>
+            <div class="form-group">
+                <label>名前</label>
+                <input type="text" id="employeeName">
+            </div>
+            <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" id="employeeEmail">
+            </div>
+            <div class="form-group">
+                <label>部署</label>
+                <input type="text" id="employeeDepartment">
+            </div>
+            <div class="form-group">
+                <label>役職</label>
+                <input type="text" id="employeePosition">
+            </div>
+            <div class="form-group">
+                <label>入社日</label>
+                <input type="date" id="employeeHireDate">
+            </div>
+            <button onclick="saveEmployee()">保存</button>
+            <button onclick="closeModal()" style="background: #6c757d; margin-top: 10px;">キャンセル</button>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

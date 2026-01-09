@@ -2,7 +2,9 @@
 
 ## 概要
 
-サーバーレスアーキテクチャ（Cognito + API Gateway + Lambda + DynamoDB + S3 + CloudFront）をCloudFormationでデプロイします。
+サーバーレスアーキテクチャ（Lambda Function URL + DynamoDB + S3 + CloudFront）をCloudFormationでデプロイします。
+
+※ AWS Academy Sandboxの制限により、API Gateway/Cognitoは使用しません。Lambda Function URLで代替します。
 
 ## 事前準備
 
@@ -18,15 +20,14 @@
 1. S3コンソールを開く
 2. 「バケットを作成」をクリック
 3. バケット名: `day4-lambda-YYYYMMDD-yourname`（例: `day4-lambda-20260109-taro`）
-   - ※バケット名は世界で一意。日付+名前で衝突回避
 4. リージョン: us-east-1
 5. 他はデフォルトのまま「バケットを作成」
 
-### Step 2: api.zipをアップロード
+### Step 2: api-academy.zipをアップロード
 
 1. 作成したバケットを開く
 2. 「アップロード」をクリック
-3. `api.zip` をアップロード
+3. `api-academy.zip` をアップロード
 
 ### Step 3: CloudFormationスタック作成
 
@@ -40,82 +41,61 @@
 
 - スタック名: `day4-stack`
 - LabRoleArn: 事前準備でコピーしたLabRoleのARN
-- LambdaCodeBucket: Step 1で作成したバケット名（例: `day4-lambda-20260109-taro`）
-- 「次へ」
-- 「AWS CloudFormation によって IAM リソースが作成される場合があることを承認します。」にチェック
-- 「次へ」
-- 「送信」
+- LambdaCodeBucket: Step 1で作成したバケット名
+- 「次へ」→「次へ」→「送信」
 
 ### Step 5: デプロイ完了を待つ
 
 - ステータスが `CREATE_COMPLETE` になるまで待機（5〜10分）
 - 「出力」タブで以下を確認:
-  - **ApiUrl**: API GatewayのURL
-  - **UserPoolId**: Cognito User Pool ID
-  - **UserPoolClientId**: Cognito Client ID
+  - **FunctionUrl**: API エンドポイント
   - **CloudFrontUrl**: フロントエンドURL
+  - **WebsiteBucketName**: フロントエンドアップロード先
 
-## 動作確認
+## 動作確認（API）
 
-### APIテスト（CloudShell）
-
-1. AWSコンソール右上の CloudShell アイコンをクリック
-2. 以下のコマンドを実行（URLは「出力」タブの ApiUrl に置き換え）
+CloudShellで以下を実行（URLは「出力」タブの FunctionUrl に置き換え）:
 
 ```bash
-# ユーザー登録
-curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signup \
+# 従業員一覧取得
+curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
+
+# 従業員登録
+curl -X POST https://xxxxxx.lambda-url.us-east-1.on.aws/employees \
   -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "password": "Password123", "name": "Test User"}'
+  -d '{"name": "山田太郎", "email": "yamada@example.com", "department": "開発部", "position": "エンジニア"}'
+
+# 従業員一覧取得（登録確認）
+curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
 ```
 
-3. Cognitoコンソールでユーザーを確認
-   - Cognito → ユーザープール → `day4-user-pool-test` → ユーザー
-   - `testuser` を選択 →「アクション」→「アカウントを確認」
+## フロントエンドのデプロイ
 
-4. サインイン
+### Step 1: app.jsのAPI URL設定
 
-```bash
-# サインイン
-curl -X POST https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod/auth/signin \
-  -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "password": "Password123"}'
-```
-
-### Step 6: app.jsの作成
-
-1. [frontend/app.js.template](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cdk/frontend/app.js.template) をダウンロードして `app.js` を作成
-2. 以下の3箇所を置換（CloudFormationの「出力」タブの値を使用）:
+`frontend-academy/app.js` の1行目を編集:
 
 ```javascript
 // 変更前
-const API_URL = 'API_GATEWAY_URL_PLACEHOLDER';
-const USER_POOL_ID = 'USER_POOL_ID_PLACEHOLDER';
-const CLIENT_ID = 'CLIENT_ID_PLACEHOLDER';
+const API_URL = 'FUNCTION_URL_PLACEHOLDER';
 
-// 変更後（例）
-const API_URL = 'https://xxxxxx.execute-api.us-east-1.amazonaws.com/prod';
-const USER_POOL_ID = 'us-east-1_XXXXXXXXX';
-const CLIENT_ID = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
+// 変更後（出力タブのFunctionUrlに置き換え、末尾のスラッシュは削除）
+const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 ```
 
-※ API_URLの末尾に `/` は付けない
-※ CLIENT_ID は「出力」タブの UserPoolClientId の値
+### Step 2: フロントエンドをS3にアップロード
 
-### Step 7: フロントエンドをS3にアップロード
+1. S3コンソールで **WebsiteBucketName** のバケットを開く
+2. 「アップロード」をクリック
+3. `frontend-academy/` フォルダ内の以下をアップロード:
+   - `index.html`
+   - `app.js`
 
-1. CloudFormationの「出力」タブで **WebsiteBucketName** を確認
-   - ※出力にない場合は「リソース」タブで `WebsiteBucket` を探す
-2. S3コンソールでそのバケットを開く
-3. 以下のファイルをバケット直下にアップロード:
-   - `index.html`（[ダウンロード](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cdk/frontend/index.html)）
-   - `app.js`（Step 6で作成したもの）
+### Step 3: フロントエンド動作確認
 
-### Step 8: CloudFrontでアクセス
-
-1. CloudFormationの「出力」タブで **CloudFrontUrl** を確認
-2. ブラウザでアクセス
-3. ユーザー登録 → サインイン → 従業員管理を試す
+1. 「出力」タブの **CloudFrontUrl** にアクセス
+2. 従業員の追加・編集・削除ができることを確認
+3. ファイルのアップロード・ダウンロード・削除ができることを確認
 
 ## クリーンアップ
 
@@ -128,6 +108,17 @@ const CLIENT_ID = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
 
 1. 「イベント」タブでエラー内容を確認
 2. よくある原因:
+   - LabRoleArnが間違っている
    - S3バケット名が間違っている
-   - api.zipがアップロードされていない
+   - api-academy.zipがアップロードされていない
    - リージョンがus-east-1以外
+
+### CloudFrontでアクセスできない場合
+
+- CloudFrontの反映には数分かかることがあります
+- キャッシュが原因の場合は、ブラウザのキャッシュをクリアしてください
+
+### CORSエラーが出る場合
+
+- app.jsのAPI_URLが正しいか確認
+- 末尾にスラッシュがないか確認（`https://xxx.on.aws` が正しい、`https://xxx.on.aws/` は間違い）
