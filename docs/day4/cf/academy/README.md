@@ -73,7 +73,7 @@ curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
 
 ### Step 1: app.jsのAPI URL設定
 
-`frontend/app.js` の1行目を編集:
+[frontend/app.js](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/frontend/app.js) の1行目を編集:
 
 ```javascript
 // 変更前
@@ -87,9 +87,9 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 1. S3コンソールで **WebsiteBucketName** のバケットを開く
 2. 「アップロード」をクリック
-3. `frontend/` フォルダ内の以下をアップロード:
-   - `index.html`
-   - `app.js`
+3. 以下をアップロード:
+   - [index.html](https://github.com/haw/strong-system-dot-com/blob/main/docs/day4/cf/academy/frontend/index.html)
+   - `app.js`（Step 1で編集したもの）
 
 ### Step 3: フロントエンド動作確認
 
