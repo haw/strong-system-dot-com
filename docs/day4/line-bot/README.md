@@ -110,7 +110,7 @@ LINE Developers で Messaging API チャネルを作成し、以下の2つを取
 
 ### Step 3: コードを貼り付け
 
-「コード」タブで `lambda_function.py` を以下に置き換え:
+「コード」タブで `lambda_function.py` を以下に置き換え（あらかじめ書いてあるコードを全部上書きしてよい）:
 
 ```python
 import json
@@ -171,12 +171,16 @@ def reply(token, text):
 
 「関数 URL」をコピーする。
 
+---
+
 もし、「[Step 1: Lambda関数を作成](#step-1-lambda関数を作成)」で設定をしていない場合は、下記の手順で有効化して、「関数 URL」をコピーする。
 
 1. 「設定」タブ →「関数 URL」→「関数 URLを作成」
 2. 認証タイプ: `NONE`（LINEからのWebhookを受けるため）
 3. 「保存」
 4. 表示された「関数 URL」をコピー
+
+---
 
 ## LINE Webhook設定
 
@@ -218,3 +222,10 @@ def reply(token, text):
 ## クリーンアップ
 
 1. Lambdaコンソールで `line-echo-bot` 関数を削除
+
+---
+
+## 講師向けメモ
+
+- AWS Academy Learner Lab で動作確認済（2026-01-15）
+- AWS Cloud Foundations サンドボックスで動作確認済（2026-01-15）
