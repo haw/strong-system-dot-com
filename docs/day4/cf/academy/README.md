@@ -21,6 +21,7 @@
 - 標準ランタイム: Node.js, Python, Java, Go, .NET など
 - 実行した分だけ課金（リクエスト数 + 実行時間）
 - 今回は Function URL でHTTPエンドポイントを公開
+- **実行ロール**: Lambda が他の AWS サービスにアクセスするための IAM ロール。今回は Lambda 実行、CloudWatch Logs への書き込み、DynamoDB へのアクセス、S3 へのアクセス権限が必要。AWS Academy が事前に用意している `LabRole` を使用
 
 ### Amazon DynamoDB
 - フルマネージドNoSQLデータベース
@@ -116,10 +117,6 @@ sequenceDiagram
 
 1. AWS Academy Learner Labを起動(Start Lab)し、「AWS🟢」ボタンでAWSコンソールを立ち上げる
 2. リージョンが **us-east-1（バージニア北部）** であることを確認
-3. LabRoleのARNを確認: IAMコンソール → ロール → `LabRole` → ARNをコピー
-   - 形式: `arn:aws:iam::XXXXXXXXXXXX:role/LabRole`
-
-![](../../images/iam-role-LabRole.png)
 
 ### Step 1: S3バケット作成（Lambda用）
 
@@ -146,7 +143,6 @@ sequenceDiagram
 ### Step 4: パラメータ入力
 
 - スタック名: `day4-stack`
-- LabRoleArn: 事前準備でコピーしたLabRoleのARN
 - LambdaCodeBucket: Step 1で作成したバケット名
 - 「次へ」→「次へ」→「送信」
 
@@ -215,7 +211,6 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 1. 「イベント」タブでエラー内容を確認
 2. よくある原因:
-   - LabRoleArnが間違っている
    - S3バケット名が間違っている
    - api.zipがアップロードされていない
    - リージョンがus-east-1以外
