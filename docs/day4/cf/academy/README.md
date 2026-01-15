@@ -305,7 +305,7 @@ graph LR
     end
     subgraph AWS
         CloudFront[CloudFront]
-        S3Web[S3<br/>静的ファイル]
+        S3Web[S3<br/>静的ファイル<br/>index.html / app.js]
         APIGateway[API Gateway]
         Lambda[Lambda]
         DynamoDB[(DynamoDB)]
@@ -317,6 +317,9 @@ graph LR
     APIGateway --> Lambda
     Lambda --> DynamoDB
     Lambda --> S3Files
+    
+    style CloudFront fill:#ff9900,stroke:#ff6600,stroke-width:3px,color:#000
+    style APIGateway fill:#ff9900,stroke:#ff6600,stroke-width:3px,color:#000
 ```
 
 #### 参考： ハンズオンの構成図
