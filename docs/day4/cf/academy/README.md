@@ -40,6 +40,13 @@
   - **FilesBucket**: アップロードファイル保存（非公開、署名付きURLでアクセス）
   - **WebsiteBucket**: 静的ウェブサイトホスティング（フロントエンド公開用）
 
+### AWS CloudFormation
+- Infrastructure as Code（IaC）サービス
+- YAMLまたはJSONでAWSリソースを定義
+- テンプレートからスタック（リソースの集合）を作成
+- 変更・削除もスタック単位で管理
+- 今回は Lambda, DynamoDB, S3, IAMロールを一括デプロイ
+
 ## 構成図
 
 ```mermaid
