@@ -14,17 +14,17 @@ Lambda + Function URL で LINE Bot を作成します。外部ライブラリ不
 
 ```mermaid
 graph LR
-    subgraph LINE
+    subgraph LINEService[LINE]
         User[ユーザー]
-        LINE[LINE Platform]
+        Platform[LINE Platform]
     end
     subgraph AWS
         Lambda[Lambda<br/>Function URL]
     end
-    User -->|メッセージ送信| LINE
-    LINE -->|Webhook| Lambda
-    Lambda -->|Reply API| LINE
-    LINE -->|返信| User
+    User -->|メッセージ送信| Platform
+    Platform -->|Webhook| Lambda
+    Lambda -->|Reply API| Platform
+    Platform -->|返信| User
 ```
 
 ## シーケンス図
