@@ -171,7 +171,7 @@ def reply(token, text):
 
 「関数 URL」をコピーする。
 
-もし、「[Step 1: Lambda関数を作成](#Step-1:-Lambda関数を作成)」で設定をしていない場合は、下記の手順で有効化して、「関数 URL」をコピーする。
+もし、「[Step 1: Lambda関数を作成](#step-1-lambda関数を作成)」で設定をしていない場合は、下記の手順で有効化して、「関数 URL」をコピーする。
 
 1. 「設定」タブ →「関数 URL」→「関数 URLを作成」
 2. 認証タイプ: `NONE`（LINEからのWebhookを受けるため）
