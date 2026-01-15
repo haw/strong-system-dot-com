@@ -213,6 +213,8 @@ def reply(token, text):
 - 現在時刻を返す（例: 「今何時？」→「14:30です」）
 - じゃんけんBot（例: 「グー」→ランダムで勝負）
 
+参考: [カスタマイズ集](https://qiita.com/torifukukaiou/items/822bec463a6ff418ad2b#4-%E3%81%8A%E3%81%86%E3%82%80%E8%BF%94%E3%81%97%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA%E9%9B%86)
+
 ## クリーンアップ
 
 1. Lambdaコンソールで `line-echo-bot` 関数を削除
