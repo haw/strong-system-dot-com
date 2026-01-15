@@ -236,3 +236,87 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 - app.jsのAPI_URLが正しいか確認
 - 末尾にスラッシュがないか確認（`https://xxx.on.aws` が正しい、`https://xxx.on.aws/` は間違い）
+
+---
+
+## 補足: 本番環境での構成
+
+今回はAWS Academy Learner Labの制約により簡易構成としましたが、本番環境では以下のサービスを追加するのが一般的です。
+
+### API Gateway + Lambda 構成
+
+```mermaid
+graph LR
+    subgraph Client
+        Browser[ブラウザ]
+    end
+    subgraph AWS
+        APIGateway[API Gateway]
+        Lambda[Lambda]
+        DynamoDB[(DynamoDB)]
+    end
+    Browser --> APIGateway
+    APIGateway --> Lambda
+    Lambda --> DynamoDB
+```
+
+**API Gatewayのメリット:**
+- レート制限（スロットリング）
+- APIキー管理
+- リクエスト/レスポンスの変換
+- カスタムドメイン対応
+- ステージ管理（dev/staging/prod）
+
+**今回の構成（Lambda Function URL）との違い:**
+- Function URLは最小構成で手軽だが、上記機能がない
+- 学習用・プロトタイプには十分、本番では要検討
+
+### CloudFront + S3 構成
+
+```mermaid
+graph LR
+    subgraph Client
+        Browser[ブラウザ]
+    end
+    subgraph AWS
+        CloudFront[CloudFront<br/>CDN]
+        S3[S3<br/>静的ファイル]
+    end
+    Browser --> CloudFront
+    CloudFront --> S3
+```
+
+**CloudFrontのメリット:**
+- エッジロケーションからの配信（低遅延）
+- HTTPS対応（カスタムドメイン + SSL証明書）
+- キャッシュによる負荷軽減
+- DDoS対策（AWS Shield統合）
+
+**今回の構成（S3 Website Hosting）との違い:**
+- S3単体ではHTTPのみ（HTTPSはCloudFront経由が必要）
+- グローバル配信にはCloudFrontが必須
+
+### 本番構成の全体像
+
+```mermaid
+graph LR
+    subgraph Client
+        Browser[ブラウザ]
+    end
+    subgraph AWS
+        CloudFront[CloudFront]
+        S3Web[S3<br/>静的ファイル]
+        APIGateway[API Gateway]
+        Lambda[Lambda]
+        DynamoDB[(DynamoDB)]
+        S3Files[S3<br/>ファイル保存]
+    end
+    Browser --> CloudFront
+    CloudFront --> S3Web
+    Browser --> APIGateway
+    APIGateway --> Lambda
+    Lambda --> DynamoDB
+    Lambda --> S3Files
+```
+
+今回のハンズオンで学んだ Lambda + DynamoDB + S3 の基本構成は、本番環境でもそのまま活きます。API GatewayやCloudFrontは「追加のレイヤー」として理解してください。
