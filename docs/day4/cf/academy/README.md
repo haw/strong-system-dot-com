@@ -319,4 +319,23 @@ graph LR
     Lambda --> S3Files
 ```
 
+#### 参考： ハンズオンの構成図
+
+```mermaid
+graph LR
+    subgraph Client
+        Browser[ブラウザ]
+    end
+    subgraph AWS
+        S3Web[S3<br/>静的ウェブサイト<br/>index.html / app.js]
+        Lambda[Lambda<br/>Function URL]
+        DynamoDB[(DynamoDB)]
+        S3Files[S3<br/>ファイル保存]
+    end
+    Browser --> S3Web
+    Browser --> Lambda
+    Lambda --> DynamoDB
+    Lambda --> S3Files
+```
+
 今回のハンズオンで学んだ Lambda + DynamoDB + S3 の基本構成は、本番環境でもそのまま活きます。API GatewayやCloudFrontは「追加のレイヤー」として理解してください。
