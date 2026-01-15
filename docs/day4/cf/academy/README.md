@@ -40,15 +40,6 @@
   - **FilesBucket**: アップロードファイル保存（非公開、署名付きURLでアクセス）
   - **WebsiteBucket**: 静的ウェブサイトホスティング（フロントエンド公開用）
 
-## 事前準備
-
-1. AWS Academy Learner Labを起動
-2. リージョンが **us-east-1（バージニア北部）** であることを確認
-3. LabRoleのARNを確認: IAMコンソール → ロール → `LabRole` → ARNをコピー
-   - 形式: `arn:aws:iam::XXXXXXXXXXXX:role/LabRole`
-
-![](../../images/iam-role-LabRole.png)
-
 ## 構成図
 
 ```mermaid
@@ -114,6 +105,15 @@ sequenceDiagram
 
 ## 手順
 
+### 事前準備
+
+1. AWS Academy Learner Labを起動(Start Lab)し、「AWS🟢」ボタンでAWSコンソールを立ち上げる
+2. リージョンが **us-east-1（バージニア北部）** であることを確認
+3. LabRoleのARNを確認: IAMコンソール → ロール → `LabRole` → ARNをコピー
+   - 形式: `arn:aws:iam::XXXXXXXXXXXX:role/LabRole`
+
+![](../../images/iam-role-LabRole.png)
+
 ### Step 1: S3バケット作成（Lambda用）
 
 1. S3コンソールを開く
@@ -126,14 +126,14 @@ sequenceDiagram
 
 1. 作成したバケットを開く
 2. 「アップロード」をクリック
-3. [api.zip](https://github.com/haw/strong-system-dot-com/raw/main/docs/day4/cf/academy/api.zip) をアップロード
+3. [api.zip](https://github.com/haw/strong-system-dot-com/raw/main/docs/day4/cf/academy/api.zip) をアップロード (リンクをクリックするとPCにダウンロードされるはず。解凍はせずに`api.zip`のままアップロードする)
 
 ### Step 3: CloudFormationスタック作成
 
 1. CloudFormationコンソールを開く
 2. 「スタックの作成」→「新しいリソースを使用（標準）」
-3. 「テンプレートファイルのアップロード」を選択
-4. [template.yaml](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/template.yaml) をアップロード
+3. 「前提条件: 既存のテンプレートを選択」、「テンプレートの指定: テンプレートファイルのアップロード」を選択
+4. [template.yaml](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/template.yaml) をアップロード (リンクを右クリックで一度、PCにダウンロードし、ダウンロードしたものをAWSコンソールにアップロードする)
 5. 「次へ」
 
 ### Step 4: パラメータ入力
@@ -145,7 +145,7 @@ sequenceDiagram
 
 ### Step 5: デプロイ完了を待つ
 
-- ステータスが `CREATE_COMPLETE` になるまで待機（2〜3分）
+- ステータスが `CREATE_COMPLETE` になるまで待機（2〜3分）※ たまに更新🔄ボタンを押す
 - 「出力」タブで以下を確認:
   - **FunctionUrl**: API エンドポイント
   - **WebsiteUrl**: フロントエンドURL
@@ -153,7 +153,7 @@ sequenceDiagram
 
 ## 動作確認（API）
 
-CloudShellで以下を実行（URLは「出力」タブの FunctionUrl に置き換え、末尾に `/employees` を追加）:
+CloudShell（左下）で以下を実行（URLは「出力」タブの FunctionUrl に置き換え、末尾に `/employees` を追加）:
 
 ```bash
 # 従業員一覧取得
@@ -172,7 +172,7 @@ curl https://xxxxxx.lambda-url.us-east-1.on.aws/employees
 
 ### Step 1: ファイルをダウンロード
 
-以下のリンクから2つのファイルをダウンロード（リンクを右クリック →「名前を付けてリンク先を保存」）:
+以下のリンクから2つのファイルをダウンロード（リンクを右クリック →「リンク先を別名で保存...」）:
 - [index.html](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/frontend/index.html)
 - [app.js](https://raw.githubusercontent.com/haw/strong-system-dot-com/main/docs/day4/cf/academy/frontend/app.js)
 
@@ -190,7 +190,7 @@ const API_URL = 'https://xxxxxx.lambda-url.us-east-1.on.aws';
 
 ### Step 3: フロントエンドをS3にアップロード
 
-1. S3コンソールで **WebsiteBucketName** のバケットを開く
+1. S3コンソールで **WebsiteBucketName** のバケット(`day4-website-xxxxx`のはず。※ xxxxxは人によって異なる)を開く
 2. 「アップロード」をクリック
 3. 以下をアップロード:
    - `index.html`（Step 1でダウンロードしたもの）
