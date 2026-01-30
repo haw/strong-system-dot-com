@@ -90,6 +90,13 @@ Resources:
       Principal: '*'
       FunctionUrlAuthType: NONE
 
+  ApiFunctionInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ApiFunction
+      Action: lambda:InvokeFunction
+      Principal: '*'
+
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
