@@ -96,6 +96,7 @@ Resources:
       FunctionName: !Ref ApiFunction
       Action: lambda:InvokeFunction
       Principal: '*'
+      InvokedViaFunctionUrl: true
 
   WebsiteBucket:
     Type: AWS::S3::Bucket
