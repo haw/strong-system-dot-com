@@ -21,7 +21,7 @@
 
 - **アプリケーションサーバー**: Node.js v22.17.1 + Express
 - **データベースサーバー**: MySQL 8.4
-- **オブジェクトストレージ**: MinIO（S3互換）
+- **オブジェクトストレージ**: RustFS（S3互換）
 - **認証サーバー**: OpenLDAP
 - **コンテナ管理**: Docker Compose
 
@@ -57,12 +57,12 @@
 - app-server-2
 - db-server
 - ldap-server
-- minio
+- minio（RustFS。app-serverとの互換性のためサービス名を維持）
 
 5. 以下のURLでアプリケーションにアクセスできます
    - 従業員情報管理システム: http://localhost:3000
    - 従業員情報管理システム（レプリカ）: http://localhost:3001
-   - MinIO管理コンソール: http://localhost:9001
+   - RustFS管理コンソール: http://localhost:9001
 
 ## ログイン情報
 
@@ -77,7 +77,7 @@
 | testuser   | password123|
 | demo       | demo       |
 
-### MinIO管理コンソール
+### RustFS管理コンソール
 
 | ユーザー名  | パスワード  |
 |-------------|-------------|
@@ -97,9 +97,9 @@
 - 公開ポート: 3306
 - 主な機能: 従業員データとファイルメタデータの保存
 
-### オブジェクトストレージ (minio)
+### オブジェクトストレージ (RustFS)
 
-- ベースイメージ: MinIO RELEASE.2023-07-21T21-12-44Z
+- ベースイメージ: RustFS 1.0.0-beta.8
 - 公開ポート: 9000 (S3 API), 9001 (Web Console)
 - 主な機能: S3互換オブジェクトストレージ（AWS S3の代替）
 
@@ -120,9 +120,9 @@
 以下のDockerボリュームを使用してデータを永続化しています:
 
 - mysql-data: MySQLデータベースのデータ
-- minio-data: MinIOオブジェクトストレージのデータ
-- ldap-data: LDAPサーバーのデータ
-- ldap-config: LDAPサーバーの設定
+- rustfs-data: RustFSオブジェクトストレージのデータ
+- ldap-vegardit-data: LDAPサーバーのデータ
+- ldap-vegardit-config: LDAPサーバーの設定
 
 ## トラブルシューティング
 
@@ -166,17 +166,17 @@
 
 ### オブジェクトストレージ接続エラー
 
-1. MinIOサーバーが起動しているか確認
+1. RustFSサーバーが起動しているか確認
     ```bash
     docker compose ps minio
     ```
 
-2. MinIOのステータスを確認
+2. RustFSのログを確認
     ```bash
-    curl -I http://localhost:9000/minio/health/live
+    docker compose logs minio
     ```
 
-3. MinIOのWebコンソールにアクセス
+3. RustFSのWebコンソールにアクセス
     - ブラウザで http://localhost:9001 にアクセス
     - ユーザー名: minioadmin
     - パスワード: minioadmin
