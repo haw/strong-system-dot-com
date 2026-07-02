@@ -105,7 +105,7 @@ services:
       - employee-network
 
   ldap-server:
-    image: symas/openldap:2.6.8-3
+    image: bitnamilegacy/openldap:2.6.10-debian-12-r4
     container_name: ldap-server
     environment:
       - LDAP_ROOT=dc=strongsystem,dc=local
