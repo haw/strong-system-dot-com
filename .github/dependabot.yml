@@ -1,0 +1,103 @@
+version: 2
+registries:
+  takumi_guard_npm:
+    type: npm-registry
+    url: https://npm.flatt.tech/
+    token: ${{secrets.TAKUMI_GUARD_TOKEN}}
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/docs/day4/cdk"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/docs/day4/cdk/lambda/seed"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/docs/day4/cdk/lambda/api"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/docs/day4/cf/academy/lambda"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/docs/day3/cdk"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/docs/day2/cdk"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/docs/day5/cdk"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/app-server"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
