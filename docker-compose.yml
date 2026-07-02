@@ -17,6 +17,7 @@ services:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - LDAP_SERVER=ldap-server
+      - LDAP_PORT=389
       - AWS_ACCESS_KEY_ID=minioadmin
       - AWS_SECRET_ACCESS_KEY=minioadmin
       - AWS_REGION=ap-northeast-1
@@ -54,6 +55,7 @@ services:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - LDAP_SERVER=ldap-server
+      - LDAP_PORT=389
       - AWS_ACCESS_KEY_ID=minioadmin
       - AWS_SECRET_ACCESS_KEY=minioadmin
       - AWS_REGION=ap-northeast-1
@@ -105,28 +107,23 @@ services:
       - employee-network
 
   ldap-server:
-    image: bitnamilegacy/openldap:2.6.10-debian-12-r4
+    image: vegardit/openldap:2.6.10
     container_name: ldap-server
     environment:
-      - LDAP_ROOT=dc=strongsystem,dc=local
-      - LDAP_ADMIN_USERNAME=admin
-      - LDAP_ADMIN_PASSWORD=admin
-      - LDAP_CONFIG_ADMIN_ENABLED=yes
-      - LDAP_CONFIG_ADMIN_USERNAME=config
-      - LDAP_CONFIG_ADMIN_PASSWORD=config
-      - LDAP_USERS=admin,user1,testuser,demo
-      - LDAP_PASSWORDS=admin,password,password123,demo
-      - LDAP_USER_OU=users
-      - LDAP_GROUP_OU=groups
-      - LDAP_GROUP=readers
-      - LDAP_ALLOW_ANON_BINDING=yes
-      - LDAP_LOGLEVEL=256
-      - LDAP_PASSWORD_HASH={CLEARTEXT}
-      - LDAP_SKIP_DEFAULT_TREE=no
+      LDAP_INIT_ORG_DN: dc=strongsystem,dc=local
+      LDAP_INIT_ORG_NAME: Strong System
+      LDAP_INIT_ROOT_USER_DN: cn=directory-admin,dc=strongsystem,dc=local
+      LDAP_INIT_ROOT_USER_PW: admin
+      LDAP_INIT_ALLOW_CONFIG_ACCESS: "true"
+      LDAP_TLS_ENABLED: "false"
+      LDAP_BACKUP_TIME: ""
+      LDAP_LOG_LEVELS: Stats
     ports:
-      - "389:1389"  # LDAP
+      - "389:389"  # LDAP
     volumes:
-      - ldap-data:/bitnami/openldap
+      - ldap-vegardit-data:/var/lib/ldap
+      - ldap-vegardit-config:/etc/ldap/slapd.d
+      - ./ldap-server/init_org_entries.ldif:/opt/ldifs/init_org_entries.ldif:ro
     networks:
       - employee-network
 
@@ -139,7 +136,7 @@ volumes:
     driver: local
   minio-data:
     driver: local
-  ldap-data:
+  ldap-vegardit-data:
     driver: local
-  ldap-config:
+  ldap-vegardit-config:
     driver: local

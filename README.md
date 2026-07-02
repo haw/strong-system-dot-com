@@ -105,7 +105,7 @@
 
 ### 認証サーバー (ldap-server)
 
-- ベースイメージ: OpenLDAP 1.5.0
+- ベースイメージ: vegardit/openldap 2.6.10
 - 公開ポート: 389 (LDAP), 636 (LDAPS)
 - 主な機能: ユーザー認証
 

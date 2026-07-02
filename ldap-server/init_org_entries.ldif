@@ -1,0 +1,63 @@
+version: 1
+
+# Application users. Keep these DNs aligned with app-server/server.js.
+dn: cn=admin,ou=Users,${LDAP_INIT_ORG_DN}
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: admin
+sn: Administrator
+uid: admin
+mail: admin@example.com
+userPassword: admin
+
+dn: cn=user1,ou=Users,${LDAP_INIT_ORG_DN}
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: user1
+sn: User1
+uid: user1
+mail: user1@example.com
+userPassword: password
+
+dn: cn=testuser,ou=Users,${LDAP_INIT_ORG_DN}
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: testuser
+sn: Testuser
+uid: testuser
+mail: testuser@example.com
+userPassword: password123
+
+dn: cn=demo,ou=Users,${LDAP_INIT_ORG_DN}
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: demo
+sn: Demo
+uid: demo
+mail: demo@example.com
+userPassword: demo
+
+dn: cn=ldap-admins,ou=Groups,${LDAP_INIT_ORG_DN}
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: ldap-admins
+description: LDAP administrators
+uniqueMember: cn=admin,ou=Users,${LDAP_INIT_ORG_DN}
+
+dn: cn=readers,ou=Groups,${LDAP_INIT_ORG_DN}
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: readers
+description: Application users
+uniqueMember: cn=admin,ou=Users,${LDAP_INIT_ORG_DN}
+uniqueMember: cn=user1,ou=Users,${LDAP_INIT_ORG_DN}
+uniqueMember: cn=testuser,ou=Users,${LDAP_INIT_ORG_DN}
+uniqueMember: cn=demo,ou=Users,${LDAP_INIT_ORG_DN}
