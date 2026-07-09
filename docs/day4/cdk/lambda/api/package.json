@@ -5,7 +5,7 @@
   "description": "Day 4 Serverless API Lambda Function",
   "main": "index.mjs",
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.1075.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1078.0",
     "@aws-sdk/client-dynamodb": "^3.1075.0",
     "@aws-sdk/lib-dynamodb": "^3.1078.0",
     "@aws-sdk/client-s3": "^3.1075.0",
