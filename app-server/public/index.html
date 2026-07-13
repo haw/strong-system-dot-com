@@ -112,12 +112,12 @@
                             <input type="text" id="employee_id" name="employee_id" required>
                         </div>
                         <div class="form-group">
-                            <label for="first_name">名</label>
-                            <input type="text" id="first_name" name="first_name" required>
-                        </div>
-                        <div class="form-group">
                             <label for="last_name">姓</label>
                             <input type="text" id="last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">名</label>
+                            <input type="text" id="first_name" name="first_name" required>
                         </div>
                         <div class="form-group">
                             <label for="email">メールアドレス</label>
@@ -162,12 +162,12 @@
                             <input type="text" id="edit_employee_id" name="employee_id" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit_first_name">名</label>
-                            <input type="text" id="edit_first_name" name="first_name" required>
-                        </div>
-                        <div class="form-group">
                             <label for="edit_last_name">姓</label>
                             <input type="text" id="edit_last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_first_name">名</label>
+                            <input type="text" id="edit_first_name" name="first_name" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_email">メールアドレス</label>
@@ -674,6 +674,9 @@
         }
         
         document.addEventListener('DOMContentLoaded', function () {
+            // 流星アニメーションの開始
+            startShootingStars();
+
             // 従業員データの取得
             fetchEmployees = function() {
                 const token = localStorage.getItem('auth_token');
@@ -1131,6 +1134,34 @@
                 
                 requestAnimationFrame(animate);
             }
+        }
+
+        // 流星（シューティングスター）を降らせるロジック
+        function startShootingStars() {
+            // デバッグ中：1秒周期で毎回流星を生成
+            setInterval(() => {
+                createShootingStar();
+            }, 1000);
+            
+            // 初回起動時にも1秒後に1回流す
+            setTimeout(createShootingStar, 1000);
+        }
+
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            document.body.appendChild(star);
+            
+            // 画面の右側または上部のランダムな位置から開始
+            const startX = Math.random() * (window.innerWidth * 0.7) + (window.innerWidth * 0.3);
+            const startY = Math.random() * (window.innerHeight * 0.3); // 上部30%の領域
+            
+            star.style.left = `${startX}px`;
+            star.style.top = `${startY}px`;
+            
+            star.addEventListener('animationend', () => {
+                star.remove();
+            });
         }
     </script>
 </body>

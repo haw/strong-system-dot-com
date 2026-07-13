@@ -26,7 +26,7 @@ body::before {
         radial-gradient(2px 2px at 25% 85%, #87ceeb, transparent);
     background-size: 300px 300px;
     opacity: 0.5;
-    z-index: -1;
+    z-index: -2;
     animation: backgroundStars 20s linear infinite;
     pointer-events: none;
 }
@@ -309,20 +309,23 @@ input::placeholder {
 }
 
 .logout-btn {
-    background-color: transparent !important;
-    color: #f7797d !important;
-    border: 1.5px solid #f7797d !important;
+    background-color: rgba(13, 1, 24, 0.5) !important;
+    color: #00ffcc !important;
+    border: 1.5px solid #00ffcc !important;
     padding: 6px 12px !important;
     border-radius: 6px !important;
     cursor: pointer !important;
     font-weight: bold !important;
     transition: all 0.3s ease !important;
+    text-shadow: 0 0 5px rgba(0, 255, 204, 0.5) !important;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2) !important;
 }
 
 .logout-btn:hover {
-    background-color: #f7797d !important;
-    color: white !important;
-    box-shadow: 0 0 15px rgba(247, 121, 125, 0.6) !important;
+    background-color: #00ffcc !important;
+    color: #0d0118 !important;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.8) !important;
+    text-shadow: none !important;
 }
 
 .header-content {
@@ -700,4 +703,31 @@ input::placeholder {
     pointer-events: none !important;
     z-index: 9999 !important;
     will-change: transform, opacity !important;
+}
+
+/* 流星（シューティングスター）用 */
+.shooting-star {
+    position: fixed;
+    width: 180px;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 204, 0.4) 45%, transparent 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+    transform: rotate(-35deg);
+    animation: shootingStar 1.5s ease-out forwards;
+}
+
+@keyframes shootingStar {
+    0% {
+        transform: rotate(-35deg) translate(0, 0) scale(0);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.9;
+    }
+    100% {
+        transform: rotate(-35deg) translate(-600px, 0) scale(1.2);
+        opacity: 0;
+    }
 }
