@@ -595,12 +595,20 @@ function getFileIcon(mimeType) {
 
 // Show loading indicator
 function showLoading() {
-    document.getElementById('loading-bar').style.display = 'block';
+    if (typeof showCosmosLoading === 'function') {
+        showCosmosLoading();
+    } else {
+        document.getElementById('loading-bar').style.display = 'block';
+    }
 }
 
 // Hide loading indicator
 function hideLoading() {
-    document.getElementById('loading-bar').style.display = 'none';
+    if (typeof hideCosmosLoading === 'function') {
+        hideCosmosLoading();
+    } else {
+        document.getElementById('loading-bar').style.display = 'none';
+    }
 }
 
 // Show success message

@@ -5,475 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>従業員情報管理システム</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            background-color: #0066cc;
-            color: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .status-panel {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #e8f4fc;
-            border-left: 4px solid #0066cc;
-            border-radius: 3px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th,
-        td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
-        .btn:hover {
-            background-color: #0055aa;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            border-radius: 5px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: black;
-        }
-
-        /* ログイン画面のスタイル */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .login-title {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #0066cc;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .login-btn:hover {
-            background-color: #0055aa;
-        }
-
-        .error-message {
-            color: #dc3545;
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-        }
-
-        .user-name {
-            margin-right: 10px;
-        }
-
-        .logout-btn {
-            background-color: transparent;
-            color: white;
-            border: 1px solid white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: #0066cc;
-            animation: loading 2s infinite;
-            z-index: 1000;
-            display: none;
-        }
-
-        @keyframes loading {
-            0% {
-                width: 0;
-            }
-            50% {
-                width: 50%;
-            }
-            100% {
-                width: 100%;
-            }
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        /* ファイル共有システムのスタイル */
-        .tab-container {
-            margin-bottom: 20px;
-        }
-
-        .tab-buttons {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-            margin-bottom: 20px;
-        }
-
-        .tab-button {
-            padding: 10px 20px;
-            background-color: #f8f9fa;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 5px;
-        }
-
-        .tab-button.active {
-            background-color: #0066cc;
-            color: white;
-            border-bottom-color: #0066cc;
-        }
-
-        .tab-button:hover:not(.active) {
-            background-color: #e9ecef;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .file-browser {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-
-        .file-browser-header {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-        }
-
-        .breadcrumb-item {
-            color: #0066cc;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .breadcrumb-item:hover {
-            text-decoration: underline;
-        }
-
-        .breadcrumb-separator {
-            margin: 0 8px;
-            color: #6c757d;
-        }
-
-        .file-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .file-browser-content {
-            padding: 15px;
-        }
-
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .file-item, .folder-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            text-align: center;
-        }
-
-        .file-item:hover, .folder-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .file-icon, .folder-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-
-        .folder-icon {
-            color: #ffc107;
-        }
-
-        .file-icon {
-            color: #6c757d;
-        }
-
-        .file-name, .folder-name {
-            font-size: 12px;
-            word-break: break-word;
-            max-width: 100%;
-        }
-
-        .file-size {
-            font-size: 10px;
-            color: #6c757d;
-            margin-top: 4px;
-        }
-
-        .upload-area {
-            border: 2px dashed #ddd;
-            border-radius: 5px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: border-color 0.2s;
-        }
-
-        .upload-area.dragover {
-            border-color: #0066cc;
-            background-color: #f8f9fa;
-        }
-
-        .upload-area input[type="file"] {
-            display: none;
-        }
-
-        .upload-button {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .upload-button:hover {
-            background-color: #0055aa;
-        }
-
-        .context-menu {
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            min-width: 150px;
-            display: none;
-        }
-
-        .context-menu-item {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-
-        .context-menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .context-menu-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: #0066cc;
-            transition: width 0.3s ease;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/cosmos.css">
 </head>
 
 <body>
     <!-- ログイン画面 -->
     <div id="login-page" class="login-container">
         <h2 class="login-title">従業員情報管理システム</h2>
-        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #17a2b8;">
-            <h4 style="margin: 0 0 10px 0; color: #17a2b8;">テストユーザー</h4>
-            <div style="font-size: 14px; line-height: 1.5;">
+        <div style="background-color: rgba(135, 90, 240, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffd700;">
+            <h4 style="margin: 0 0 10px 0; color: #ffd700;">テストユーザー</h4>
+            <div style="font-size: 14px; line-height: 1.5; color: #fff;">
                 <strong>admin</strong> / admin<br>
                 <strong>user1</strong> / password<br>
                 <strong>testuser</strong> / password123<br>
@@ -496,6 +37,14 @@
 
     <!-- ローディングインジケーター -->
     <div id="loading-bar" class="loading"></div>
+
+    <!-- Loading Overlay - 小宇宙（コスモ）版 -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-box">
+            <div class="loading-spinner"></div>
+            <div id="loadingText" class="loading-text">小宇宙を燃やせ！</div>
+        </div>
+    </div>
 
     <!-- メインアプリケーション画面 -->
     <div id="app-page" class="container" style="display: none;">
@@ -533,123 +82,123 @@
             </div>
 
             <h2>従業員一覧</h2>
-        <table id="employees-table">
-            <thead>
-                <tr>
-                    <th>従業員ID</th>
-                    <th>氏名</th>
-                    <th>メールアドレス</th>
-                    <th>部署</th>
-                    <th>役職</th>
-                    <th>入社日</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody id="employees-list">
-                <tr>
-                    <td colspan="7">データを読み込み中...</td>
-                </tr>
-            </tbody>
-        </table>
+            <table id="employees-table">
+                <thead>
+                    <tr>
+                        <th>従業員ID</th>
+                        <th>氏名</th>
+                        <th>メールアドレス</th>
+                        <th>部署</th>
+                        <th>役職</th>
+                        <th>入社日</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="employees-list">
+                    <tr>
+                        <td colspan="7">データを読み込み中...</td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <!-- 従業員追加モーダル -->
-        <div id="add-employee-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>新規従業員登録</h2>
-                <form id="add-employee-form">
-                    <div class="form-group">
-                        <label for="employee_id">従業員ID</label>
-                        <input type="text" id="employee_id" name="employee_id" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="first_name">名</label>
-                        <input type="text" id="first_name" name="first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name">姓</label>
-                        <input type="text" id="last_name" name="last_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">メールアドレス</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="department">部署</label>
-                        <select id="department" name="department" required>
-                            <option value="">選択してください</option>
-                            <option value="開発部">開発部</option>
-                            <option value="営業部">営業部</option>
-                            <option value="管理部">管理部</option>
-                            <option value="人事部">人事部</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="position">役職</label>
-                        <input type="text" id="position" name="position">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">電話番号</label>
-                        <input type="text" id="phone" name="phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="hire_date">入社日</label>
-                        <input type="date" id="hire_date" name="hire_date" required>
-                    </div>
-                    <button type="submit" class="btn">登録</button>
-                </form>
+            <!-- 従業員追加モーダル -->
+            <div id="add-employee-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>新規従業員登録</h2>
+                    <form id="add-employee-form">
+                        <div class="form-group">
+                            <label for="employee_id">従業員ID</label>
+                            <input type="text" id="employee_id" name="employee_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">名</label>
+                            <input type="text" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">姓</label>
+                            <input type="text" id="last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">メールアドレス</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">部署</label>
+                            <select id="department" name="department" required>
+                                <option value="">選択してください</option>
+                                <option value="開発部">開発部</option>
+                                <option value="営業部">営業部</option>
+                                <option value="管理部">管理部</option>
+                                <option value="人事部">人事部</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="position">役職</label>
+                            <input type="text" id="position" name="position">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">電話番号</label>
+                            <input type="text" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="hire_date">入社日</label>
+                            <input type="date" id="hire_date" name="hire_date" required>
+                        </div>
+                        <button type="submit" class="btn">登録</button>
+                    </form>
+                </div>
             </div>
-        </div>
 
-        <!-- 従業員編集モーダル -->
-        <div id="edit-employee-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>従業員情報編集</h2>
-                <form id="edit-employee-form">
-                    <input type="hidden" id="edit_id" name="id">
-                    <div class="form-group">
-                        <label for="edit_employee_id">従業員ID</label>
-                        <input type="text" id="edit_employee_id" name="employee_id" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_first_name">名</label>
-                        <input type="text" id="edit_first_name" name="first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_last_name">姓</label>
-                        <input type="text" id="edit_last_name" name="last_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_email">メールアドレス</label>
-                        <input type="email" id="edit_email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_department">部署</label>
-                        <select id="edit_department" name="department" required>
-                            <option value="">選択してください</option>
-                            <option value="開発部">開発部</option>
-                            <option value="営業部">営業部</option>
-                            <option value="管理部">管理部</option>
-                            <option value="人事部">人事部</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_position">役職</label>
-                        <input type="text" id="edit_position" name="position">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_phone">電話番号</label>
-                        <input type="text" id="edit_phone" name="phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_hire_date">入社日</label>
-                        <input type="date" id="edit_hire_date" name="hire_date" required>
-                    </div>
-                    <button type="submit" class="btn">更新</button>
-                </form>
+            <!-- 従業員編集モーダル -->
+            <div id="edit-employee-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>従業員情報編集</h2>
+                    <form id="edit-employee-form">
+                        <input type="hidden" id="edit_id" name="id">
+                        <div class="form-group">
+                            <label for="edit_employee_id">従業員ID</label>
+                            <input type="text" id="edit_employee_id" name="employee_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_first_name">名</label>
+                            <input type="text" id="edit_first_name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_last_name">姓</label>
+                            <input type="text" id="edit_last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_email">メールアドレス</label>
+                            <input type="email" id="edit_email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_department">部署</label>
+                            <select id="edit_department" name="department" required>
+                                <option value="">選択してください</option>
+                                <option value="開発部">開発部</option>
+                                <option value="営業部">営業部</option>
+                                <option value="管理部">管理部</option>
+                                <option value="人事部">人事部</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_position">役職</label>
+                            <input type="text" id="edit_position" name="position">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_phone">電話番号</label>
+                            <input type="text" id="edit_phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_hire_date">入社日</label>
+                            <input type="date" id="edit_hire_date" name="hire_date" required>
+                        </div>
+                        <button type="submit" class="btn">更新</button>
+                    </form>
+                </div>
             </div>
-        </div>
         </div>
 
         <!-- ファイル共有タブ -->
@@ -719,6 +268,35 @@
             }, 3000);
         }
 
+        // 小宇宙（コスモ）Loading 表示/非表示関数
+        function showCosmosLoading() {
+            document.getElementById('loading-bar').style.display = 'block';
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                const texts = [
+                    '小宇宙（コスモ）を燃やせ！',
+                    'ペガサス流星拳を充填中...',
+                    '第七感（セブンセンシズ）に目覚める時間だ...',
+                    'アテナの加護があらんことを...',
+                    'ギャラクシアンエクスプロージョン！',
+                    '鳳翼天翔！',
+                    'ダイヤモンドダスト！',
+                    '廬山昇龍覇！'
+                ];
+                const textElement = document.getElementById('loadingText');
+                if (textElement) {
+                    textElement.textContent = texts[Math.floor(Math.random() * texts.length)];
+                }
+            }
+        }
+
+        function hideCosmosLoading() {
+            document.getElementById('loading-bar').style.display = 'none';
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
         // ファイル共有システムの関数群
         
         // ファイルサイズをフォーマットする関数
@@ -767,7 +345,6 @@
 
         // フォルダに移動する関数
         function navigateToFolder(folderId) {
-            // 履歴を更新
             const folderIndex = folderHistory.findIndex(f => f.id === folderId);
             if (folderIndex !== -1) {
                 folderHistory = folderHistory.slice(0, folderIndex + 1);
@@ -781,9 +358,9 @@
         // フォルダの内容を読み込む関数
         async function loadFolderContents(folderId) {
             const token = localStorage.getItem('auth_token');
+            showCosmosLoading();
             
             try {
-                // フォルダとファイルを並行して取得
                 const [foldersResponse, filesResponse] = await Promise.all([
                     fetch(`/api/folders/${folderId}/folders`, {
                         headers: { 'Authorization': `Bearer ${token}` }
@@ -804,6 +381,8 @@
             } catch (error) {
                 console.error('Error loading folder contents:', error);
                 showErrorMessage('フォルダの内容を読み込めませんでした');
+            } finally {
+                hideCosmosLoading();
             }
         }
 
@@ -821,7 +400,6 @@
             
             emptyState.style.display = 'none';
             
-            // ファイルを表示
             files.forEach(file => {
                 const fileElement = createFileElement(file);
                 fileGrid.appendChild(fileElement);
@@ -858,18 +436,14 @@
             const downloadItem = document.getElementById('download-item');
             const deleteItem = document.getElementById('delete-item');
             
-            // ファイルの場合のみダウンロードを表示
             downloadItem.style.display = type === 'file' ? 'block' : 'none';
             
-            // イベントリスナーをクリア
             downloadItem.replaceWith(downloadItem.cloneNode(true));
             deleteItem.replaceWith(deleteItem.cloneNode(true));
             
-            // 新しい要素を取得
             const newDownloadItem = document.getElementById('download-item');
             const newDeleteItem = document.getElementById('delete-item');
             
-            // イベントリスナーを追加
             if (type === 'file') {
                 newDownloadItem.addEventListener('click', () => {
                     downloadFile(id);
@@ -886,7 +460,6 @@
                 hideContextMenu();
             });
             
-            // メニューを表示
             contextMenu.style.display = 'block';
             contextMenu.style.left = event.pageX + 'px';
             contextMenu.style.top = event.pageY + 'px';
@@ -900,6 +473,7 @@
         // ファイルをダウンロードする関数
         async function downloadFile(fileId) {
             const token = localStorage.getItem('auth_token');
+            showCosmosLoading();
             
             try {
                 const response = await fetch(`/api/files/${fileId}/download`, {
@@ -922,6 +496,8 @@
             } catch (error) {
                 console.error('Error downloading file:', error);
                 showErrorMessage('ファイルのダウンロードに失敗しました');
+            } finally {
+                hideCosmosLoading();
             }
         }
 
@@ -930,6 +506,7 @@
             if (!confirm('このファイルを削除しますか？')) return;
             
             const token = localStorage.getItem('auth_token');
+            showCosmosLoading();
             
             try {
                 const response = await fetch(`/api/files/${fileId}`, {
@@ -946,6 +523,8 @@
             } catch (error) {
                 console.error('Error deleting file:', error);
                 showErrorMessage('ファイルの削除に失敗しました');
+            } finally {
+                hideCosmosLoading();
             }
         }
 
@@ -954,6 +533,7 @@
             if (!confirm('このフォルダとその中身をすべて削除しますか？')) return;
             
             const token = localStorage.getItem('auth_token');
+            showCosmosLoading();
             
             try {
                 const response = await fetch(`/api/folders/${folderId}`, {
@@ -970,6 +550,8 @@
             } catch (error) {
                 console.error('Error deleting folder:', error);
                 showErrorMessage('フォルダの削除に失敗しました');
+            } finally {
+                hideCosmosLoading();
             }
         }
 
@@ -980,6 +562,7 @@
             const progressFill = document.getElementById('progress-fill');
             
             progressElement.style.display = 'block';
+            showCosmosLoading();
             
             try {
                 for (let i = 0; i < files.length; i++) {
@@ -998,7 +581,6 @@
                         throw new Error(`Upload failed for ${file.name}`);
                     }
                     
-                    // プログレスバーを更新
                     const progress = ((i + 1) / files.length) * 100;
                     progressFill.style.width = progress + '%';
                 }
@@ -1011,17 +593,17 @@
             } finally {
                 progressElement.style.display = 'none';
                 progressFill.style.width = '0%';
+                hideCosmosLoading();
             }
         }
 
         // エラーメッセージを表示する関数
         function showErrorMessage(message) {
-            alert(message); // 簡単な実装として alert を使用
+            alert(message);
         }
 
         // ファイル共有システムのイベントリスナーを設定する関数
         function setupFileShareEventListeners() {
-            // タブ切り替え
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
             
@@ -1029,22 +611,18 @@
                 button.addEventListener('click', () => {
                     const targetTab = button.dataset.tab;
                     
-                    // すべてのタブボタンとコンテンツから active クラスを削除
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabContents.forEach(content => content.classList.remove('active'));
                     
-                    // クリックされたタブボタンとコンテンツに active クラスを追加
                     button.classList.add('active');
                     document.getElementById(targetTab + '-tab').classList.add('active');
                     
-                    // ファイル共有タブが選択された場合、フォルダ内容を読み込み
                     if (targetTab === 'files') {
                         loadFolderContents(currentFolderId);
                     }
                 });
             });
 
-            // ファイルアップロード関連
             const fileInput = document.getElementById('file-input');
             const uploadArea = document.getElementById('upload-area');
             const uploadFileBtn = document.getElementById('upload-file-btn');
@@ -1059,7 +637,6 @@
                 fileInput.click();
             });
 
-            // ドラッグ&ドロップ
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 uploadArea.classList.add('dragover');
@@ -1079,13 +656,11 @@
                 }
             });
 
-            // ファイル更新
             const refreshFilesBtn = document.getElementById('refresh-files-btn');
             refreshFilesBtn.addEventListener('click', () => {
                 loadFolderContents(currentFolderId);
             });
 
-            // モーダルを閉じる（既存のコードに追加）
             const existingCloseButtons = document.querySelectorAll('.close');
             existingCloseButtons.forEach(button => {
                 button.addEventListener('click', function () {
@@ -1094,10 +669,7 @@
                 });
             });
 
-            // コンテキストメニューを隠す
             document.addEventListener('click', hideContextMenu);
-
-            // 初期フォルダ内容を読み込み
             loadFolderContents(currentFolderId);
         }
         
@@ -1105,9 +677,7 @@
             // 従業員データの取得
             fetchEmployees = function() {
                 const token = localStorage.getItem('auth_token');
-                
-                // ローディングインジケーターを表示
-                document.getElementById('loading-bar').style.display = 'block';
+                showCosmosLoading();
 
                 fetch('/api/employees', {
                     headers: {
@@ -1117,7 +687,6 @@
                     .then(response => {
                         if (!response.ok) {
                             if (response.status === 401) {
-                                // 認証エラー
                                 localStorage.removeItem('auth_token');
                                 localStorage.removeItem('username');
                                 showLoginPage();
@@ -1130,7 +699,6 @@
                     .then(data => {
                         displayEmployees(data);
                         
-                        // 最終更新時間を更新
                         const now = new Date();
                         const formattedTime = now.toLocaleTimeString('ja-JP');
                         document.getElementById('last-updated').textContent = formattedTime;
@@ -1143,8 +711,7 @@
                         }
                     })
                     .finally(() => {
-                        // ローディングインジケーターを非表示
-                        document.getElementById('loading-bar').style.display = 'none';
+                        hideCosmosLoading();
                     });
             };
             
@@ -1164,10 +731,9 @@
                 };
 
                 const token = localStorage.getItem('auth_token');
-                
-                // 送信ボタンを無効化して重複送信を防止
                 const submitButton = document.getElementById('add-employee-form').querySelector('button[type="submit"]');
                 if (submitButton) submitButton.disabled = true;
+                showCosmosLoading();
 
                 fetch('/api/employees', {
                     method: 'POST',
@@ -1180,7 +746,6 @@
                     .then(response => {
                         if (!response.ok) {
                             if (response.status === 401) {
-                                // 認証エラー
                                 localStorage.removeItem('auth_token');
                                 localStorage.removeItem('username');
                                 showLoginPage();
@@ -1204,12 +769,12 @@
                     .catch(error => {
                         console.error('Error:', error);
                         if (error.message !== 'Authentication required') {
-                            alert('従業員の追加に失敗しました。');
+                            alert(error.message || '従業員の追加に失敗しました。');
                         }
                     })
                     .finally(() => {
-                        // 送信ボタンを再度有効化
                         if (submitButton) submitButton.disabled = false;
+                        hideCosmosLoading();
                     });
             }
 
@@ -1230,10 +795,9 @@
                 };
 
                 const token = localStorage.getItem('auth_token');
-                
-                // 送信ボタンを無効化して重複送信を防止
                 const submitButton = document.getElementById('edit-employee-form').querySelector('button[type="submit"]');
                 if (submitButton) submitButton.disabled = true;
+                showCosmosLoading();
 
                 fetch(`/api/employees/${id}`, {
                     method: 'PUT',
@@ -1246,7 +810,6 @@
                     .then(response => {
                         if (!response.ok) {
                             if (response.status === 401) {
-                                // 認証エラー
                                 localStorage.removeItem('auth_token');
                                 localStorage.removeItem('username');
                                 showLoginPage();
@@ -1273,12 +836,11 @@
                         }
                     })
                     .finally(() => {
-                        // 送信ボタンを再度有効化
                         if (submitButton) submitButton.disabled = false;
+                        hideCosmosLoading();
                     });
             }
             
-            // ログイン状態の確認
             const token = localStorage.getItem('auth_token');
             const username = localStorage.getItem('username');
 
@@ -1288,14 +850,13 @@
                 showLoginPage();
             }
 
-            // ログインフォームの送信
             document.getElementById('login-form').addEventListener('submit', function (e) {
                 e.preventDefault();
 
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
+                showCosmosLoading();
 
-                // LDAP認証APIを呼び出す
                 fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
@@ -1310,26 +871,25 @@
                         return response.json();
                     })
                     .then(data => {
-                        // 認証成功
                         localStorage.setItem('auth_token', data.token);
                         localStorage.setItem('username', username);
                         showAppPage(username);
                     })
                     .catch(error => {
-                        // 認証失敗
                         document.getElementById('login-error').textContent = 'ユーザー名またはパスワードが正しくありません。';
                         console.error('Login error:', error);
+                    })
+                    .finally(() => {
+                        hideCosmosLoading();
                     });
             });
 
-            // ログアウトボタンのイベントリスナー
             document.getElementById('logout-btn').addEventListener('click', function () {
                 localStorage.removeItem('auth_token');
                 localStorage.removeItem('username');
                 showLoginPage();
             });
 
-            // サーバーステータスの確認
             function checkServerStatus() {
                 fetch('/api/health')
                     .then(response => response.json())
@@ -1344,22 +904,16 @@
                     });
             }
 
-            // アプリケーションページを表示
             function showAppPage(username) {
                 document.getElementById('login-page').style.display = 'none';
                 document.getElementById('app-page').style.display = 'block';
                 document.getElementById('user-name').textContent = username;
 
-                // サーバーステータスの確認
                 checkServerStatus();
-
-                // 従業員データの取得
                 fetchEmployees();
 
-                // 更新ボタンのイベントリスナー
                 document.getElementById('refresh-btn').addEventListener('click', fetchEmployees);
 
-                // 新規従業員登録ボタンのイベントリスナー
                 const addEmployeeBtn = document.getElementById('add-employee-btn');
                 const addEmployeeModal = document.getElementById('add-employee-modal');
                 const addEmployeeForm = document.getElementById('add-employee-form');
@@ -1368,7 +922,6 @@
                     addEmployeeModal.style.display = 'block';
                 });
 
-                // モーダルを閉じる
                 const closeButtons = document.querySelectorAll('.close');
                 closeButtons.forEach(button => {
                     button.addEventListener('click', function () {
@@ -1377,27 +930,22 @@
                     });
                 });
 
-                // 従業員追加フォームの送信
                 addEmployeeForm.removeEventListener('submit', handleAddEmployeeSubmit);
                 addEmployeeForm.addEventListener('submit', handleAddEmployeeSubmit);
 
-                // 編集フォームの送信
                 const editEmployeeForm = document.getElementById('edit-employee-form');
                 editEmployeeForm.removeEventListener('submit', handleEditEmployeeSubmit);
                 editEmployeeForm.addEventListener('submit', handleEditEmployeeSubmit);
 
-                // ファイル共有システムのイベントリスナー
                 setupFileShareEventListeners();
             }
 
-            // ログインページを表示
             function showLoginPage() {
                 document.getElementById('login-page').style.display = 'block';
                 document.getElementById('app-page').style.display = 'none';
                 document.getElementById('login-error').textContent = '';
             }
             
-            // 従業員リストを表示する関数
             function displayEmployees(data) {
                 const employeesList = document.getElementById('employees-list');
                 employeesList.innerHTML = '';
@@ -1410,7 +958,6 @@
                 data.forEach(employee => {
                     const row = document.createElement('tr');
 
-                    // 日付のフォーマット
                     const hireDate = new Date(employee.hire_date);
                     const formattedDate = hireDate.toLocaleDateString('ja-JP');
 
@@ -1432,9 +979,9 @@
             }
         });
 
-        // 従業員編集モーダルを開く関数
         function editEmployee(id) {
             const token = localStorage.getItem('auth_token');
+            showCosmosLoading();
 
             fetch(`/api/employees/${id}`, {
                 headers: {
@@ -1444,7 +991,6 @@
                 .then(response => {
                     if (!response.ok) {
                         if (response.status === 401) {
-                            // 認証エラー
                             localStorage.removeItem('auth_token');
                             localStorage.removeItem('username');
                             document.getElementById('login-page').style.display = 'block';
@@ -1465,7 +1011,6 @@
                     document.getElementById('edit_position').value = employee.position || '';
                     document.getElementById('edit_phone').value = employee.phone || '';
 
-                    // 日付のフォーマット (YYYY-MM-DD)
                     const hireDate = new Date(employee.hire_date);
                     const year = hireDate.getFullYear();
                     const month = String(hireDate.getMonth() + 1).padStart(2, '0');
@@ -1479,13 +1024,16 @@
                     if (error.message !== 'Authentication required') {
                         alert('従業員情報の取得に失敗しました。');
                     }
+                })
+                .finally(() => {
+                    hideCosmosLoading();
                 });
         }
 
-        // 従業員削除関数
         function deleteEmployee(id) {
             if (confirm('この従業員を削除してもよろしいですか？')) {
                 const token = localStorage.getItem('auth_token');
+                showCosmosLoading();
 
                 fetch(`/api/employees/${id}`, {
                     method: 'DELETE',
@@ -1496,7 +1044,6 @@
                     .then(response => {
                         if (!response.ok) {
                             if (response.status === 401) {
-                                // 認証エラー
                                 localStorage.removeItem('auth_token');
                                 localStorage.removeItem('username');
                                 document.getElementById('login-page').style.display = 'block';
@@ -1508,9 +1055,7 @@
                         return response.json();
                     })
                     .then(data => {
-                        // 削除成功メッセージを表示
                         showSuccessMessage('従業員が正常に削除されました。');
-                        // 従業員リストを再取得
                         fetchEmployees();
                     })
                     .catch(error => {
@@ -1518,7 +1063,73 @@
                         if (error.message !== 'Authentication required') {
                             alert('従業員の削除に失敗しました。');
                         }
+                    })
+                    .finally(() => {
+                        hideCosmosLoading();
                     });
+            }
+        }
+
+        // クリック時のコスモパーティクルエフェクト
+        document.addEventListener('click', (e) => {
+            const target = e.target.closest('button, .btn, .tab-button, .login-btn, .close, .breadcrumb-item, .file-item, .folder-item');
+            if (!target) return;
+            
+            createCosmosParticles(e.clientX, e.clientY);
+        });
+
+        function createCosmosParticles(x, y) {
+            const particleCount = 20;
+            const colors = ['#ffd700', '#ff6b00', '#ff0055', '#00ffcc', '#0099ff', '#ff00ff'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'cosmos-particle';
+                document.body.appendChild(particle);
+                
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                
+                particle.style.position = 'fixed';
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '9999';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 6 + 2;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                let opacity = 1;
+                let px = x;
+                let py = y;
+                
+                const animate = () => {
+                    if (opacity <= 0) {
+                        particle.remove();
+                        return;
+                    }
+                    
+                    px += vx;
+                    py += vy;
+                    opacity -= 0.02;
+                    
+                    particle.style.left = `${px}px`;
+                    particle.style.top = `${py}px`;
+                    particle.style.opacity = opacity;
+                    particle.style.transform = `scale(${opacity})`;
+                    
+                    requestAnimationFrame(animate);
+                };
+                
+                requestAnimationFrame(animate);
             }
         }
     </script>

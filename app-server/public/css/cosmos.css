@@ -1,0 +1,703 @@
+/* Cosmos Dark-Neon Theme for Employee Management System */
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: radial-gradient(ellipse at center, #1b0c33 0%, #0d0118 60%, #000000 100%) !important;
+    background-attachment: fixed !important;
+    color: #fff !important;
+    min-height: 100vh;
+}
+
+/* 宇宙空間に漂う星屑の背景アニメーション */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: 
+        radial-gradient(1.5px 1.5px at 15% 20%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 35% 60%, #ffd700, transparent),
+        radial-gradient(1px 1px at 50% 40%, #fff, transparent),
+        radial-gradient(2px 2px at 70% 15%, #87ceeb, transparent),
+        radial-gradient(1.5px 1.5px at 80% 75%, #ff00ff, transparent),
+        radial-gradient(1px 1px at 90% 30%, #fff, transparent),
+        radial-gradient(2px 2px at 25% 85%, #87ceeb, transparent);
+    background-size: 300px 300px;
+    opacity: 0.5;
+    z-index: -1;
+    animation: backgroundStars 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes backgroundStars {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-300px); }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(26, 10, 46, 0.75) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    padding: 30px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(196, 113, 237, 0.3) !important;
+    box-shadow: 0 10px 40px rgba(135, 90, 240, 0.3), inset 0 0 20px rgba(196, 113, 237, 0.15) !important;
+}
+
+header {
+    background: linear-gradient(135deg, #764ba2 0%, #c471ed 50%, #f7797d 100%) !important;
+    color: white !important;
+    padding: 20px 30px !important;
+    margin-bottom: 30px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 5px 25px rgba(196, 113, 237, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(196, 113, 237, 0.8) !important;
+    letter-spacing: 2px !important;
+    color: white !important;
+}
+
+h2 {
+    color: #ffd700 !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+    margin-top: 30px !important;
+    font-weight: 700 !important;
+}
+
+.status-panel {
+    margin-bottom: 30px !important;
+    padding: 20px !important;
+    background-color: rgba(135, 90, 240, 0.15) !important;
+    border-left: 5px solid #c471ed !important;
+    border-radius: 8px !important;
+    border-top: 1px solid rgba(135, 90, 240, 0.2) !important;
+    border-right: 1px solid rgba(135, 90, 240, 0.2) !important;
+    border-bottom: 1px solid rgba(135, 90, 240, 0.2) !important;
+    box-shadow: 0 0 15px rgba(135, 90, 240, 0.1) !important;
+    color: #fff !important;
+}
+
+.status-panel p {
+    margin: 8px 0 !important;
+    font-size: 15px !important;
+}
+
+#server-status, #db-status {
+    font-weight: bold !important;
+    text-shadow: 0 0 8px currentColor !important;
+}
+
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 30px !important;
+    background-color: rgba(13, 1, 24, 0.5) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(196, 113, 237, 0.2) !important;
+}
+
+th,
+td {
+    padding: 15px 20px !important;
+    text-align: left !important;
+    border-bottom: 1px solid rgba(196, 113, 237, 0.15) !important;
+    color: #fff !important;
+}
+
+th {
+    background-color: rgba(118, 75, 162, 0.4) !important;
+    font-weight: bold !important;
+    color: #ffd700 !important;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3) !important;
+    border-bottom: 2px solid rgba(196, 113, 237, 0.3) !important;
+}
+
+tr:hover {
+    background-color: rgba(196, 113, 237, 0.15) !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.btn, .login-btn, .upload-button {
+    display: inline-block !important;
+    padding: 10px 20px !important;
+    background: linear-gradient(135deg, #764ba2 0%, #c471ed 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin-right: 5px !important;
+    box-shadow: 0 0 15px rgba(196, 113, 237, 0.4) !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn:hover, .login-btn:hover, .upload-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 25px rgba(196, 113, 237, 0.8), 0 0 35px rgba(118, 75, 162, 0.5) !important;
+    filter: brightness(1.2) !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #f7797d 0%, #f72585 100%) !important;
+    box-shadow: 0 0 15px rgba(247, 121, 125, 0.4) !important;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 0 25px rgba(247, 121, 125, 0.8), 0 0 35px rgba(247, 37, 133, 0.5) !important;
+}
+
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+label {
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-weight: bold !important;
+    color: #ffd700 !important;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3) !important;
+}
+
+input,
+select {
+    width: 100% !important;
+    padding: 12px !important;
+    background: rgba(13, 1, 24, 0.8) !important;
+    border: 1.5px solid rgba(196, 113, 237, 0.4) !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    color: white !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+input:focus,
+select:focus {
+    outline: none !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5) !important;
+    background: rgba(26, 10, 46, 0.9) !important;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.modal {
+    display: none;
+    position: fixed !important;
+    z-index: 1000 !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(8px) !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.modal-content {
+    background: rgba(26, 10, 46, 0.95) !important;
+    border: 2.5px solid rgba(196, 113, 237, 0.6) !important;
+    margin: 5% auto !important;
+    padding: 30px !important;
+    width: 50% !important;
+    border-radius: 16px !important;
+    box-shadow: 0 0 50px rgba(196, 113, 237, 0.5) !important;
+    color: white !important;
+    animation: modalOpen 0.4s ease-out;
+}
+
+@keyframes modalOpen {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.close {
+    color: #c471ed !important;
+    float: right !important;
+    font-size: 32px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+.close:hover {
+    color: #ffd700 !important;
+    transform: rotate(90deg) !important;
+}
+
+/* ログイン画面のスタイル */
+.login-container {
+    max-width: 450px !important;
+    margin: 80px auto !important;
+    padding: 40px !important;
+    background: rgba(26, 10, 46, 0.8) !important;
+    backdrop-filter: blur(15px) !important;
+    border-radius: 16px !important;
+    border: 2px solid rgba(196, 113, 237, 0.4) !important;
+    box-shadow: 0 15px 50px rgba(135, 90, 240, 0.4) !important;
+    color: white !important;
+}
+
+.login-title {
+    text-align: center !important;
+    margin-bottom: 30px !important;
+    color: #ffd700 !important;
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 0 20px rgba(196, 113, 237, 0.4) !important;
+    letter-spacing: 1px !important;
+}
+
+.login-btn {
+    width: 100% !important;
+    padding: 14px !important;
+    background: linear-gradient(135deg, #c471ed 0%, #f7797d 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 15px rgba(247, 121, 125, 0.5) !important;
+    transition: all 0.3s ease !important;
+    margin-top: 10px !important;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 30px rgba(247, 121, 125, 0.8), 0 0 45px rgba(196, 113, 237, 0.6) !important;
+    filter: brightness(1.2) !important;
+}
+
+.error-message {
+    color: #ff3366 !important;
+    margin-top: 15px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    text-shadow: 0 0 5px rgba(255, 51, 102, 0.3) !important;
+}
+
+.user-info {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+}
+
+.user-name {
+    margin-right: 15px !important;
+    font-weight: bold !important;
+    color: #ffd700 !important;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5) !important;
+}
+
+.logout-btn {
+    background-color: transparent !important;
+    color: #f7797d !important;
+    border: 1.5px solid #f7797d !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease !important;
+}
+
+.logout-btn:hover {
+    background-color: #f7797d !important;
+    color: white !important;
+    box-shadow: 0 0 15px rgba(247, 121, 125, 0.6) !important;
+}
+
+.header-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.loading {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, #764ba2, #c471ed, #f7797d) !important;
+    background-size: 200% 100% !important;
+    animation: loadingBar 1.5s infinite linear !important;
+    z-index: 2000 !important;
+    display: none;
+}
+
+@keyframes loadingBar {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.success-message {
+    background-color: rgba(21, 87, 36, 0.85) !important;
+    color: #d4edda !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #155724 !important;
+    box-shadow: 0 0 15px rgba(21, 87, 36, 0.4) !important;
+    display: none;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+.error-message {
+    background-color: rgba(114, 28, 36, 0.85) !important;
+    color: #f8d7da !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #721c24 !important;
+    box-shadow: 0 0 15px rgba(114, 28, 36, 0.4) !important;
+    display: none;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+/* ファイル共有システムのスタイル */
+.tab-container {
+    margin-bottom: 30px !important;
+}
+
+.tab-buttons {
+    display: flex !important;
+    border-bottom: 2px solid rgba(196, 113, 237, 0.3) !important;
+    margin-bottom: 25px !important;
+}
+
+.tab-button {
+    padding: 12px 24px !important;
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    border: none !important;
+    border-bottom: 3px solid transparent !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    margin-right: 10px !important;
+    transition: all 0.3s ease !important;
+}
+
+.tab-button.active {
+    color: #ffd700 !important;
+    border-bottom-color: #ffd700 !important;
+    background-color: transparent !important;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5) !important;
+}
+
+.tab-button:hover:not(.active) {
+    color: white !important;
+    border-bottom-color: rgba(196, 113, 237, 0.5) !important;
+    background-color: transparent !important;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block !important;
+}
+
+.file-browser {
+    border: 1px solid rgba(196, 113, 237, 0.3) !important;
+    border-radius: 12px !important;
+    background: rgba(13, 1, 24, 0.4) !important;
+    overflow: hidden !important;
+    box-shadow: 0 5px 25px rgba(135, 90, 240, 0.15) !important;
+}
+
+.file-browser-header {
+    background-color: rgba(26, 10, 46, 0.6) !important;
+    padding: 20px !important;
+    border-bottom: 1px solid rgba(196, 113, 237, 0.2) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.breadcrumb {
+    display: flex !important;
+    align-items: center !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+}
+
+.breadcrumb-item {
+    color: #c471ed !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.breadcrumb-item:hover {
+    color: #ffd700 !important;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.4) !important;
+}
+
+.breadcrumb-separator {
+    margin: 0 10px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.file-actions {
+    display: flex !important;
+    gap: 10px !important;
+}
+
+.file-browser-content {
+    padding: 25px !important;
+}
+
+.file-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 20px !important;
+    margin-bottom: 25px !important;
+}
+
+.file-item, .folder-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 20px 15px !important;
+    background: rgba(26, 10, 46, 0.4) !important;
+    border: 1.5px solid rgba(196, 113, 237, 0.25) !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    text-align: center !important;
+}
+
+.file-item:hover, .folder-item:hover {
+    background: rgba(196, 113, 237, 0.15) !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 15px rgba(196, 113, 237, 0.4) !important;
+    transform: translateY(-3px) !important;
+}
+
+.file-icon, .folder-icon {
+    font-size: 52px !important;
+    margin-bottom: 10px !important;
+    transition: transform 0.3s ease !important;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
+}
+
+.file-item:hover .file-icon, .folder-item:hover .folder-icon {
+    transform: scale(1.15) rotate(5deg) !important;
+}
+
+.folder-icon {
+    color: #ffd700 !important;
+}
+
+.file-icon {
+    color: #00ffcc !important;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 204, 0.4)) !important;
+}
+
+.file-name, .folder-name {
+    font-size: 13px !important;
+    word-break: break-word !important;
+    max-width: 100% !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+}
+
+.file-size {
+    font-size: 11px !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    margin-top: 6px !important;
+}
+
+.upload-area {
+    border: 2.5px dashed rgba(196, 113, 237, 0.4) !important;
+    border-radius: 12px !important;
+    padding: 45px !important;
+    text-align: center !important;
+    margin-bottom: 25px !important;
+    background: rgba(26, 10, 46, 0.3) !important;
+    transition: all 0.3s ease !important;
+    color: #fff !important;
+}
+
+.upload-area.dragover {
+    border-color: #ffd700 !important;
+    background-color: rgba(196, 113, 237, 0.15) !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3) !important;
+}
+
+.upload-area input[type="file"] {
+    display: none !important;
+}
+
+.context-menu {
+    position: absolute !important;
+    background-color: rgba(26, 10, 46, 0.95) !important;
+    border: 1.5px solid rgba(196, 113, 237, 0.5) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    z-index: 1000 !important;
+    min-width: 160px !important;
+    display: none;
+    overflow: hidden !important;
+}
+
+.context-menu-item {
+    padding: 10px 15px !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid rgba(196, 113, 237, 0.15) !important;
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 13px !important;
+    transition: all 0.2s ease !important;
+}
+
+.context-menu-item:last-child {
+    border-bottom: none !important;
+}
+
+.context-menu-item:hover {
+    background-color: rgba(196, 113, 237, 0.2) !important;
+    color: #ffd700 !important;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3) !important;
+}
+
+.progress-bar {
+    width: 100% !important;
+    height: 20px !important;
+    background-color: rgba(13, 1, 24, 0.8) !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    margin-top: 15px !important;
+    border: 1px solid rgba(196, 113, 237, 0.3) !important;
+}
+
+.progress-fill {
+    height: 100% !important;
+    background: linear-gradient(90deg, #764ba2, #c471ed, #f7797d) !important;
+    transition: width 0.3s ease !important;
+    box-shadow: 0 0 10px rgba(196, 113, 237, 0.8) !important;
+}
+
+.empty-state {
+    text-align: center !important;
+    padding: 50px !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.empty-state-icon {
+    font-size: 72px !important;
+    margin-bottom: 20px !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) !important;
+}
+
+/* Loading Overlay - 小宇宙（コスモ）版 */
+.loading-overlay {
+    display: none;
+    position: fixed !important;
+    top: 0 !important; left: 0 !important;
+    width: 100% !important; height: 100% !important;
+    background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0015 50%, #000 100%) !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 3000 !important;
+    overflow: hidden !important;
+}
+.loading-overlay::before {
+    content: '';
+    position: absolute;
+    width: 200%; height: 200%;
+    background: 
+        radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+        radial-gradient(2px 2px at 40% 70%, #ffd700, transparent),
+        radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+        radial-gradient(2px 2px at 60% 20%, #87ceeb, transparent),
+        radial-gradient(1px 1px at 70% 60%, #fff, transparent),
+        radial-gradient(2px 2px at 80% 40%, #ffd700, transparent),
+        radial-gradient(1px 1px at 90% 80%, #fff, transparent),
+        radial-gradient(1px 1px at 10% 90%, #87ceeb, transparent),
+        radial-gradient(2px 2px at 30% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 15%, #ffd700, transparent);
+    background-size: 250px 250px;
+    animation: twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.8; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-10px); }
+}
+.loading-box {
+    position: relative !important;
+    padding: 60px 80px !important;
+    text-align: center !important;
+}
+.loading-spinner {
+    width: 120px !important; height: 120px !important;
+    margin: 0 auto 30px !important;
+    position: relative !important;
+    animation: cosmo-burn 2s ease-in-out infinite !important;
+}
+@keyframes cosmo-burn {
+    0%, 100% { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff6b00); }
+    50% { filter: drop-shadow(0 0 40px #ffd700) drop-shadow(0 0 80px #ff6b00) drop-shadow(0 0 120px #ff0000); }
+}
+.loading-spinner::before {
+    content: '☆' !important;
+    font-size: 80px !important;
+    color: #ffd700 !important;
+    position: absolute !important;
+    top: 50% !important; left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    animation: star-pulse 1s ease-in-out infinite !important;
+}
+@keyframes star-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) scale(1.2) rotate(180deg); }
+}
+.loading-spinner::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -20px !important; left: -20px !important;
+    right: -20px !important; bottom: -20px !important;
+    border: 3px solid transparent !important;
+    border-top-color: #ffd700 !important;
+    border-radius: 50% !important;
+    animation: spin 1.5s linear infinite !important;
+}
+.loading-text {
+    color: #ffd700 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6b00, 0 0 30px #ff0000 !important;
+    letter-spacing: 4px !important;
+}
+
+/* コスモパーティクル用 */
+.cosmos-particle {
+    position: fixed !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+    z-index: 9999 !important;
+    will-change: transform, opacity !important;
+}
