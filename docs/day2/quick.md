@@ -69,17 +69,17 @@ Docker Compose:
 
 ---
 
-### 2. Node.js 22のセットアップ
+### 2. Node.js 24のセットアップ
 
 ```bash
 # nvmのインストール
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 
-# Node.js 22のインストール
-nvm install 22
-nvm use 22
-node -v  # v22.x.x と表示されることを確認
+# Node.js 24のインストール
+nvm install 24
+nvm use 24
+node -v  # v24.x.x と表示されることを確認
 ```
 
 ---

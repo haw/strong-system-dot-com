@@ -147,7 +147,7 @@ Resources:
       MemorySize: 512
       Role:
         Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/LabRole
-      Runtime: nodejs22.x
+      Runtime: nodejs24.x
       Timeout: 30
     Metadata:
       aws:cdk:path: Day4Stack-test/ApiFunction/Resource

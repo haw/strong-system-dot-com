@@ -20,9 +20,9 @@ echo '/swapfile none swap sw 0 0' >> /etc/fstab
 echo "Swap space created and enabled"
 free -m
 
-# Node.js 22.x インストール
-echo "[1/4] Installing Node.js 22.x..."
-curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+# Node.js 24.x インストール
+echo "[1/4] Installing Node.js 24.x..."
+curl -fsSL https://rpm.nodesource.com/setup_24.x | bash -
 dnf install -y nodejs
 
 # Node.js バージョン確認

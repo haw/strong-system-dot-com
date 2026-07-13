@@ -55,7 +55,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: day4-api
-      Runtime: nodejs22.x
+      Runtime: nodejs24.x
       Handler: index.handler
       MemorySize: 512
       Timeout: 30

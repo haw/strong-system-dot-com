@@ -32,7 +32,7 @@ Day 4では、完全サーバーレスアーキテクチャに移行します：
 
 バックエンド:
 ├── API Gateway (REST API)
-├── Lambda (Node.js 22) ← AWS SDK v3
+├── Lambda (Node.js 24) ← AWS SDK v3
 ├── DynamoDB (On-Demand) ← 50%値下げ！
 ├── Cognito User Pools (認証)
 └── S3 (ファイルストレージ)
@@ -67,17 +67,17 @@ Day 4では、完全サーバーレスアーキテクチャに移行します：
 
 ---
 
-### 2. Node.js 22のセットアップ
+### 2. Node.js 24のセットアップ
 
 ```bash
 # nvmのインストール
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 
-# Node.js 22のインストール
-nvm install 22
-nvm use 22
-node -v  # v22.x.x と表示されることを確認
+# Node.js 24のインストール
+nvm install 24
+nvm use 24
+node -v  # v24.x.x と表示されることを確認
 ```
 
 ---
@@ -98,7 +98,7 @@ cd strong-system-dot-com/docs/day4/cdk
 npm install
 ```
 
-> **Note**: Lambda関数（`lambda/api`、`lambda/seed`）での`npm install`は不要です。Node.js 22 Runtimeに必要なAWS SDK v3がすべて含まれています。
+> **Note**: Lambda関数（`lambda/api`、`lambda/seed`）での`npm install`は不要です。Node.js 24 Runtimeに必要なAWS SDK v3がすべて含まれています。
 
 ---
 
@@ -292,7 +292,7 @@ npx cdk destroy -c userName=yamada --verbose
 1. **Presigned URL方式**: ファイルアップロード/ダウンロードは、Lambda経由ではなくS3への直接アクセス（セキュア）
 2. **Cognito認証**: JWT tokenによるステートレス認証
 3. **DynamoDB On-Demand**: 2024年11月に50%値下げ、プロビジョニング不要
-4. **Lambda Node.js 22**: 2025年最新ランタイム、AWS SDK v3バンドル
+4. **Lambda Node.js 24**: 最新ランタイム、AWS SDK v3バンドル
 5. **Custom Resource**: デプロイ時に初期データ自動投入
 
 ### コスト試算（月間）
@@ -334,6 +334,6 @@ npx cdk destroy -c userName=yamada --verbose
 
 ## 参考資料
 
-- [AWS Lambda Node.js 22](https://aws.amazon.com/blogs/compute/node-js-22-runtime-now-available-in-aws-lambda/)
+- [AWS Lambda Node.js 24](https://aws.amazon.com/blogs/compute/node-js-24-runtime-now-available-in-aws-lambda/)
 - [DynamoDB 50% Price Reduction](https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-dynamo-db-reduces-prices-on-demand-throughput-global-tables/)
 - [CloudFront 2025 Features](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)

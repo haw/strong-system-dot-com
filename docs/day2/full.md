@@ -92,7 +92,7 @@ Day 1のインフラをCDKで自動構築するため、CDKを実行するEC2を
     - **ユーザーデータ**: 「<a href="https://github.com/haw/strong-system-dot-com/blob/main/docs/day2/assets/cdk-ec2-userdata.txt" target="_blank" rel="noopener noreferrer">assets/cdk-ec2-userdata.txt</a>」 の内容をコピー&ペースト
         - このユーザーデータで行っていること
             - Swap領域の作成（2GB、メモリ不足対策）
-            - Node.js 22.x のインストール
+            - Node.js 24.x のインストール
             - Node.jsヒープメモリ上限の設定（1536MB）
             - AWS CDK CLI のインストール
             - Git のインストール確認

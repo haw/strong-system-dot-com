@@ -108,13 +108,13 @@ export class Day4ServerlessStack extends cdk.Stack {
     });
 
     // ========================================
-    // 4. Lambda Functions (Node.js 22 - Latest LTS!)
+    // 4. Lambda Functions (Node.js 24 - Latest LTS!)
     // ========================================
     
     // API Lambda Function
     const apiFunction = new lambda.Function(this, 'ApiFunction', {
       functionName: `day4-api-${userName}`,
-      runtime: lambda.Runtime.NODEJS_22_X, // 2025 Latest!
+      runtime: lambda.Runtime.NODEJS_24_X, // Latest LTS!
       handler: 'index.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/api')),
       environment: {
@@ -138,7 +138,7 @@ export class Day4ServerlessStack extends cdk.Stack {
     // ========================================
     const seedFunction = new lambda.Function(this, 'SeedFunction', {
       functionName: `day4-seed-${userName}`,
-      runtime: lambda.Runtime.NODEJS_22_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/seed')),
       environment: {

@@ -25,7 +25,7 @@ Day 2完了後の状態：
 
 ## 前提条件
 
-- Node.js 22.x
+- Node.js 24.x
 - AWS CLI設定済み
 - 適切なIAM権限
 
