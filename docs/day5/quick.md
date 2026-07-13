@@ -74,7 +74,7 @@ Amazon S3:
 
 ```bash
 # nvmのインストール
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash
 source ~/.bashrc
 
 # Node.js 24のインストール
