@@ -16,7 +16,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/docs/day4/cdk/lambda/seed"
@@ -28,7 +28,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/docs/day4/cdk/lambda/api"
@@ -40,7 +40,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/docs/day4/cf/academy/lambda"
@@ -52,7 +52,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/docs/day3/cdk"
@@ -64,7 +64,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/docs/day2/cdk"
@@ -76,7 +76,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/docs/day5/cdk"
@@ -88,7 +88,7 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
 
   - package-ecosystem: "npm"
     directory: "/app-server"
@@ -100,4 +100,4 @@ updates:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 7
