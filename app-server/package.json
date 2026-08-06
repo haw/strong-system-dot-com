@@ -15,7 +15,7 @@
     "jsonwebtoken": "^9.0.3",
     "ldapjs": "^3.0.7",
     "multer": "^2.2.0",
-    "mysql2": "^3.23.1",
+    "mysql2": "^3.23.2",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
