@@ -142,6 +142,8 @@ aws s3 rm "s3://$BUCKET/comparison/guide.txt"
 
 **期待結果：拒否される。** `AmazonS3FullAccess` は削除も許可していますが、教材用バケットのバケットポリシーが削除を明示的に拒否しているため、拒否が優先されます。
 
+続けて、付けた `AmazonS3FullAccess` の中身を見ます。IAMコンソールで自分のロールの「許可」タブを開き、`AmazonS3FullAccess` のポリシー名を選ぶと、中身をJSONで確かめられます。`Action`（許可する操作）と `Resource`（対象）に何が書かれているかを見てください。
+
 **考えること**：自分の教材を読むだけのプログラムに、`AmazonS3FullAccess` は必要でしょうか。
 
 ## 手順6：③自分の教材だけに絞る
@@ -173,7 +175,12 @@ aws s3 rm "s3://$BUCKET/comparison/guide.txt"
    | `Action` | `s3:GetObject` は、オブジェクトを読む操作だけ。一覧表示や削除は含まない |
    | `Resource` | 対象をARN（Amazon Resource Name）で指定する。ここでは教材バケットの `trainees/{あなたの名前}/guide.txt` の1件だけ |
 
-   手順5の `AmazonS3FullAccess` と比べてみてください。`AmazonS3FullAccess` は、`Action` にS3のすべての操作（`s3:*`）を含み、`Resource` はすべての対象（`*`）です。IAMコンソールでこのポリシーを開くと、JSONで確かめられます。
+   手順5で見た `AmazonS3FullAccess` と比べると、違いは操作と対象の2点です。
+
+   | | 手順5：`AmazonS3FullAccess` | 手順6：このポリシー |
+   | --- | --- | --- |
+   | `Action`（操作） | `s3:*` など（S3のすべての操作） | `s3:GetObject`（読むだけ） |
+   | `Resource`（対象） | `*`（すべてのバケットとオブジェクト） | 自分の教材1件だけ |
 
 3. 「次へ」を選び、ポリシー名に `day1-read-my-guide` を入力して「ポリシーの作成」。
 4. EC2のターミナルに戻り、実行する。EC2の再起動は不要です。
