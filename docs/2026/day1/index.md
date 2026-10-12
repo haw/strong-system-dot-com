@@ -171,7 +171,7 @@ aws s3 rm "s3://$BUCKET/comparison/guide.txt"
    | `Sid` | この許可の名前。自由に付けてよく、省略もできる |
    | `Effect` | `Allow` は「許可する」 |
    | `Action` | `s3:GetObject` は、オブジェクトを読む操作だけ。一覧表示や削除は含まない |
-   | `Resource` | 対象をARNで指定する。ここでは教材バケットの `trainees/{あなたの名前}/guide.txt` の1件だけ |
+   | `Resource` | 対象をARN（Amazon Resource Name）で指定する。ここでは教材バケットの `trainees/{あなたの名前}/guide.txt` の1件だけ |
 
    手順5の `AmazonS3FullAccess` と比べてみてください。`AmazonS3FullAccess` は、`Action` にS3のすべての操作（`s3:*`）を含み、`Resource` はすべての対象（`*`）です。IAMコンソールでこのポリシーを開くと、JSONで確かめられます。
 
