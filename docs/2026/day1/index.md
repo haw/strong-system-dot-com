@@ -117,8 +117,8 @@ arn:aws:sts::{アカウントID}:assumed-role/day1-ec2-role-{あなたの名前}
 まず、以降の手順で使う値を設定します。`{教材バケット名}` と `{あなたの名前}` を配られた値に置き換えてください。認証情報ではなく、対象を指定するための値です。
 
 ```bash
-BUCKET='{教材バケット名}'
-NAME='{あなたの名前}'
+export BUCKET='{教材バケット名}'
+export NAME='{あなたの名前}'
 export AWS_REGION='ap-northeast-1'
 ```
 
