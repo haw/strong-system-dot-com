@@ -1,187 +1,366 @@
+/* Cosmos dark-neon theme, carried over from app-server/public/css/cosmos.css */
 :root {
-    --bg: #0b0620;
-    --text: #f4f1ff;
-    --muted: #b7aedb;
-    --panel: rgba(255, 255, 255, 0.07);
-    --line: rgba(255, 255, 255, 0.14);
-    --pink: #ff3d9a;
-    --violet: #8b5cf6;
-    --local: #ff9f1c;
-    --rds: #22d3ee;
-    --danger: #ff5c7a;
+    --gold: #ffd700;
+    --violet: #764ba2;
+    --orchid: #c471ed;
+    --coral: #f7797d;
+    --rose: #f72585;
+    --aqua: #00ffcc;
+    --panel: rgba(26, 10, 46, 0.75);
+    --line: rgba(196, 113, 237, 0.3);
 }
 
 * { box-sizing: border-box; }
 
 body {
     margin: 0;
+    padding: 20px;
     min-height: 100vh;
-    font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
-    color: var(--text);
-    background: radial-gradient(circle at 20% 0%, #2a0f5c 0%, var(--bg) 55%) fixed;
+    font-family: 'Helvetica Neue', Arial, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #fff;
+    background: radial-gradient(ellipse at center, #1b0c33 0%, #0d0118 60%, #000 100%) fixed;
     overflow-x: hidden;
 }
 
-.glow {
+/* 宇宙空間に漂う星屑 */
+body::before {
+    content: '';
     position: fixed;
-    width: 520px;
-    height: 520px;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.45;
-    z-index: -1;
-    animation: drift 14s ease-in-out infinite alternate;
+    inset: 0;
+    background:
+        radial-gradient(1.5px 1.5px at 15% 20%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 35% 60%, var(--gold), transparent),
+        radial-gradient(1px 1px at 50% 40%, #fff, transparent),
+        radial-gradient(2px 2px at 70% 15%, #87ceeb, transparent),
+        radial-gradient(1.5px 1.5px at 80% 75%, #ff00ff, transparent),
+        radial-gradient(1px 1px at 90% 30%, #fff, transparent),
+        radial-gradient(2px 2px at 25% 85%, #87ceeb, transparent);
+    background-size: 300px 300px;
+    opacity: 0.5;
+    z-index: -2;
+    animation: background-stars 20s linear infinite;
+    pointer-events: none;
 }
-.glow-a { background: var(--pink); top: -160px; right: -120px; }
-.glow-b { background: var(--violet); bottom: -200px; left: -160px; animation-delay: -7s; }
 
-@keyframes drift {
-    from { transform: translate(0, 0) scale(1); }
-    to { transform: translate(60px, 40px) scale(1.15); }
+@keyframes background-stars {
+    from { transform: translateY(0); }
+    to { transform: translateY(-300px); }
 }
 
-.hero {
-    max-width: 1100px;
+.container {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 48px 16px 24px;
-    text-align: center;
+    padding: 30px;
+    background: var(--panel);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 40px rgba(135, 90, 240, 0.3), inset 0 0 20px rgba(196, 113, 237, 0.15);
 }
 
-.eyebrow {
-    margin: 0;
-    letter-spacing: 0.3em;
-    font-size: 0.8rem;
-    color: var(--muted);
+header {
+    padding: 20px 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--violet) 0%, var(--orchid) 50%, var(--coral) 100%);
+    box-shadow: 0 5px 25px rgba(196, 113, 237, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 h1 {
-    margin: 8px 0 28px;
-    font-size: clamp(2.4rem, 7vw, 4.2rem);
+    margin: 0;
+    font-size: 28px;
     font-weight: 800;
-    background: linear-gradient(90deg, #fff, var(--pink), var(--violet));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(196, 113, 237, 0.8);
 }
 
+h2 {
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    font-weight: 700;
+}
+
+/* 接続先：いま燃やしている小宇宙はどこか */
 .badge {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 20px 28px;
-    border-radius: 20px;
-    border: 2px solid var(--line);
-    background: var(--panel);
-    backdrop-filter: blur(12px);
+    margin-bottom: 30px;
+    padding: 24px;
+    text-align: center;
+    border-radius: 16px;
+    background: rgba(13, 1, 24, 0.6);
+    border: 2.5px solid var(--line);
     transition: border-color 0.4s, box-shadow 0.4s;
 }
-.badge-label { font-size: 0.8rem; letter-spacing: 0.2em; color: var(--muted); }
-.badge-source { margin-top: 4px; font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; }
-.badge-host { margin-top: 6px; font-family: ui-monospace, Menlo, monospace; word-break: break-all; }
-.badge-meta { margin-top: 4px; font-size: 0.85rem; color: var(--muted); }
+.badge-label { font-size: 13px; letter-spacing: 6px; color: rgba(255, 255, 255, 0.7); }
+.badge-source { margin: 6px 0; font-size: clamp(24px, 5vw, 38px); font-weight: 800; letter-spacing: 2px; }
+.badge-host { font-family: ui-monospace, Menlo, monospace; font-size: 15px; word-break: break-all; }
+.badge-meta { margin-top: 6px; font-size: 13px; color: rgba(255, 255, 255, 0.6); }
 
-.badge-local { border-color: var(--local); box-shadow: 0 0 40px rgba(255, 159, 28, 0.45); }
-.badge-local .badge-source { color: var(--local); }
-.badge-rds { border-color: var(--rds); box-shadow: 0 0 40px rgba(34, 211, 238, 0.5); animation: pulse 2.4s ease-in-out infinite; }
-.badge-rds .badge-source { color: var(--rds); }
-.badge-down { border-color: var(--danger); box-shadow: 0 0 40px rgba(255, 92, 122, 0.45); }
-.badge-down .badge-source { color: var(--danger); }
+.badge-local { border-color: var(--gold); animation: cosmo-burn 2s ease-in-out infinite; }
+.badge-local .badge-source { color: var(--gold); text-shadow: 0 0 10px var(--gold), 0 0 20px #ff6b00; }
 
-@keyframes pulse {
-    50% { box-shadow: 0 0 70px rgba(34, 211, 238, 0.8); }
+.badge-rds { border-color: var(--aqua); animation: cosmo-aqua 2s ease-in-out infinite; }
+.badge-rds .badge-source { color: var(--aqua); text-shadow: 0 0 10px var(--aqua), 0 0 24px #0099ff; }
+
+.badge-down { border-color: var(--rose); box-shadow: 0 0 30px rgba(247, 37, 133, 0.5); }
+.badge-down .badge-source { color: #ff3366; text-shadow: 0 0 10px rgba(255, 51, 102, 0.6); }
+
+@keyframes cosmo-burn {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 107, 0, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 107, 0, 0.5); }
+}
+@keyframes cosmo-aqua {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 204, 0.5), 0 0 40px rgba(0, 153, 255, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(0, 255, 204, 0.8), 0 0 80px rgba(0, 153, 255, 0.5); }
 }
 
-.error {
-    max-width: 720px;
-    margin: 16px auto 0;
-    padding: 12px 16px;
-    border-radius: 12px;
-    background: rgba(255, 92, 122, 0.15);
-    border: 1px solid var(--danger);
-    color: #ffd6de;
-    text-align: left;
+.error-message {
+    margin: 0 0 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(114, 28, 36, 0.85);
+    border: 1px solid #ff3366;
+    color: #f8d7da;
+    font-weight: bold;
     word-break: break-word;
 }
 
-.panel {
-    max-width: 1100px;
-    margin: 0 auto 48px;
-    padding: 20px;
-    border-radius: 24px;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    backdrop-filter: blur(12px);
+.success-message {
+    margin: 0 0 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(21, 87, 36, 0.85);
+    border: 1px solid #2ecc71;
+    color: #d4edda;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
 }
 
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
+.toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.toolbar h2 { margin: 0 auto 0 0; }
+.count { color: var(--gold); font-size: 14px; }
+
+.table-wrap { overflow-x: auto; margin-top: 20px; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(13, 1, 24, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(196, 113, 237, 0.2);
 }
-.count { font-size: 1.1rem; color: var(--muted); }
-.count span { font-size: 1.8rem; font-weight: 800; color: var(--text); }
-
-.table-wrap { overflow-x: auto; }
-
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
-th { font-size: 0.8rem; letter-spacing: 0.1em; color: var(--muted); }
-tbody tr { transition: background 0.2s; }
-tbody tr:hover { background: rgba(255, 255, 255, 0.06); }
-tr.added { animation: flash 1.6s ease-out; }
-@keyframes flash { from { background: rgba(255, 61, 154, 0.45); } to { background: transparent; } }
-
-.emp-id { font-family: ui-monospace, Menlo, monospace; font-weight: 700; }
+th, td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(196, 113, 237, 0.15);
+    white-space: nowrap;
+}
+th {
+    background: rgba(118, 75, 162, 0.4);
+    color: var(--gold);
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+    border-bottom: 2px solid var(--line);
+}
+tbody tr { transition: background-color 0.2s ease; }
+tbody tr:hover { background: rgba(196, 113, 237, 0.15); }
+tr.added { animation: new-star 2s ease-out; }
+@keyframes new-star {
+    from { background: rgba(255, 215, 0, 0.35); box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.6); }
+    to { background: transparent; box-shadow: none; }
+}
+.emp-id { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--aqua); }
 .row-actions { text-align: right; }
 
 .btn {
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font: inherit;
-    cursor: pointer;
-}
-.btn:hover { background: rgba(255, 255, 255, 0.16); }
-.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
     border: none;
-    background: linear-gradient(90deg, var(--pink), var(--violet));
-    font-weight: 700;
-    box-shadow: 0 6px 24px rgba(255, 61, 154, 0.35);
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--violet) 0%, var(--orchid) 100%);
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(196, 113, 237, 0.4);
+    transition: all 0.3s ease;
 }
-.btn-primary:hover { filter: brightness(1.1); }
-.btn-danger { border-color: var(--danger); color: #ffd6de; }
-.btn-small { padding: 4px 12px; font-size: 0.85rem; }
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+    box-shadow: 0 0 25px rgba(196, 113, 237, 0.8), 0 0 35px rgba(118, 75, 162, 0.5);
+}
+.btn-danger {
+    background: linear-gradient(135deg, var(--coral) 0%, var(--rose) 100%);
+    box-shadow: 0 0 15px rgba(247, 121, 125, 0.4);
+}
+.btn-danger:hover { box-shadow: 0 0 25px rgba(247, 121, 125, 0.8), 0 0 35px rgba(247, 37, 133, 0.5); }
+.btn-ghost {
+    background: rgba(13, 1, 24, 0.5);
+    color: var(--aqua);
+    border: 1.5px solid var(--aqua);
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+}
+.btn-small { padding: 6px 12px; font-size: 13px; }
 
+/* モーダル */
 dialog {
     width: min(560px, calc(100% - 32px));
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: #1a1036;
-    color: var(--text);
-    padding: 24px;
+    padding: 30px;
+    border-radius: 16px;
+    border: 2.5px solid rgba(196, 113, 237, 0.6);
+    background: rgba(26, 10, 46, 0.95);
+    color: #fff;
+    box-shadow: 0 0 50px rgba(196, 113, 237, 0.5);
 }
-dialog::backdrop { background: rgba(5, 2, 20, 0.7); backdrop-filter: blur(4px); }
+dialog[open] { animation: modal-open 0.4s ease-out; }
+dialog::backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); }
 dialog h2 { margin-top: 0; }
-
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid .wide { grid-column: 1 / -1; }
-label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--muted); }
-input {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text);
-    font: inherit;
+@keyframes modal-open {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
-input:focus { outline: 2px solid var(--pink); border-color: transparent; }
 
-.actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid .wide { grid-column: 1 / -1; }
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: bold;
+    color: var(--gold);
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(196, 113, 237, 0.4);
+    background: rgba(13, 1, 24, 0.8);
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    background: rgba(26, 10, 46, 0.9);
+}
+.actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 
-@media (max-width: 600px) {
+/* 小宇宙（コスモ）ローディング */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0015 50%, #000 100%);
+}
+.loading-overlay.show { display: flex; }
+.loading-overlay::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+        radial-gradient(2px 2px at 40% 70%, var(--gold), transparent),
+        radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+        radial-gradient(2px 2px at 60% 20%, #87ceeb, transparent),
+        radial-gradient(1px 1px at 70% 60%, #fff, transparent),
+        radial-gradient(2px 2px at 80% 40%, var(--gold), transparent),
+        radial-gradient(1px 1px at 90% 80%, #fff, transparent),
+        radial-gradient(1px 1px at 10% 90%, #87ceeb, transparent);
+    background-size: 250px 250px;
+    animation: twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.8; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-10px); }
+}
+.loading-box { position: relative; padding: 60px 40px; text-align: center; }
+.loading-spinner {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    animation: spinner-burn 2s ease-in-out infinite;
+}
+@keyframes spinner-burn {
+    0%, 100% { filter: drop-shadow(0 0 20px var(--gold)) drop-shadow(0 0 40px #ff6b00); }
+    50% { filter: drop-shadow(0 0 40px var(--gold)) drop-shadow(0 0 80px #ff6b00) drop-shadow(0 0 120px #ff0000); }
+}
+.loading-spinner::before {
+    content: '☆';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 80px;
+    color: var(--gold);
+    transform: translate(-50%, -50%);
+    animation: star-pulse 1s ease-in-out infinite;
+}
+@keyframes star-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) scale(1.2) rotate(180deg); }
+}
+.loading-spinner::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border: 3px solid transparent;
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+    color: var(--gold);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px var(--gold), 0 0 20px #ff6b00, 0 0 30px #ff0000;
+}
+
+/* クリックで飛び散るコスモ */
+.cosmos-particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform, opacity;
+}
+
+/* 流星 */
+.shooting-star {
+    position: fixed;
+    width: 180px;
+    height: 3px;
+    background: linear-gradient(90deg, #fff 0%, rgba(0, 255, 204, 0.4) 45%, transparent 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+    transform: rotate(-35deg);
+    animation: shooting-star 1.5s ease-out forwards;
+}
+@keyframes shooting-star {
+    0% { transform: rotate(-35deg) translate(0, 0) scale(0); opacity: 0; }
+    15% { opacity: 0.9; }
+    100% { transform: rotate(-35deg) translate(-600px, 0) scale(1.2); opacity: 0; }
+}
+
+@media (max-width: 640px) {
+    body { padding: 10px; }
+    .container { padding: 16px; }
+    header { padding: 16px; }
+    h1 { font-size: 22px; }
     .grid { grid-template-columns: 1fr; }
-    .toolbar { flex-direction: column; align-items: stretch; }
 }
