@@ -114,3 +114,5 @@ cdk.out
 
 *.sql
 !docs/day4/cf/academy/frontend/app.js
+!docs/2026/day2/app/public/app.js
+!docs/2026/day2/app/init.sql

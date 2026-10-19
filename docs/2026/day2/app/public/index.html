@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>従業員情報管理システム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 小宇宙（コスモ）ローディング -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-box">
+            <div class="loading-spinner"></div>
+            <div id="loading-text" class="loading-text">小宇宙を燃やせ！</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>従業員情報管理システム</h1>
+        </header>
+
+        <section id="badge" class="badge" aria-live="polite">
+            <div class="badge-label">接続先</div>
+            <div class="badge-source" id="badge-source">確認中…</div>
+            <div class="badge-host" id="badge-host"></div>
+            <div class="badge-meta" id="badge-meta"></div>
+        </section>
+
+        <div id="error-message" class="error-message" hidden></div>
+        <div id="success-message" class="success-message" hidden></div>
+
+        <div class="toolbar">
+            <h2>従業員一覧 <span class="count">（<span id="count">0</span> 名）</span></h2>
+            <button class="btn" data-action="open-create">新規従業員登録</button>
+            <button class="btn btn-ghost" data-action="refresh">データ更新</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>従業員ID</th>
+                        <th>氏名</th>
+                        <th>メールアドレス</th>
+                        <th>部署</th>
+                        <th>役職</th>
+                        <th>入社日</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="rows">
+                    <tr><td colspan="7">データを読み込み中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <dialog id="editor">
+        <form id="editor-form">
+            <h2 id="editor-title">新規従業員登録</h2>
+            <div class="grid">
+                <label>従業員ID<input name="employee_id" maxlength="20" required></label>
+                <label>部署
+                    <select name="department" required>
+                        <option value="">選択してください</option>
+                        <option value="開発部">開発部</option>
+                        <option value="営業部">営業部</option>
+                        <option value="管理部">管理部</option>
+                        <option value="人事部">人事部</option>
+                    </select>
+                </label>
+                <label>姓<input name="last_name" maxlength="50" required></label>
+                <label>名<input name="first_name" maxlength="50" required></label>
+                <label class="wide">メールアドレス<input name="email" type="email" maxlength="100" required></label>
+                <label>役職<input name="position" maxlength="50"></label>
+                <label>入社日<input name="hire_date" type="date"></label>
+            </div>
+            <p id="editor-error" class="error-message" hidden></p>
+            <div class="actions">
+                <button type="button" class="btn btn-ghost" data-action="close-editor">キャンセル</button>
+                <button type="submit" class="btn" id="editor-submit">登録</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="app.js"></script>
+</body>
+</html>
