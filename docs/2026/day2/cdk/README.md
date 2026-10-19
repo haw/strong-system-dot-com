@@ -15,8 +15,7 @@
 
 EC2 は起動時に Docker を入れ、このリポジトリの `docs/2026/day2/app` を `DB_SOURCE=local` で起動します。起動完了まで数分かかります。ログは EC2 の `/var/log/day2-setup.log` です。
 
-- bootstrap は不要です（アセットを使わず、テンプレートを直接渡すため）。
-- 環境（アカウントとリージョン）はコードに書いていません。デプロイ先は `AWS_REGION` で決まります。
+環境（アカウントとリージョン）はコードに書いていません。デプロイ先は `AWS_REGION` で決まります。
 
 ## 準備（CloudShell）
 
@@ -25,6 +24,14 @@ git clone https://github.com/haw/strong-system-dot-com.git
 cd strong-system-dot-com/docs/2026/day2/cdk
 npm ci
 ```
+
+受講者がいるリージョンごとに、1回だけ bootstrap します。すでに済んでいるリージョンで実行しても問題ありません。
+
+```bash
+AWS_REGION=us-west-2 npx cdk bootstrap -c userName=tanaka
+```
+
+`-c userName=` は、アプリの読み込みに必要なだけです。どの名前でも構いません。
 
 ## デプロイ（受講者1人分）
 

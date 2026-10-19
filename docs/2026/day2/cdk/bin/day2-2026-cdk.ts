@@ -19,6 +19,4 @@ new Day2Stack(app, `day2-2026-${userName}`, {
   allowedCidr,
   // env は指定しない。デプロイ先のリージョンは AWS_REGION で決まり、どのリージョンでも同じテンプレートを使う。
   description: `Day 2 (2026) starting point for ${userName}`,
-  // アセットを使わず、テンプレートも小さいので、bootstrap なしでテンプレートを直接渡してデプロイする。
-  synthesizer: new cdk.LegacyStackSynthesizer(),
 });
