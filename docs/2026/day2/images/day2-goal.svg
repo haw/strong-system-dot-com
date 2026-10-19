@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="今日あなたが作るもの">
+<defs>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#1f2a3d" flood-opacity="0.18"/></filter>
+<marker id="arrow-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1c6dd0"/></marker><marker id="arrow-you" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e8590c"/></marker><marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa3b2"/></marker>
+</defs>
+<rect width="1200" height="800" fill="#ffffff"/>
+<text x="22" y="42" font-size="26" font-weight="800" fill="#1f2a3d" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">今日あなたが作るもの</text>
+<text x="22" y="66" font-size="14" font-weight="400" fill="#5b6578" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">ローカルの MySQL から RDS へ移し、パスワードは Parameter Store から読む</text>
+<rect x="200" y="80" width="985" height="700" rx="16" fill="#f4f6fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<text x="220" y="108" font-size="15" font-weight="700" fill="#5b6578" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">AWS リージョン（あなたに割り当てられたリージョン）</text>
+<rect x="222" y="125" width="705" height="635" rx="14" fill="#eef6ee" stroke="#4f8a4f" stroke-width="2" filter="url(#shadow)"/>
+<text x="240" y="152" font-size="16" font-weight="800" fill="#4f8a4f" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">VPC</text>
+<text x="282" y="152" font-size="14" font-weight="600" fill="#4f8a4f" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">day2-2026-vpc-{名前}　10.0.0.0/16</text>
+<rect x="240" y="168" width="328" height="575" rx="12" fill="none" stroke="#7d8796" stroke-width="1.4" stroke-dasharray="7 5"/>
+<text x="404" y="188" font-size="13" font-weight="700" fill="#7d8796" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">アベイラビリティゾーン 1</text>
+<rect x="250" y="198" width="308" height="275" rx="10" fill="#e7f3fb" stroke="#6aa6d6" stroke-width="1.6"/>
+<text x="262" y="218" font-size="13" font-weight="700" fill="#2f6fa3" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">パブリックサブネット</text>
+<rect x="250" y="486" width="308" height="247" rx="10" fill="#f3eefb" stroke="#9a7bc8" stroke-width="1.6"/>
+<text x="262" y="506" font-size="13" font-weight="700" fill="#6b4fa0" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">プライベートサブネット</text>
+<rect x="582" y="168" width="328" height="575" rx="12" fill="none" stroke="#7d8796" stroke-width="1.4" stroke-dasharray="7 5"/>
+<text x="746" y="188" font-size="13" font-weight="700" fill="#7d8796" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">アベイラビリティゾーン 2</text>
+<rect x="592" y="198" width="308" height="275" rx="10" fill="#e7f3fb" stroke="#6aa6d6" stroke-width="1.6"/>
+<text x="604" y="218" font-size="13" font-weight="700" fill="#2f6fa3" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">パブリックサブネット</text>
+<rect x="592" y="486" width="308" height="247" rx="10" fill="#f3eefb" stroke="#9a7bc8" stroke-width="1.6"/>
+<text x="604" y="506" font-size="13" font-weight="700" fill="#6b4fa0" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">プライベートサブネット</text>
+<text x="746" y="340" font-size="12" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">（このハンズオンでは使わない）</text>
+<rect x="258" y="230" width="296" height="226" rx="10" fill="none" stroke="#c2410c" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="268" y="249" font-size="11.5" font-weight="700" fill="#c2410c" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">SG day2-2026-app-sg-{名前}（3000番）</text>
+<rect x="272" y="258" width="268" height="186" rx="10" fill="#fff4e8" stroke="#e07b1f" stroke-width="2" filter="url(#shadow)"/>
+<text x="286" y="280" font-size="15" font-weight="800" fill="#e07b1f" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">EC2</text>
+<text x="322" y="280" font-size="12.5" font-weight="600" fill="#e07b1f" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">day2-2026-app-{名前}</text>
+<text x="527" y="280" font-size="11" font-weight="400" fill="#5b6578" text-anchor="end" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">Docker</text>
+<rect x="290" y="296" width="180" height="50" rx="8" fill="#ffffff" stroke="#e07b1f" stroke-width="1.4"/>
+<text x="380" y="318" font-size="14" font-weight="700" fill="#1f2a3d" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">アプリ（社員名簿）</text>
+<text x="380" y="337" font-size="11" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace">:3000</text>
+<rect x="290" y="378" width="180" height="50" rx="8" fill="#f3f3f3" stroke="#9aa3b2" stroke-width="1.4"/>
+<text x="380" y="400" font-size="14" font-weight="700" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">MySQL（ローカル）</text>
+<text x="380" y="419" font-size="11" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">移行元</text>
+<path d="M360 346 V376" fill="none" stroke="#9aa3b2" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-gray)"/>
+<rect x="256" y="520" width="638" height="200" rx="12" fill="none" stroke="#6b4fa0" stroke-width="2" stroke-dasharray="10 6"/>
+<text x="575" y="713" font-size="12.5" font-weight="700" fill="#6b4fa0" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">DBサブネットグループ day2-2026-db-subnet-group-{名前}</text>
+<rect x="948" y="168" width="222" height="110" rx="10" fill="#fdecef" stroke="#c7385a" stroke-width="1.8" filter="url(#shadow)"/>
+<text x="962" y="192" font-size="15" font-weight="800" fill="#c7385a" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">IAMロール</text>
+<text x="962" y="212" font-size="12" font-weight="600" fill="#c7385a" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">day2-2026-ec2-role-{名前}</text>
+<text x="962" y="236" font-size="12" font-weight="400" fill="#1f2a3d" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">Session Manager で接続</text>
+<text x="962" y="256" font-size="12" font-weight="400" fill="#1f2a3d" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">/day2-2026/{名前}/db/* だけ読める</text>
+<path d="M948 230 H530 V256" fill="none" stroke="#c7385a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow-gray)"/>
+<text x="830" y="250" font-size="12" font-weight="700" fill="#c7385a" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">EC2 に付いている</text>
+<rect x="948" y="470" width="222" height="200" rx="10" fill="#fff1e6" stroke="#e8590c" stroke-width="2.5" filter="url(#shadow)"/>
+<text x="962" y="495" font-size="15" font-weight="800" fill="#e8590c" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">Parameter Store</text>
+<text x="962" y="514" font-size="11.5" font-weight="400" fill="#1f2a3d" text-anchor="start" font-family="ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace">/day2-2026/{名前}/db/</text>
+<rect x="962" y="525" width="194" height="24" rx="5" fill="#ffffff" stroke="#e3c4ad" stroke-width="1.2"/>
+<text x="970" y="542" font-size="12.5" font-weight="700" fill="#1f2a3d" text-anchor="start" font-family="ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace">host</text>
+<text x="1148" y="542" font-size="11" font-weight="400" fill="#5b6578" text-anchor="end" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">String</text>
+<rect x="962" y="555" width="194" height="24" rx="5" fill="#ffffff" stroke="#e3c4ad" stroke-width="1.2"/>
+<text x="970" y="572" font-size="12.5" font-weight="700" fill="#1f2a3d" text-anchor="start" font-family="ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace">user</text>
+<text x="1148" y="572" font-size="11" font-weight="400" fill="#5b6578" text-anchor="end" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">String</text>
+<rect x="962" y="585" width="194" height="24" rx="5" fill="#ffffff" stroke="#e3c4ad" stroke-width="1.2"/>
+<text x="970" y="602" font-size="12.5" font-weight="700" fill="#1f2a3d" text-anchor="start" font-family="ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace">name</text>
+<text x="1148" y="602" font-size="11" font-weight="400" fill="#5b6578" text-anchor="end" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">String</text>
+<rect x="962" y="615" width="194" height="24" rx="5" fill="#ffffff" stroke="#e8590c" stroke-width="1.2"/>
+<text x="970" y="632" font-size="12.5" font-weight="700" fill="#1f2a3d" text-anchor="start" font-family="ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace">password</text>
+<text x="1148" y="632" font-size="11" font-weight="700" fill="#e8590c" text-anchor="end" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">SecureString</text>
+<rect x="962" y="645" width="130" height="21" rx="10.5" fill="#e8590c"/><text x="1027" y="661" font-size="12" font-weight="700" fill="#fff" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">手順5 あなたが作る</text>
+<rect x="22" y="300" width="150" height="120" rx="14" fill="#ffffff" stroke="#9aa3b2" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="57" y="318" width="80" height="52" rx="4" fill="#dbe7f7" stroke="#1f2a3d" stroke-width="2"/>
+<path d="M45 376 H149 L157 388 H37 Z" fill="#1f2a3d"/>
+<text x="97" y="410" font-size="14" font-weight="700" fill="#1f2a3d" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">あなたのブラウザ</text>
+<path d="M172 345 C 215 345, 230 321, 288 321" fill="none" stroke="#1c6dd0" stroke-width="2.5" marker-end="url(#arrow-flow)"/>
+<rect x="13.560000000000002" y="276" width="166.88" height="21" rx="6" fill="#ffffff" stroke="#1c6dd0" stroke-width="1.2"/><text x="97" y="291" font-size="12" font-weight="700" fill="#1c6dd0" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">http://…:3000</text>
+<rect x="266" y="548" width="280" height="152" rx="10" fill="none" stroke="#e8590c" stroke-width="2.2" stroke-dasharray="7 4"/>
+<text x="330" y="567" font-size="11.5" font-weight="700" fill="#e8590c" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">SG day2-2026-rds-sg-{名前}</text>
+<text x="330" y="583" font-size="11" font-weight="400" fill="#e8590c" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">3306 をアプリの SG からだけ許可</text>
+<rect x="290" y="594" width="180" height="92" rx="10" fill="#fff1e6" stroke="#e8590c" stroke-width="2.5" filter="url(#shadow)"/>
+<text x="380" y="618" font-size="15" font-weight="800" fill="#e8590c" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">RDS for MySQL</text>
+<text x="380" y="637" font-size="12" font-weight="600" fill="#1f2a3d" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">day2-2026-db-{名前}</text>
+<text x="380" y="655" font-size="11.5" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">Single-AZ・ユーザー admin</text>
+<text x="380" y="674" font-size="11" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">移行先</text>
+<rect x="478" y="677" width="73" height="21" rx="10.5" fill="#e8590c"/><text x="514.5" y="693" font-size="12" font-weight="700" fill="#fff" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">手順2・3</text>
+<text x="746" y="660" font-size="12.5" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">Single-AZ なので、</text>
+<text x="746" y="680" font-size="12.5" font-weight="400" fill="#5b6578" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">こちらには RDS は置かれない</text>
+<path d="M310 428 V592" fill="none" stroke="#e8590c" stroke-width="3" stroke-dasharray="9 5" marker-end="url(#arrow-you)"/>
+<rect x="322" y="456" width="131.6" height="21" rx="6" fill="#ffffff" stroke="#e8590c" stroke-width="1.2"/><text x="387.8" y="471" font-size="12" font-weight="700" fill="#e8590c" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">手順4 データを移す</text>
+<path d="M470 309 H930 V520 H946" fill="none" stroke="#1c6dd0" stroke-width="2.6" marker-end="url(#arrow-flow)"/>
+<rect x="639.04" y="286" width="213.92" height="21" rx="6" fill="#ffffff" stroke="#1c6dd0" stroke-width="1.2"/><text x="746" y="301" font-size="12" font-weight="700" fill="#1c6dd0" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">手順6 設定を読む（ロールの権限）</text>
+<path d="M470 334 H510 V640 H472" fill="none" stroke="#1c6dd0" stroke-width="2.6" marker-end="url(#arrow-flow)"/>
+<rect x="518" y="578" width="202.16" height="21" rx="6" fill="#ffffff" stroke="#1c6dd0" stroke-width="1.2"/><text x="619.08" y="593" font-size="12" font-weight="700" fill="#1c6dd0" text-anchor="middle" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">手順6 接続（3306・TLS）</text>
+<rect x="22" y="738" width="150" height="70" rx="8" fill="#ffffff" stroke="#9aa3b2" stroke-width="1.5"/>
+<rect x="34" y="749" width="20" height="14" rx="3" fill="#f4f6fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<text x="62" y="761" font-size="12" font-weight="400" fill="#1f2a3d" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">講師が用意（CDK）</text>
+<rect x="34" y="775" width="20" height="14" rx="3" fill="#fff1e6" stroke="#e8590c" stroke-width="2"/>
+<text x="62" y="787" font-size="12" font-weight="700" fill="#e8590c" text-anchor="start" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif">あなたが作る</text>
+</svg>
