@@ -1,0 +1,37 @@
+# Day 2 hands-on: the app and its local MySQL on one EC2.
+# Switch the database by editing DB_SOURCE in .env, then run: docker compose up -d
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DB_SOURCE: ${DB_SOURCE:-local}
+      PARAM_PREFIX: ${PARAM_PREFIX:-}
+      AWS_REGION: ${AWS_REGION:-}
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4.5
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: employee_db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+volumes:
+  db-data:
