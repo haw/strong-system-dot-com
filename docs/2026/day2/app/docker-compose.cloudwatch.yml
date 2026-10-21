@@ -1,0 +1,11 @@
+# Sends the app's logs to CloudWatch Logs (Day 3). Not used by Day 2 or local runs.
+# Enable it with COMPOSE_FILE=docker-compose.yml:docker-compose.cloudwatch.yml in .env,
+# and set LOG_GROUP and AWS_REGION there. "docker compose logs app" still works.
+services:
+  app:
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${AWS_REGION}
+        awslogs-group: ${LOG_GROUP}
+        awslogs-stream: app
