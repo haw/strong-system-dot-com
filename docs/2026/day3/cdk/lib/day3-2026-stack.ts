@@ -172,6 +172,10 @@ export class Day3Stack extends cdk.Stack {
       `cd ${appDir}`,
       'sudo -u ubuntu docker compose up -d --build --no-deps app',
       '',
+      '# 1分ごとに社員一覧の API を呼ぶ（利用者のアクセスの代わり）。障害が起きると、アプリがエラーをログに出し続ける。',
+      "printf '%s\\n' '# Day 3/4: call the app every minute in place of users' '* * * * * root curl -s -o /dev/null --max-time 50 http://localhost:3000/api/employees' > /etc/cron.d/day3-app-traffic",
+      'chmod 644 /etc/cron.d/day3-app-traffic',
+      '',
       'echo "Day 3 setup completed"',
     );
 
