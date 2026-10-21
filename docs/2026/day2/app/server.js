@@ -60,7 +60,9 @@ async function connect() {
         // 切り替えはここだけ。どちらで読んでも、このあとの接続処理は同じ。
         const config = DB_SOURCE === 'ssm' ? await loadSsmConfig() : await loadLocalConfig();
         dbInfo = { source: DB_SOURCE, host: config.host, database: config.database };
-        pool = mysql.createPool({ ...config, charset: 'utf8mb4', dateStrings: true, connectionLimit: 5 });
+        // maxIdle: 0 で、使い終わった接続を残さず閉じる。アクセスのたびに新しく接続するので、
+        // セキュリティグループなどの変更が、次のアクセスからすぐに効く（古い接続が使われ続けない）。
+        pool = mysql.createPool({ ...config, charset: 'utf8mb4', dateStrings: true, connectionLimit: 5, maxIdle: 0 });
         console.log(`DB_SOURCE=${DB_SOURCE} host=${config.host} database=${config.database}`);
     } catch (err) {
         // パスワードはログに出さない。エラーの種類とメッセージだけを残す。

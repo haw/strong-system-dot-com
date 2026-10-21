@@ -19,6 +19,8 @@ Day 2 を終えた状態（社員名簿のアプリが RDS につながって、
 
 EC2 は起動時に Docker を入れ、Day 2 のアプリ（`docs/2026/day2/app`）を `DB_SOURCE=ssm` で起動します。ログは、Docker の `awslogs` ログドライバーで CloudWatch Logs にも送ります（`docker-compose.cloudwatch.yml`。`.env` の `COMPOSE_FILE` で読み込む）。その前に、アプリの `init.sql`（社員10名）をRDSへ流し込みます。ログは EC2 の `/var/log/day3-setup.log` です。
 
+EC2 では、cron（`/etc/cron.d/day3-app-traffic`）が1分ごとに社員一覧の API を呼びます。利用者のアクセスの代わりで、障害が起きるとアプリがエラーをログに出し続けます。Day 4 でも、このスタックをそのまま使います。
+
 ## パスワード（デプロイの前に作る）
 
 `/day3-2026/{名前}/db/password` の SecureString は、CloudFormation では作れません。**デプロイの前に**作っておきます。値は、Day 2 の手順書で使っている研修用パスワードです。
