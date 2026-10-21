@@ -95,7 +95,7 @@ RDSへの通信を、アプリケーションのEC2からだけ許可します�
    | DBインスタンス識別子 | `day2-2026-db-{あなたの名前}` |
    | マスターユーザー名 | `admin` |
    | 認証情報管理 | セルフマネージド |
-   | マスターパスワード | 自分で決める。8文字以上で、`/` `'` `"` `@` と空白は使えない |
+   | マスターパスワード | 研修用パスワード `Tr41n-Rds2026-Kq7mZx` をコピーして貼り付ける。確認用の欄にも同じ値を貼り付ける（下の注意を参照） |
    | インスタンスの設定 | バースト可能クラス、`db.t3.micro` |
    | ストレージ | 汎用SSD（gp3）、20 GiB。「ストレージの自動スケーリング」はオフ |
    | コンピューティングリソース | EC2コンピューティングリソースに接続しない |
@@ -109,7 +109,13 @@ RDSへの通信を、アプリケーションのEC2からだけ許可します�
 
 3. 「データベースの作成」を選ぶ。
 
-マスターパスワードは、手順4と手順5で使います。忘れないようにしてください。
+マスターパスワードは、入力の間違いを防ぐため、研修用に決めた次の値をコピーして使います。手順4と手順5でも同じ値を使います。
+
+```text
+Tr41n-Rds2026-Kq7mZx
+```
+
+**この値は研修用で、この手順書と一緒に公開されています。実際の業務では、このような公開された値は使いません。** 自分だけが知る、推測されにくいパスワードを使います。
 
 「拡張モニタリング」を有効にすると、OSレベルの細かい指標を集めるため、RDSがモニタリング用のIAMロールを作ります。このハンズオンでは使わないので、無効にします。
 
@@ -187,7 +193,11 @@ head -n 20 employee_db.sql
    docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "source /tmp/employee_db.sql"
    ```
 
-   `Enter password:` と表示されたら、手順3で決めたマスターパスワードを入力します。入力した文字は表示されません。
+   `Enter password:` と表示されたら、手順3の研修用パスワードを貼り付けて Enter を押します。貼り付けた文字は表示されません。
+
+   ```text
+   Tr41n-Rds2026-Kq7mZx
+   ```
 
 パスワードをコマンドに書かず、入力を求めさせています。コマンドに書くと、コマンドの履歴に残るためです。`--ssl-mode=REQUIRED` は、RDSとの通信をTLSで暗号化する指定です。`--default-character-set=utf8mb4` は、日本語を正しく扱うための指定です。
 
@@ -195,6 +205,12 @@ head -n 20 employee_db.sql
 
 ```bash
 docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "SELECT COUNT(*) FROM employee_db.employees; SELECT employee_id, last_name, first_name FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
+```
+
+`Enter password:` には、4-5と同じ研修用パスワードを貼り付けます。
+
+```text
+Tr41n-Rds2026-Kq7mZx
 ```
 
 **期待結果：4-3でメモした件数と `L-{あなたの名前}` の行が、RDSでも同じ。** これで、データがRDSへコピーされたことが確かめられました（事前学習8.1の1つ目）。
@@ -211,7 +227,7 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --de
    | `/day2-2026/{あなたの名前}/db/host` | 文字列（String） | RDSのエンドポイント |
    | `/day2-2026/{あなたの名前}/db/user` | 文字列（String） | `admin` |
    | `/day2-2026/{あなたの名前}/db/name` | 文字列（String） | `employee_db` |
-   | `/day2-2026/{あなたの名前}/db/password` | 安全な文字列（SecureString） | 手順3で決めたマスターパスワード |
+   | `/day2-2026/{あなたの名前}/db/password` | 安全な文字列（SecureString） | `Tr41n-Rds2026-Kq7mZx`（手順3の研修用パスワード） |
 
    `password` の「KMSキーソース」は「現在のアカウント」、「KMSキーID」は `alias/aws/ssm` のままにします。
 
@@ -364,10 +380,10 @@ VPC、EC2、DBサブネットグループ、IAMロールは講師が削除しま
 | アプリケーションの画面が開かない | `http://`（`https://` ではない）と `:3000` を付けたか。手順4-2で止めた後なら、表示されないのは想定どおり |
 | RDSのVPCやサブネットグループが選べない | コンソール右上のリージョンが、自分のリージョンか |
 | 4-5で接続できずに止まる、`Can't connect` | RDSの「ステータス」が「利用可能」か。RDSのセキュリティグループが `day2-2026-rds-sg-{あなたの名前}` だけか。そのインバウンドルールのソースが `day2-2026-app-sg-{あなたの名前}` か |
-| 4-5で `Access denied` | ユーザー名が `admin` か。パスワードが、手順3で決めたものか |
+| 4-5で `Access denied` | ユーザー名が `admin` か。パスワードが `Tr41n-Rds2026-Kq7mZx` か。前後に空白が入っていないか |
 | 4-6で件数が違う | 4-2でアプリケーションを止めた後にダンプを取ったか |
 | 切り替え後、「接続先」の下に「パラメータが見つかりません」 | パラメータの名前の先頭が `/day2-2026/{あなたの名前}/db/` か。4つすべて作ったか。作ったリージョンが自分のリージョンか |
 | 切り替え後、`AccessDeniedException` | パラメータを作った場所が、ロールの `Allow` と同じ場所か |
-| 切り替え後、`Access denied for user` | `/user` と `/password` の値が、手順3の設定と同じか。直したら `docker compose up -d --force-recreate app` で起動し直す |
+| 切り替え後、`Access denied for user` | `/user` の値が `admin` か。`/password` の値が `Tr41n-Rds2026-Kq7mZx` で、前後に空白が入っていないか。直したら `docker compose up -d --force-recreate app` で起動し直す |
 | 切り替え後、`ETIMEDOUT` | `/host` の値がRDSのエンドポイントか。RDSのセキュリティグループの設定 |
 | 画面が古いまま | `.env` の `DB_SOURCE` を確かめ、`docker compose up -d` を実行したか |
