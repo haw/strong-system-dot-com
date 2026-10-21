@@ -1,6 +1,8 @@
-// Day 2 hands-on app: employee CRUD that switches its database by DB_SOURCE.
-//   DB_SOURCE=local  -> MySQL container on this EC2 (settings from env vars)
-//   DB_SOURCE=ssm    -> Amazon RDS (settings read from Parameter Store at startup)
+// Day 2 ハンズオン用アプリ（社員名簿）。
+// 接続情報をどこから持ってくるかを、環境変数 DB_SOURCE で切り替える。
+//   local : このファイルに書いた値で、同じEC2のMySQLコンテナにつなぐ
+//   ssm   : 起動時に Parameter Store から読んだ値でつなぐ
+// ssm で RDS につながるのは、Parameter Store の host に RDS のエンドポイントを入れたから。
 const path = require('path');
 const express = require('express');
 const mysql = require('mysql2/promise');
@@ -15,6 +17,7 @@ let pool = null;
 let dbInfo = { source: DB_SOURCE, host: null, database: null };
 let configError = null;
 
+// local：接続情報は、このファイルに書いてある（パスワードも）。
 async function loadLocalConfig() {
     return {
         host: process.env.DB_HOST || 'db',
@@ -24,7 +27,9 @@ async function loadLocalConfig() {
     };
 }
 
-// Reads <prefix>/host, /user, /name (String) and /password (SecureString).
+// ssm：接続情報を Parameter Store から読む。読む権限は EC2 のロールにある。
+// {PARAM_PREFIX}/host, /user, /name は String、/password は SecureString。
+// WithDecryption: true で、SecureString を復号した値を受け取る。
 async function loadSsmConfig() {
     if (!PARAM_PREFIX) {
         throw new Error('PARAM_PREFIX が設定されていません');
@@ -45,19 +50,20 @@ async function loadSsmConfig() {
         user: values.user,
         password: values.password,
         database: values.name,
-        // TLS to RDS, verified with the Amazon RDS CA certificates.
+        // RDS とは TLS でつなぎ、相手が本物の RDS かを Amazon RDS の CA 証明書で確かめる。
         ssl: awsCaBundle,
     };
 }
 
 async function connect() {
     try {
+        // 切り替えはここだけ。どちらで読んでも、このあとの接続処理は同じ。
         const config = DB_SOURCE === 'ssm' ? await loadSsmConfig() : await loadLocalConfig();
         dbInfo = { source: DB_SOURCE, host: config.host, database: config.database };
         pool = mysql.createPool({ ...config, charset: 'utf8mb4', dateStrings: true, connectionLimit: 5 });
         console.log(`DB_SOURCE=${DB_SOURCE} host=${config.host} database=${config.database}`);
     } catch (err) {
-        // Never log the password; only the error name and message.
+        // パスワードはログに出さない。エラーの種類とメッセージだけを残す。
         configError = `${err.name}: ${err.message}`;
         console.error(`設定の読み込みに失敗しました (${configError})`);
     }
