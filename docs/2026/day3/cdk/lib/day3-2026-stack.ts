@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
@@ -111,6 +112,14 @@ export class Day3Stack extends cdk.Stack {
       },
     });
 
+    // アプリのログを送る CloudWatch Logs のロググループ。ログを送るのは EC2 上の Docker なので、EC2 のロールに書く権限を付ける。
+    const appLogGroup = new logs.LogGroup(this, 'AppLogs', {
+      logGroupName: `/${prefix}/${userName}/app`,
+      retention: logs.RetentionDays.ONE_WEEK,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+    appLogGroup.grantWrite(role);
+
     const machineImage = ec2.MachineImage.fromSsmParameter(
       '/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id',
     );
@@ -151,11 +160,13 @@ export class Day3Stack extends cdk.Stack {
       'unset DB_PASSWORD',
       'set -x',
       '',
-      '# アプリを RDS につないで起動する',
+      '# アプリを RDS につないで起動する。ログは CloudWatch Logs にも送る（docker-compose.cloudwatch.yml）',
       `cat > ${appDir}/.env <<'EOF'`,
       'DB_SOURCE=ssm',
       `PARAM_PREFIX=${paramPath}`,
       `AWS_REGION=${this.region}`,
+      'COMPOSE_FILE=docker-compose.yml:docker-compose.cloudwatch.yml',
+      `LOG_GROUP=${appLogGroup.logGroupName}`,
       'EOF',
       `chown ubuntu:ubuntu ${appDir}/.env`,
       `cd ${appDir}`,
@@ -190,5 +201,6 @@ export class Day3Stack extends cdk.Stack {
     new cdk.CfnOutput(this, 'RdsSecurityGroupId', { value: rdsSg.securityGroupId });
     new cdk.CfnOutput(this, 'AppSecurityGroupId', { value: appSg.securityGroupId });
     new cdk.CfnOutput(this, 'ParameterPath', { value: paramPath });
+    new cdk.CfnOutput(this, 'AppLogGroup', { value: appLogGroup.logGroupName });
   }
 }
