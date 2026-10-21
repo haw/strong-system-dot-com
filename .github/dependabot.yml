@@ -129,3 +129,19 @@ updates:
       # TypeScript 7 (native compiler) is not verified with ts-node yet.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "npm"
+    directory: "/docs/2026/day3/cdk"
+    registries:
+      - takumi_guard_npm
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 7
+    ignore:
+      # TypeScript 7 (native compiler) is not verified with ts-node yet.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
