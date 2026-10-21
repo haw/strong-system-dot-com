@@ -223,6 +223,63 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --de
 
 ## 手順6：アプリケーションの接続先を切り替える
 
+アプリケーションがどこへ接続するかは、アプリケーションのコードで決まっています。切り替える前に、その部分を読みます。
+
+### 6-1. 接続先を決めているコードを読む
+
+EC2のターミナルで、`DB_SOURCE` を使っている行を探します。
+
+```bash
+grep -n "DB_SOURCE" server.js
+```
+
+接続先を決めているのは、次の部分です（`server.js` から抜粋）。
+
+```js
+const DB_SOURCE = process.env.DB_SOURCE === 'ssm' ? 'ssm' : 'local';
+
+// local：接続情報は、このファイルに書いてある（パスワードも）。
+async function loadLocalConfig() {
+    return {
+        host: process.env.DB_HOST || 'db',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || 'password',
+        database: process.env.DB_NAME || 'employee_db',
+    };
+}
+
+// ssm：接続情報を Parameter Store から読む。読む権限は EC2 のロールにある。
+async function loadSsmConfig() {
+    // （省略）
+    const keys = ['host', 'user', 'name', 'password'];
+    const names = keys.map((key) => `${PARAM_PREFIX}/${key}`);
+    const ssm = new SSMClient({});
+    const result = await ssm.send(new GetParametersCommand({ Names: names, WithDecryption: true }));
+    // （省略）
+}
+
+// 切り替えはここだけ。どちらで読んでも、このあとの接続処理は同じ。
+const config = DB_SOURCE === 'ssm' ? await loadSsmConfig() : await loadLocalConfig();
+```
+
+2つの関数の全体は、次のコマンドで表示できます。
+
+```bash
+sed -n '/^async function loadLocalConfig/,/^}/p' server.js
+sed -n '/^async function loadSsmConfig/,/^}/p' server.js
+```
+
+| 見るところ | 分かること |
+| --- | --- |
+| `const DB_SOURCE = ...` | 環境変数 `DB_SOURCE` で決まる。`ssm` 以外は、すべて `local` として扱う |
+| `loadLocalConfig` | 接続情報がコードに書いてある。パスワード `password` も |
+| `loadSsmConfig` | `PARAM_PREFIX` の下の `host`、`user`、`name`、`password` を読む。手順5で作った4つの名前と同じ。`WithDecryption: true` で、SecureStringを復号した値を受け取る |
+| `const config = ...` | 変わるのは「接続情報をどこから持ってくるか」だけ。そのあとのつなぎ方は同じ |
+
+`ssm` にするとRDSにつながるのは、`ssm` がRDSを意味するからではありません。Parameter Storeの `host` に、RDSのエンドポイントを入れたからです。
+
+### 6-2. 切り替える
+
 1. EC2のターミナルで、設定ファイル `.env` の `DB_SOURCE` を `ssm` に変える。
 
    ```bash
@@ -244,7 +301,7 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --de
 
 **期待結果：「接続先」が水色の Amazon RDS に変わり、その下にRDSのエンドポイントが表示される。社員一覧に `L-{あなたの名前}` がある。**
 
-続けて、RDSに新しいデータを書きます。
+### 6-3. RDSに書き込む
 
 1. 「新規従業員登録」で、従業員ID `R-{あなたの名前}`、メールアドレス `r-{あなたの名前}@example.com` の社員を1件登録する。そのほかの項目は好きな値でよい。
 2. 登録した `R-{あなたの名前}` を「編集」で変更し、保存する。
@@ -257,7 +314,7 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --de
 | Parameter Storeから接続情報を読む | EC2のIAMロール |
 | RDSのMySQLへログインする | DBユーザー名（`admin`）とパスワード |
 
-アプリケーションのコードにも `.env` にも、パスワードは書かれていません。
+RDSのパスワードは、コードにも `.env` にも書かれていません。6-1で見たとおり、ローカルのMySQLのパスワードはコードに書かれていました。
 
 ## 手順7：切り戻すと何が起きるかを見る
 
