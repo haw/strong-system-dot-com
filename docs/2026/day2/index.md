@@ -191,28 +191,22 @@ head -n 20 employee_db.sql
 
    ```bash
    docker compose cp employee_db.sql db:/tmp/employee_db.sql
-   docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "source /tmp/employee_db.sql"
+   docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "source /tmp/employee_db.sql"
    ```
 
-   `Enter password:` と表示されたら、手順3の研修用パスワードを貼り付けて Enter を押します。貼り付けた文字は表示されません。
+   `mysql: [Warning] Using a password on the command line interface can be insecure.` と1行表示されますが、問題ありません。
 
-   ```text
-   Tr41n-Rds2026-Kq7mZx
-   ```
+`-p` のすぐ後ろ（空白を入れずに）に、手順3の研修用パスワードを書いています。今回は研修用に公開している値なので、コマンドに書いています。**本番ではパスワードをコマンドに書きません。** コマンドの履歴や、実行中のプロセスの一覧に残るためです。上の警告は、そのことを知らせています。本番では `-p` だけを付けて、入力を求めさせます。
 
-パスワードをコマンドに書かず、入力を求めさせています。コマンドに書くと、コマンドの履歴に残るためです。`--ssl-mode=REQUIRED` は、RDSとの通信をTLSで暗号化する指定です。`--default-character-set=utf8mb4` は、日本語を正しく扱うための指定です。
+`--ssl-mode=REQUIRED` は、RDSとの通信をTLSで暗号化する指定です。`--default-character-set=utf8mb4` は、日本語を正しく扱うための指定です。
 
 ### 4-6. 移行後の件数を確かめる
 
 ```bash
-docker compose exec db mysql -h "$RDS_HOST" -u admin -p --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "SELECT COUNT(*) FROM employee_db.employees; SELECT employee_id, last_name, first_name FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
+docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "SELECT COUNT(*) FROM employee_db.employees; SELECT employee_id, last_name, first_name FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
 ```
 
-`Enter password:` には、4-5と同じ研修用パスワードを貼り付けます。
-
-```text
-Tr41n-Rds2026-Kq7mZx
-```
+4-5と同じく、警告が1行表示されますが問題ありません。
 
 **期待結果：4-3でメモした件数と `L-{あなたの名前}` の行が、RDSでも同じ。** これで、データがRDSへコピーされたことが確かめられました（事前学習8.1の1つ目）。
 
@@ -382,7 +376,7 @@ VPC、EC2、DBサブネットグループ、IAMロールは講師が削除しま
 | アプリケーションの画面が開かない | `http://`（`https://` ではない）と `:3000` を付けたか。手順4-2で止めた後なら、表示されないのは想定どおり |
 | RDSのVPCやサブネットグループが選べない | コンソール右上のリージョンが、自分のリージョンか |
 | 4-5で接続できずに止まる、`Can't connect` | RDSの「ステータス」が「利用可能」か。RDSのセキュリティグループが `day2-2026-rds-sg-{あなたの名前}` だけか。そのインバウンドルールのソースが `day2-2026-app-sg-{あなたの名前}` か |
-| 4-5で `Access denied` | ユーザー名が `admin` か。パスワードが `Tr41n-Rds2026-Kq7mZx` か。前後に空白が入っていないか |
+| 4-5・4-6で `Access denied` | ユーザー名が `admin` か。パスワードが `Tr41n-Rds2026-Kq7mZx` か。`(using password: NO)` と出たら、`-p` とパスワードのあいだに空白が入っている（空白を入れずに続ける） |
 | 4-6で件数が違う | 4-2でアプリケーションを止めた後にダンプを取ったか |
 | 切り替え後、「接続先」の下に「パラメータが見つかりません」 | パラメータの名前の先頭が `/day2-2026/{あなたの名前}/db/` か。4つすべて作ったか。作ったリージョンが自分のリージョンか |
 | 切り替え後、`AccessDeniedException` | パラメータを作った場所が、ロールの `Allow` と同じ場所か |
