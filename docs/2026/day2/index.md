@@ -186,10 +186,13 @@ docker compose exec db mysql -uroot -ppassword --default-character-set=utf8mb4 -
 
 ```bash
 docker compose exec -T db mysqldump -uroot -ppassword --single-transaction --no-tablespaces --databases employee_db > employee_db.sql
-head -n 20 employee_db.sql
 ```
 
-`employee_db.sql` には、テーブルを作る `CREATE TABLE` と、データを入れる `INSERT` が書かれています。
+ダンプを `employee_db.sql` に保存しました。このファイルには、テーブルを作る `CREATE TABLE` と、データを入れる `INSERT` が含まれます。次のコマンドで先頭20行を確認します。
+
+```bash
+head -n 20 employee_db.sql
+```
 
 ### 4-5. RDSへ読み込む
 
