@@ -245,6 +245,8 @@ CloudShellから、次の4つのパラメータをまとめて作成します。
 
 1. AWSコンソールの **CloudShell** を開く。ここからは、EC2のターミナルではなくCloudShellで実行する。
 
+   ![AWSコンソール上部からCloudShellを開き、リージョンの環境を起動する](images/cloudshell-open.png)
+
 2. 配られた自分の名前とリージョンに置き換えて実行する。
 
    ```bash
