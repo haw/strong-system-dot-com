@@ -335,7 +335,15 @@ sed -n '/^async function loadSsmConfig/,/^}/p' server.js
 
 ### 6-2. 切り替える
 
-1. EC2のターミナルで、設定ファイル `.env` の `DB_SOURCE` を `ssm` に変える。
+1. EC2のターミナルで、設定ファイル `.env` を確認する。
+
+   ```bash
+   cat .env
+   ```
+
+   `DB_SOURCE=local` になっていることを確かめます。
+
+2. `.env` の `DB_SOURCE` を `ssm` に変える。
 
    ```bash
    sed -i 's/^DB_SOURCE=.*/DB_SOURCE=ssm/' .env
@@ -344,7 +352,7 @@ sed -n '/^async function loadSsmConfig/,/^}/p' server.js
 
    `DB_SOURCE=ssm` になっていることを確かめます。`PARAM_PREFIX` は、手順5で作ったパラメータの場所です。
 
-2. アプリケーションを起動し直す。
+3. アプリケーションを起動し直す。
 
    ```bash
    docker compose up -d
@@ -352,7 +360,7 @@ sed -n '/^async function loadSsmConfig/,/^}/p' server.js
 
    アプリケーションは、起動するときにParameter Storeから接続情報を読みます。設定を変えたら、起動し直す必要があります。
 
-3. ブラウザでアプリケーションを再読み込みする。
+4. ブラウザでアプリケーションを再読み込みする。
 
 **期待結果：「接続先」が水色の Amazon RDS に変わり、その下にRDSのエンドポイントが表示される。社員一覧に `L-{あなたの名前}` がある。**
 
