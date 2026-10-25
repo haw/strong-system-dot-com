@@ -233,19 +233,49 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --
 
 アプリケーションがRDSへ接続するための情報を、Parameter Storeに置きます（事前学習7.2）。
 
-1. **Systems Manager** を開き、左メニュー（下方）「パラメータストア」→「パラメータの作成」を選ぶ。
-2. 次の4つを、1つずつ作成する。利用枠は「標準」のまま。
+CloudShellから、次の4つのパラメータをまとめて作成します。利用枠は「標準」、パスワードだけを暗号化して保存します。
 
-   | 名前 | 種類 | 値 |
-   | --- | --- | --- |
-   | `/day2-2026/{あなたの名前}/db/host` | 文字列 | RDSのエンドポイント |
-   | `/day2-2026/{あなたの名前}/db/user` | 文字列 | `admin` |
-   | `/day2-2026/{あなたの名前}/db/name` | 文字列 | `employee_db` |
-   | `/day2-2026/{あなたの名前}/db/password` | 安全な文字列 | `Tr41n-Rds2026-Kq7mZx`（手順3の研修用パスワード） |
+| 名前 | 種類 | 値 |
+| --- | --- | --- |
+| `/day2-2026/{あなたの名前}/db/host` | 文字列 | RDSのエンドポイント |
+| `/day2-2026/{あなたの名前}/db/user` | 文字列 | `admin` |
+| `/day2-2026/{あなたの名前}/db/name` | 文字列 | `employee_db` |
+| `/day2-2026/{あなたの名前}/db/password` | 安全な文字列 | `Tr41n-Rds2026-Kq7mZx`（手順3の研修用パスワード） |
 
-   `password` の「KMSキーソース」は「現在のアカウント」、「KMSキーID」は `alias/aws/ssm` のままにします。
+1. AWSコンソールの **CloudShell** を開く。ここからは、EC2のターミナルではなくCloudShellで実行する。
 
-3. 作成した `password` を開き、値が `****` のように隠れていることを確かめる。「表示」を選ぶと、復号した値が見えます。
+2. 配られた自分の名前とリージョンに置き換えて実行する。
+
+   ```bash
+   NAME='あなたの名前'
+   REGION='あなたのリージョン'
+   ```
+
+3. 次をまとめてコピーして実行する。RDSのエンドポイントを取得し、表の4つを作成する。パスワードの暗号化には `alias/aws/ssm` を使う。
+
+   ```bash
+   (
+       set -e
+       PREFIX="/day2-2026/$NAME/db"
+       RDS_HOST=$(aws rds describe-db-instances \
+           --region "$REGION" --db-instance-identifier "day2-2026-db-$NAME" \
+           --query 'DBInstances[0].Endpoint.Address' --output text)
+
+       aws ssm put-parameter --region "$REGION" --name "$PREFIX/host" \
+           --type String --value "$RDS_HOST" --tier Standard --overwrite
+       aws ssm put-parameter --region "$REGION" --name "$PREFIX/user" \
+           --type String --value admin --tier Standard --overwrite
+       aws ssm put-parameter --region "$REGION" --name "$PREFIX/name" \
+           --type String --value employee_db --tier Standard --overwrite
+       aws ssm put-parameter --region "$REGION" --name "$PREFIX/password" \
+           --type SecureString --key-id alias/aws/ssm \
+           --value 'Tr41n-Rds2026-Kq7mZx' --tier Standard --overwrite
+   )
+   ```
+
+   `--overwrite` は、同じ名前のパラメータがあれば上書きする指定です。入力を直して再実行できます。
+
+4. **Systems Manager** の左メニュー（下方）「パラメータストア」で4つが作られたことを確認する。作成した `password` を開き、値が `****` のように隠れていることを確かめる。「表示」を選ぶと、復号した値が見えます。
 
 名前の先頭の `/day2-2026/{あなたの名前}/db/` は、待つ間に確かめたロールの `Allow` と同じです。ここ以外に作ると、アプリケーションは読めません。
 
