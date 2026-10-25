@@ -325,6 +325,8 @@ sed -n '/^async function loadSsmConfig/,/^}/p' server.js
 
 **期待結果：「接続先」が水色の Amazon RDS に変わり、その下にRDSのエンドポイントが表示される。社員一覧に `L-{あなたの名前}` がある。**
 
+![接続先がAmazon RDSに切り替わったアプリケーション](images/app-connected-to-rds.png)
+
 ### 6-3. RDSに書き込む
 
 1. 「新規従業員登録」で、従業員ID `R-{あなたの名前}`、メールアドレス `r-{あなたの名前}@example.com` の社員を1件登録する。そのほかの項目は好きな値でよい。
