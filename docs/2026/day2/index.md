@@ -233,7 +233,7 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --
 
 アプリケーションがRDSへ接続するための情報を、Parameter Storeに置きます（事前学習7.2）。
 
-1. **Systems Manager** を開き、左メニュー「パラメータストア」→「パラメータの作成」を選ぶ。
+1. **Systems Manager** を開き、左メニュー（下方）「パラメータストア」→「パラメータの作成」を選ぶ。
 2. 次の4つを、1つずつ作成する。利用枠は「標準」のまま。
 
    | 名前 | 種類 | 値 |
