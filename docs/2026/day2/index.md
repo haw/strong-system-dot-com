@@ -238,10 +238,10 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --
 
    | 名前 | 種類 | 値 |
    | --- | --- | --- |
-   | `/day2-2026/{あなたの名前}/db/host` | 文字列（String） | RDSのエンドポイント |
-   | `/day2-2026/{あなたの名前}/db/user` | 文字列（String） | `admin` |
-   | `/day2-2026/{あなたの名前}/db/name` | 文字列（String） | `employee_db` |
-   | `/day2-2026/{あなたの名前}/db/password` | 安全な文字列（SecureString） | `Tr41n-Rds2026-Kq7mZx`（手順3の研修用パスワード） |
+   | `/day2-2026/{あなたの名前}/db/host` | 文字列 | RDSのエンドポイント |
+   | `/day2-2026/{あなたの名前}/db/user` | 文字列 | `admin` |
+   | `/day2-2026/{あなたの名前}/db/name` | 文字列 | `employee_db` |
+   | `/day2-2026/{あなたの名前}/db/password` | 安全な文字列 | `Tr41n-Rds2026-Kq7mZx`（手順3の研修用パスワード） |
 
    `password` の「KMSキーソース」は「現在のアカウント」、「KMSキーID」は `alias/aws/ssm` のままにします。
 
@@ -256,12 +256,6 @@ docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --
 アプリケーションがどこへ接続するかは、アプリケーションのコードで決まっています。切り替える前に、その部分を読みます。
 
 ### 6-1. 接続先を決めているコードを読む
-
-EC2のターミナルで、`DB_SOURCE` を使っている行を探します。
-
-```bash
-grep -n "DB_SOURCE" server.js
-```
 
 接続先を決めているのは、次の部分です（`server.js` から抜粋）。
 
