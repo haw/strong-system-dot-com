@@ -195,7 +195,7 @@ docker compose exec -T db mysqldump -uroot -ppassword --single-transaction --no-
 head -n 20 employee_db.sql
 ```
 
-### 4-5. RDSへ取り込む
+### 4-5. RDSへ流し込む
 
 1. **Aurora and RDS** で `day2-2026-db-{あなたの名前}` を開き、「接続とセキュリティ」タブの「エンドポイント」をコピーする。
 
@@ -207,7 +207,7 @@ head -n 20 employee_db.sql
    RDS_HOST='{エンドポイント}'
    ```
 
-3. ダンプをMySQLコンテナへコピーし、コンテナの中の `mysql` コマンドで、ダンプの内容をRDSへ取り込む。
+3. ダンプをMySQLコンテナへコピーし、コンテナの中の `mysql` コマンドで、ダンプの内容をRDSへ流し込む。
 
    ```bash
    docker compose cp employee_db.sql db:/tmp/employee_db.sql
