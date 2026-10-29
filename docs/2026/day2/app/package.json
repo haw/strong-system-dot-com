@@ -11,7 +11,7 @@
     "node": ">=24"
   },
   "dependencies": {
-    "@aws-sdk/client-ssm": "^3.1152.0",
+    "@aws-sdk/client-ssm": "^3.1155.0",
     "aws-ssl-profiles": "^1.1.2",
     "express": "^5.3.0",
     "mysql2": "^3.24.6"
