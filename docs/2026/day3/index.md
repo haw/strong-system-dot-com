@@ -179,7 +179,55 @@ cat .env
 
 どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。ユーザー名が `SLRManagement` などのものは、AWS のサービスが自動で行った操作です。何も表示されなければ、そのものは変えられていません。
 
-各行の最後は、その記録をコンソールで開く URL です。気になる記録を1つ選んで、URL をブラウザで開いてみてください。記録の全体（誰が、どこから、何を、どんな値で）が JSON で表示されます。コマンドで取り出したのは、その中のほんの一部だということが分かります。
+各行の最後は、その記録をコンソールで開く URL です。
+
+5. セキュリティグループのコマンドの結果から、`RevokeSecurityGroupIngress` の行の URL をコピーし、ブラウザで開く。
+
+   記録の全体が JSON で表示されます。項目がたくさんあって、また面食らうと思います。コマンドで取り出したのは、その中のほんの一部です。全部を読む必要はありません。次の項目だけを見ます（値は例です）。
+
+   ```json
+   {
+       "userIdentity": {
+           "type": "IAMUser",
+           "arn": "arn:aws:iam::123456789012:user/instructor",
+           "userName": "instructor"
+       },
+       "eventTime": "2026-11-06T08:31:51Z",
+       "eventSource": "ec2.amazonaws.com",
+       "eventName": "RevokeSecurityGroupIngress",
+       "awsRegion": "us-west-2",
+       "sourceIPAddress": "203.0.113.10",
+       "userAgent": "aws-cli/2.x ... exec-env/CloudShell ... md/command#ec2.revoke-security-group-ingress",
+       "requestParameters": {
+           "groupId": "sg-0rds",
+           "ipPermissions": { "items": [ {
+               "ipProtocol": "tcp", "fromPort": 3306, "toPort": 3306,
+               "groups": { "items": [ { "groupId": "sg-0app" } ] }
+           } ] }
+       },
+       "responseElements": {
+           "revokedSecurityGroupRuleSet": { "items": [ {
+               "groupId": "sg-0rds",
+               "description": "MySQL from app",
+               "fromPort": 3306, "toPort": 3306,
+               "referencedGroupId": "sg-0app"
+           } ] }
+       },
+       "readOnly": false
+   }
+   ```
+
+   | 項目 | 分かること |
+   | --- | --- |
+   | `userIdentity` | **誰が**操作したか。IAM ユーザーなら `userName` に名前が出る |
+   | `eventTime` | **いつ**操作したか。末尾の `Z` は UTC（協定世界時）の意味。日本時間は、これに9時間を足す |
+   | `eventSource`、`eventName` | **どのサービスの、何の操作**か。ここでは EC2 の「インバウンドルールの削除」 |
+   | `sourceIPAddress`、`userAgent` | **どこから、何を使って**操作したか。`userAgent` に `aws-cli` と `CloudShell` があるので、コンソールの画面ではなく、CloudShell からコマンドで操作したと分かる |
+   | `requestParameters` | **何を頼んだか**。どのセキュリティグループ（`groupId`）から、どのルール（3306、相手は `groups` のセキュリティグループ）を消すよう頼んだか |
+   | `responseElements` | **その結果**。実際に消えたルール。`description` の `MySQL from app` から、アプリケーションから MySQL への通信を許可するルールだったと分かる |
+   | `readOnly` | `false` は、何かを変えた操作であること |
+
+   `groupId` が自分の RDS のセキュリティグループ（`echo "$RDS_SG"` で表示した ID）であること、`referencedGroupId` がアプリケーションのセキュリティグループであることを確かめます。手順2で見たエラーと、この記録がつながるかを考えます。
 
 見つけた変更は、時刻・ユーザー名・内容をメモします。ただし、まだ直しません。手順4で、その変更が本当に障害の原因かを確かめてから直します。
 
