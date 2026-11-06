@@ -56,5 +56,6 @@ AWS_REGION=us-west-2 npx cdk destroy -c userName=tanaka --force
 AWS に接続せずにテンプレートを生成できます（`cdk.out/` に出力）。
 
 ```bash
-CDK_OUTDIR=cdk.out CDK_CONTEXT_JSON='{"userName":"tanaka"}' npx ts-node --prefer-ts-exts bin/day2-2026-cdk.ts
+CDK_OUTDIR=cdk.out CDK_CONTEXT_JSON='{"userName":"tanaka"}' \
+  npx ts-node --prefer-ts-exts bin/day2-2026-cdk.ts
 ```

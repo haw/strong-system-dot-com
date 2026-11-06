@@ -26,7 +26,8 @@ EC2 では、cron（`/etc/cron.d/day3-app-traffic`）が1分ごとに社員一�
 `/day3-2026/{名前}/db/password` の SecureString は、CloudFormation では作れません。**デプロイの前に**作っておきます。値は、Day 2 の手順書で使っている研修用パスワードです。
 
 ```bash
-AWS_REGION=us-west-2 aws ssm put-parameter --name /day3-2026/tanaka/db/password \
+AWS_REGION=us-west-2 aws ssm put-parameter \
+  --name /day3-2026/tanaka/db/password \
   --type SecureString --value 'Tr41n-Rds2026-Kq7mZx' --overwrite
 ```
 
@@ -50,7 +51,11 @@ RDS を作るので、デプロイには時間がかかります。終わって�
 
 ```bash
 AWS_REGION=us-west-2 npx cdk destroy -c userName=tanaka --force
-AWS_REGION=us-west-2 aws ssm delete-parameter --name /day3-2026/tanaka/db/password
+```
+
+```bash
+AWS_REGION=us-west-2 aws ssm delete-parameter \
+  --name /day3-2026/tanaka/db/password
 ```
 
 ## 手元でテンプレートだけ確かめる
@@ -58,5 +63,6 @@ AWS_REGION=us-west-2 aws ssm delete-parameter --name /day3-2026/tanaka/db/passwo
 AWS に接続せずにテンプレートを生成できます（`cdk.out/` に出力）。
 
 ```bash
-CDK_OUTDIR=cdk.out CDK_CONTEXT_JSON='{"userName":"tanaka"}' npx ts-node --prefer-ts-exts bin/day3-2026-cdk.ts
+CDK_OUTDIR=cdk.out CDK_CONTEXT_JSON='{"userName":"tanaka"}' \
+  npx ts-node --prefer-ts-exts bin/day3-2026-cdk.ts
 ```
