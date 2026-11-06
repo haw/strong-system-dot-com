@@ -77,6 +77,9 @@
 
    ```bash
    sudo su - ubuntu
+   ```
+
+   ```bash
    cd ~/strong-system-dot-com/docs/2026/app
    ```
 
@@ -84,6 +87,9 @@
 
    ```bash
    docker compose ps
+   ```
+
+   ```bash
    docker compose logs --tail 30 app
    ```
 
@@ -141,15 +147,41 @@ cat .env
    NAME=tanaka
    ```
 
-3. 自分の環境ができた時刻と、RDS のセキュリティグループの ID を、変数に入れる。そのまま貼り付けて実行します。
+3. 絞り込みに使う値を、変数に入れる。自分の環境ができた時刻と、RDS のセキュリティグループの ID です。どれも、そのまま貼り付けて実行します。
 
    ```bash
-   since=$(aws cloudformation describe-stacks --stack-name "day3-2026-$NAME" --query 'Stacks[0].CreationTime' --output text)
-   RDS_SG=$(aws cloudformation describe-stacks --stack-name "day3-2026-$NAME" --query "Stacks[0].Outputs[?OutputKey=='RdsSecurityGroupId'].OutputValue" --output text)
-   echo "$NAME $since $RDS_SG"
+   since=$(aws cloudformation describe-stacks \
+     --stack-name "day3-2026-$NAME" \
+     --query 'Stacks[0].CreationTime' \
+     --output text)
    ```
 
-   名前、時刻、`sg-` で始まる ID の3つが表示されれば準備できています。CloudShell を開き直したときは、2 からやり直します。
+   ```bash
+   RDS_SG=$(aws cloudformation describe-stacks \
+     --stack-name "day3-2026-$NAME" \
+     --query "Stacks[0].Outputs[?OutputKey=='RdsSecurityGroupId'].OutputValue" \
+     --output text)
+   ```
+
+   EC2 の IAM ロールの名前も入れておきます。
+
+   ```bash
+   ROLE=day3-2026-ec2-role-$NAME
+   ```
+
+   コマンドの結果を、コンソールで開く URL にするための文字列も入れておきます。
+
+   ```bash
+   CT=console.aws.amazon.com/cloudtrailv2/home
+   ```
+
+   入った値を確かめます。
+
+   ```bash
+   echo "$NAME $since $RDS_SG $ROLE"
+   ```
+
+   名前、時刻、`sg-` で始まる ID、ロールの名前の4つが表示されれば準備できています。CloudShell を開き直したときは、2 からやり直します。
 
 4. 調べたいものごとに、次のコマンドで絞り込む。どれも、そのまま貼り付けて実行します。記録の残り方がものによって違うため、絞り込み方も変わります。
 
@@ -158,7 +190,17 @@ cat .env
    パラメータの変更は、一覧の「リソース名」に名前が残りません。イベント名 `PutParameter` で絞ってから、記録の中身にあるパラメータ名で、自分の分だけを取り出します。
 
    ```bash
-   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r --arg prefix "/day3-2026/$NAME/" --arg region "$AWS_REGION" '.[] | fromjson | select(.requestParameters.name | startswith($prefix)) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name, "https://\($region).console.aws.amazon.com/cloudtrailv2/home?region=\($region)#/events/\(.eventID)"] | @tsv'
+   aws cloudtrail lookup-events \
+     --start-time "$since" \
+     --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter \
+     --output json |
+   jq -r --arg prefix "/day3-2026/$NAME/" --arg r "$AWS_REGION" --arg ct "$CT" '
+     .Events[] | .CloudTrailEvent | fromjson
+     | select(.requestParameters.name | startswith($prefix))
+     | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com")
+     | [.eventTime, .userIdentity.userName, .requestParameters.name,
+        "https://\($r).\($ct)?region=\($r)#/events/\(.eventID)"]
+     | @tsv'
    ```
 
    **セキュリティグループの変更**
@@ -166,7 +208,16 @@ cat .env
    セキュリティグループの変更は、「リソース名」にセキュリティグループの ID が残ります。3 で変数に入れた、RDS のセキュリティグループの ID で絞ります。
 
    ```bash
-   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username,join('', ['https://$AWS_REGION.console.aws.amazon.com/cloudtrailv2/home?region=$AWS_REGION#/events/', EventId])]" --output text
+   aws cloudtrail lookup-events \
+     --start-time "$since" \
+     --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" \
+     --output json |
+   jq -r --arg r "$AWS_REGION" --arg ct "$CT" '
+     .Events[]
+     | select(.Username != "AWSCloudFormation")
+     | [.EventTime, .EventName, .Username,
+        "https://\($r).\($ct)?region=\($r)#/events/\(.EventId)"]
+     | @tsv'
    ```
 
    **IAM の変更**
@@ -174,12 +225,22 @@ cat .env
    IAM は、リージョンを持たないサービスです。記録は、どのリージョンで操作しても **us-east-1** に残ります。リージョンを指定し、ロール名で絞ります。
 
    ```bash
-   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="day3-2026-ec2-role-$NAME" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username,join('', ['https://us-east-1.console.aws.amazon.com/cloudtrailv2/home?region=us-east-1#/events/', EventId])]" --output text
+   aws cloudtrail lookup-events \
+     --region us-east-1 \
+     --start-time "$since" \
+     --lookup-attributes AttributeKey=ResourceName,AttributeValue="$ROLE" \
+     --output json |
+   jq -r --arg r us-east-1 --arg ct "$CT" '
+     .Events[]
+     | select(.Username != "AWSCloudFormation")
+     | [.EventTime, .EventName, .Username,
+        "https://\($r).\($ct)?region=\($r)#/events/\(.EventId)"]
+     | @tsv'
    ```
 
-どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。ユーザー名が `SLRManagement` などのものは、AWS のサービスが自動で行った操作です。何も表示されなければ、そのものは変えられていません。
+   どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。ユーザー名が `SLRManagement` などのものは、AWS のサービスが自動で行った操作です。何も表示されなければ、そのものは変えられていません。
 
-各行の最後は、その記録をコンソールで開く URL です。
+   各行の最後は、その記録をコンソールで開く URL です。
 
 5. セキュリティグループのコマンドの結果から、`RevokeSecurityGroupIngress` の行の URL をコピーし、ブラウザで開く。
 
@@ -246,6 +307,8 @@ cat .env
 
 ### 4-0. 準備
 
+ここには、このあとの 4-1〜4-4 で使うものをまとめています。この場で実行するのは、「本当の接続先を変数に入れる」だけです。ほかは、あとで必要になったときに見返します。ここでは読み流して、先に進んでください。
+
 **エラーと段階の対応**
 
 画面やログのエラーを、事前学習5章の表に当てはめます。
@@ -259,15 +322,21 @@ cat .env
 
 **本当の接続先を変数に入れる**
 
-確かめるときは、アプリケーションを通さず、EC2 から直接試すと切り分けやすくなります。**Aurora and RDS** で `day3-2026-db-{あなたの名前}` を開き、「接続とセキュリティ」タブの「エンドポイント」をコピーして、EC2 のターミナルで変数に入れます。
+確かめるときは、アプリケーションを通さず、EC2 から直接試すと切り分けやすくなります。そのために、本当の接続先を変数に入れておきます。
 
-```bash
-DB_HOST='{エンドポイント}'
-```
+1. **Aurora and RDS** で `day3-2026-db-{あなたの名前}` を開き、「接続とセキュリティ」タブの「エンドポイント」をコピーする。
+
+   ![RDSの接続とセキュリティでエンドポイントを確認する](../day2/images/rds-endpoint.png)
+
+2. EC2 のターミナルで、エンドポイントを変数に入れる。`{エンドポイント}` は、コピーした値に置き換える。
+
+   ```bash
+   DB_HOST='{エンドポイント}'
+   ```
 
 **Parameter Store の正しい値**
 
-**Systems Manager** の「パラメータストア」で、`/day3-2026/{あなたの名前}/db/` の4つを確かめられます。`password` は「表示」を選ぶと見られます。正しい値は次のとおりです。
+あとで値を確かめるときに使う表です。いまは確かめなくて構いません。**Systems Manager** の「パラメータストア」で、`/day3-2026/{あなたの名前}/db/` の4つの値を見られます。`password` は「表示」を選ぶと見られます。
 
 | パラメータ | 正しい値 |
 | --- | --- |
@@ -278,10 +347,23 @@ DB_HOST='{エンドポイント}'
 
 **アプリケーションを起動し直すコマンド**
 
-アプリケーションは、**起動したときにだけ** Parameter Store から接続情報を読みます（事前学習7.3）。また、セキュリティグループを直した後も、古い接続が残っていることがあります。1つ直すたびに、次のコマンドで起動し直します。
+アプリケーションは、**起動したときにだけ** Parameter Store から接続情報を読みます（事前学習7.3）。また、セキュリティグループを直した後も、古い接続が残っていることがあります。そのため、1つ直すたびに、EC2 のターミナルでアプリケーションを起動し直します。4-1〜4-4 の最後でも、同じコマンドを示します。
+
+アプリケーションのディレクトリにいなければ、先に移動します。
+
+```bash
+cd ~/strong-system-dot-com/docs/2026/app
+```
+
+起動し直します。
 
 ```bash
 docker compose up -d --force-recreate --no-deps app
+```
+
+起動したときのログを見ます。
+
+```bash
 docker compose logs --tail 10 app
 ```
 
@@ -304,7 +386,13 @@ docker compose logs --tail 10 app
 
    明示的な拒否は、許可より優先されます（Day 1）。
 4. 正しい状態と違うところを、1か所だけ直す。`Deny` を消したり、強い権限を付けたりしてはいけません。ほかの受講者のパラメータまで読めるようになります。
-5. 2 のコマンドで値が表示されることを確かめてから（反映に数秒かかることがあります）、アプリケーションを起動し直し、ブラウザを再読み込みする。`AccessDeniedException` が消えて、別のエラーに変われば、障害1は解決です。
+5. 2 のコマンドで値が表示されることを確かめる（反映に数秒かかることがあります）。そのあと、アプリケーションを起動し直す。
+
+   ```bash
+   docker compose up -d --force-recreate --no-deps app
+   ```
+
+   ブラウザを再読み込みする。`AccessDeniedException` が消えて、別のエラーに変われば、障害1は解決です。
 
 <a href="answer-1.html" target="_blank" rel="noopener noreferrer">障害1の答えを見る</a>
 
@@ -314,15 +402,28 @@ docker compose logs --tail 10 app
 2. ログの最初の行（`DB_SOURCE=ssm host=...`）にある、アプリケーションが使っている接続先をメモする。
 3. 本当の接続先と、アプリケーションが使っている接続先の両方で、名前を引いてみる。
 
+   本当の接続先：
+
    ```bash
    getent hosts "$DB_HOST"
+   ```
+
+   アプリケーションが使っている接続先（`{ログの host= の値}` は、2 でメモした値に置き換える）：
+
+   ```bash
    getent hosts '{ログの host= の値}'
    ```
 
    IP アドレスが表示されれば、名前は引けています。何も表示されなければ、その名前は見つかりません。
 
 4. 2つの名前を1文字ずつ比べ、アプリケーションがどこから接続先を読んでいるかを考えて、1か所だけ直す。
-5. アプリケーションを起動し直し、ブラウザを再読み込みする。`ENOTFOUND` が消えて、別のエラーに変われば、障害2は解決です。
+5. アプリケーションを起動し直す。
+
+   ```bash
+   docker compose up -d --force-recreate --no-deps app
+   ```
+
+   ブラウザを再読み込みする。`ENOTFOUND` が消えて、別のエラーに変われば、障害2は解決です。
 
 <a href="answer-2.html" target="_blank" rel="noopener noreferrer">障害2の答えを見る</a>
 
@@ -341,7 +442,13 @@ docker compose logs --tail 10 app
    - **EC2** の「セキュリティグループ」で `day3-2026-rds-sg-{あなたの名前}` を開き、「インバウンドルール」を見る。正しくは、タイプ「MYSQL/Aurora」（3306）、ソースが `day3-2026-app-sg-{あなたの名前}` です。
    - RDS に、実際にそのセキュリティグループが付いているか（RDS の「接続とセキュリティ」タブ）。
 4. 正しい状態と違うところを、1か所だけ直す。ソースを `0.0.0.0/0` にしてはいけません。
-5. 上の `/dev/tcp` で `届いた` になることを確かめてから、アプリケーションを起動し直し、ブラウザを再読み込みする。`ETIMEDOUT` が消えて、別のエラーに変われば、障害3は解決です。
+5. 2 の `/dev/tcp` のコマンドで `届いた` になることを確かめる。そのあと、アプリケーションを起動し直す。
+
+   ```bash
+   docker compose up -d --force-recreate --no-deps app
+   ```
+
+   ブラウザを再読み込みする。`ETIMEDOUT` が消えて、別のエラーに変われば、障害3は解決です。
 
 <a href="answer-3.html" target="_blank" rel="noopener noreferrer">障害3の答えを見る</a>
 
@@ -351,14 +458,22 @@ docker compose logs --tail 10 app
 2. EC2 から、研修用パスワードで DB にログインしてみる。
 
    ```bash
-   docker run --rm mysql:8.4.5 mysql -h "$DB_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED -e "SELECT 1"
+   docker run --rm mysql:8.4.5 mysql \
+     -h "$DB_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' \
+     --ssl-mode=REQUIRED -e "SELECT 1"
    ```
 
    Day 2 と同じく、`-p` の直後に空白を入れずに研修用パスワードを書いています。`Using a password on the command line interface can be insecure.` という警告が出ますが、気にしなくて構いません。`1` が表示されれば、研修用パスワードでログインできます。RDS は正常です。
 
 3. 研修用パスワードでログインできるのに、アプリケーションは断られています。アプリケーションが使っている値を、4-0 の表と比べる。これは DB のログインのエラーです。IAM ロールを変えても直りません（事前学習5.3）。
 4. 違っている値を、1か所だけ直す。
-5. アプリケーションを起動し直し、ブラウザを再読み込みする。「接続先」が水色の **Amazon RDS** になり、社員一覧が表示されれば、障害4は解決です。手順5に進みます。
+5. アプリケーションを起動し直す。
+
+   ```bash
+   docker compose up -d --force-recreate --no-deps app
+   ```
+
+   ブラウザを再読み込みする。「接続先」が水色の **Amazon RDS** になり、社員一覧が表示されれば、障害4は解決です。手順5に進みます。
 
 <a href="answer-4.html" target="_blank" rel="noopener noreferrer">障害4の答えを見る</a>
 
@@ -405,7 +520,7 @@ docker compose logs --tail 10 app
 | 直したのに、画面が変わらない | 4-0 のコマンドでアプリケーションを起動し直したか。ブラウザを再読み込みしたか |
 | CloudTrail に何も見つからない | コンソール右上のリージョンが、自分のリージョンか。「読み取り専用」を `false` にしたか。時間の範囲が短すぎないか |
 | CloudTrail に記録がたくさんあって分からない | 3-2 のコマンドで絞り込む |
-| 3-2 のコマンドで何も表示されない | `echo "$NAME $since $RDS_SG"` で3つとも表示されるか。CloudShell を開き直したら、3-2 の 2 からやり直す |
+| 3-2 のコマンドで何も表示されない | `echo "$NAME $since $RDS_SG $ROLE"` で4つとも表示されるか。CloudShell を開き直したら、3-2 の 2 からやり直す |
 | `getent hosts` で何も表示されない | `DB_HOST` に、RDS のコンソールからコピーしたエンドポイントを入れたか。前後に空白が入っていないか |
 | 3306 に `届かない` のに、セキュリティグループは正しい | RDS に付いているセキュリティグループと、ネットワークACLも確かめたか |
 | `docker run` でも `Access denied` | コマンドをそのままコピーしたか。`-p` とパスワードの間に空白が入っていないか。それでも同じなら、講師に声をかける |
