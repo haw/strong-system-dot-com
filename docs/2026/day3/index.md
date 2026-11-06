@@ -247,16 +247,10 @@ docker compose logs --tail 10 app
 2. EC2 から、研修用パスワードで DB にログインしてみる。
 
    ```bash
-   docker run --rm -it mysql:8.4.5 mysql -h "$DB_HOST" -u admin -p --ssl-mode=REQUIRED -e "SELECT 1"
+   docker run --rm mysql:8.4.5 mysql -h "$DB_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED -e "SELECT 1"
    ```
 
-   `Enter password:` には、研修用パスワードを貼り付けます。
-
-   ```text
-   Tr41n-Rds2026-Kq7mZx
-   ```
-
-   `1` が表示されれば、研修用パスワードでログインできます。RDS は正常です。
+   Day 2 と同じく、`-p` の直後に空白を入れずに研修用パスワードを書いています。`Using a password on the command line interface can be insecure.` という警告が出ますが、気にしなくて構いません。`1` が表示されれば、研修用パスワードでログインできます。RDS は正常です。
 
 3. 研修用パスワードでログインできるのに、アプリケーションは断られています。アプリケーションが使っている値を、4-0 の表と比べる。これは DB のログインのエラーです。IAM ロールを変えても直りません（事前学習5.3）。
 4. 違っている値を、1か所だけ直す。
@@ -309,5 +303,5 @@ docker compose logs --tail 10 app
 | CloudTrail に記録がたくさんあって分からない | 環境ができた時刻より後の記録に絞る。イベント名とリソース名に、自分の名前が付いたものを探す |
 | `getent hosts` で何も表示されない | `DB_HOST` に、RDS のコンソールからコピーしたエンドポイントを入れたか。前後に空白が入っていないか |
 | 3306 に `届かない` のに、セキュリティグループは正しい | RDS に付いているセキュリティグループと、ネットワークACLも確かめたか |
-| `docker run` でパスワードを入れても `Access denied` | 研修用パスワードを、前後に空白を入れずに貼り付けたか。それでも同じなら、講師に声をかける |
+| `docker run` でも `Access denied` | コマンドをそのままコピーしたか。`-p` とパスワードの間に空白が入っていないか。それでも同じなら、講師に声をかける |
 | 何を変えたか分からなくなった | メモを見直す。分からなければ、講師に声をかける |
