@@ -125,7 +125,7 @@ export class Day3Stack extends cdk.Stack {
     );
 
     // Day 2 のアプリを使う。最初から RDS（DB_SOURCE=ssm）につなぐ。ローカルの MySQL コンテナは使わない。
-    const appDir = '/home/ubuntu/strong-system-dot-com/docs/2026/day2/app';
+    const appDir = '/home/ubuntu/strong-system-dot-com/docs/2026/app';
     const userData = ec2.UserData.forLinux();
     userData.addCommands(
       'set -euxo pipefail',

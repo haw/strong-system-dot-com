@@ -103,7 +103,7 @@ updates:
       semver-patch-days: 7
 
   - package-ecosystem: "npm"
-    directory: "/docs/2026/day2/app"
+    directory: "/docs/2026/app"
     registries:
       - takumi_guard_npm
     schedule:

@@ -159,7 +159,7 @@ Tr41n-Rds2026-Kq7mZx
 
    ```bash
    sudo su - ubuntu
-   cd ~/strong-system-dot-com/docs/2026/day2/app
+   cd ~/strong-system-dot-com/docs/2026/app
    docker compose ps
    ```
 
