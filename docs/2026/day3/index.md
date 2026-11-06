@@ -135,29 +135,38 @@ cat .env
 
    ![AWSコンソール上部からCloudShellを開く](../day2/images/cloudshell-open.png)
 
-2. 自分の環境ができた時刻を、変数に入れる。
+2. 自分の名前を、変数 `NAME` に入れる。`tanaka` の部分だけを、配られた自分の名前に書き換えてから実行します。
 
    ```bash
-   since=$(aws cloudformation describe-stacks --stack-name day3-2026-{あなたの名前} --query 'Stacks[0].CreationTime' --output text)
-   echo "$since"
+   NAME=tanaka
    ```
 
-3. 調べたいものごとに、次のコマンドで絞り込む。記録の残り方がものによって違うため、絞り込み方も変わります。
+3. 自分の環境ができた時刻と、RDS のセキュリティグループの ID を、変数に入れる。そのまま貼り付けて実行します。
+
+   ```bash
+   since=$(aws cloudformation describe-stacks --stack-name "day3-2026-$NAME" --query 'Stacks[0].CreationTime' --output text)
+   RDS_SG=$(aws cloudformation describe-stacks --stack-name "day3-2026-$NAME" --query "Stacks[0].Outputs[?OutputKey=='RdsSecurityGroupId'].OutputValue" --output text)
+   echo "$NAME $since $RDS_SG"
+   ```
+
+   名前、時刻、`sg-` で始まる ID の3つが表示されれば準備できています。CloudShell を開き直したときは、2 からやり直します。
+
+4. 調べたいものごとに、次のコマンドで絞り込む。どれも、そのまま貼り付けて実行します。記録の残り方がものによって違うため、絞り込み方も変わります。
 
    **Parameter Store の変更**
 
    パラメータの変更は、一覧の「リソース名」に名前が残りません。イベント名 `PutParameter` で絞ってから、記録の中身にあるパラメータ名で、自分の分だけを取り出します。
 
    ```bash
-   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r '.[] | fromjson | select(.requestParameters.name | startswith("/day3-2026/{あなたの名前}/")) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name] | @tsv'
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r --arg prefix "/day3-2026/$NAME/" '.[] | fromjson | select(.requestParameters.name | startswith($prefix)) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name] | @tsv'
    ```
 
    **セキュリティグループの変更**
 
-   セキュリティグループの変更は、「リソース名」にセキュリティグループの ID が残ります。**EC2** の「セキュリティグループ」で `day3-2026-rds-sg-{あなたの名前}` の ID（`sg-` で始まる）を確かめ、その ID で絞ります。
+   セキュリティグループの変更は、「リソース名」にセキュリティグループの ID が残ります。3 で変数に入れた、RDS のセキュリティグループの ID で絞ります。
 
    ```bash
-   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue={RDSのセキュリティグループのID} --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
    ```
 
    **IAM の変更**
@@ -165,7 +174,7 @@ cat .env
    IAM は、リージョンを持たないサービスです。記録は、どのリージョンで操作しても **us-east-1** に残ります。リージョンを指定し、ロール名で絞ります。
 
    ```bash
-   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue=day3-2026-ec2-role-{あなたの名前} --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
+   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="day3-2026-ec2-role-$NAME" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
    ```
 
 どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。何も表示されなければ、そのものは変えられていません。
@@ -346,7 +355,7 @@ docker compose logs --tail 10 app
 | 直したのに、画面が変わらない | 4-0 のコマンドでアプリケーションを起動し直したか。ブラウザを再読み込みしたか |
 | CloudTrail に何も見つからない | コンソール右上のリージョンが、自分のリージョンか。「読み取り専用」を `false` にしたか。時間の範囲が短すぎないか |
 | CloudTrail に記録がたくさんあって分からない | 3-2 のコマンドで絞り込む |
-| 3-2 のコマンドで何も表示されない | `{あなたの名前}` と、セキュリティグループの ID を置き換えたか。`echo "$since"` で時刻が表示されるか。IAM のコマンドに `--region us-east-1` を付けたか |
+| 3-2 のコマンドで何も表示されない | `echo "$NAME $since $RDS_SG"` で3つとも表示されるか。CloudShell を開き直したら、3-2 の 2 からやり直す |
 | `getent hosts` で何も表示されない | `DB_HOST` に、RDS のコンソールからコピーしたエンドポイントを入れたか。前後に空白が入っていないか |
 | 3306 に `届かない` のに、セキュリティグループは正しい | RDS に付いているセキュリティグループと、ネットワークACLも確かめたか |
 | `docker run` でも `Access denied` | コマンドをそのままコピーしたか。`-p` とパスワードの間に空白が入っていないか。それでも同じなら、講師に声をかける |
