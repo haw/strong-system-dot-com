@@ -265,6 +265,8 @@ docker compose logs --tail 10 app
 
 ここまで終わったら、講師に声をかけてください。もう1つ、別の障害を入れます。同じ進め方で、原因を探して直してください。
 
+<a href="answer-4.html" target="_blank" rel="noopener noreferrer">追加の障害の答えを見る</a>
+
 ## 後片付け
 
 このハンズオンでは、新しいリソースは作っていません。Session Manager のセッションを終了するだけです。環境は講師が削除します。
