@@ -118,12 +118,116 @@ cat .env
 
 「昨日まで使えていた」なら、昨日から今日までに何が変わったかが、大きな手掛かりです（事前学習6.3）。
 
+### 3-1. コンソールで見る
+
 1. **CloudTrail** を開き、左メニューの「イベント履歴」を選ぶ。
 2. 検索の条件で「読み取り専用」を選び、`false` を指定する。参照だけの操作が除かれ、何かを作成・変更・削除した操作だけになります。
 3. 右上の時間の範囲を「1日」にする。
 4. 一覧で、「イベント名」「イベント時間」「ユーザー名」「リソース名」を見る。
 
-講師が環境を作ったときの操作（CloudFormation による作成など）も、たくさん並んでいます。環境ができた**後**に、誰かが何かを**変えた**記録を探します。気になるイベントは、選ぶと詳しい内容（何を、どの値に変えたか）を見られます。
+たくさん並んでいて、どれが手掛かりか分からないと思います。それが普通です。講師が環境を作ったときの記録（ユーザー名が `AWSCloudFormation` など）と、そのあとに人が変えた記録が混ざっています。共有のアカウントなので、ほかの受講者の記録も並んでいます。
+
+### 3-2. コマンドで絞り込む
+
+探したいのは、**自分の環境ができた後**に、**人が変えた**記録です。CloudShell で、条件を付けて絞り込みます。
+
+1. コンソール上部の CloudShell のアイコンを選び、CloudShell を開く。リージョンは、自分のリージョンのままにする。
+
+   ![AWSコンソール上部からCloudShellを開く](../day2/images/cloudshell-open.png)
+
+2. 自分の名前を、変数 `NAME` に入れる。`tanaka` の部分だけを、配られた自分の名前に書き換えてから実行します。
+
+   ```bash
+   NAME=tanaka
+   ```
+
+3. 自分の環境ができた時刻と、RDS のセキュリティグループの ID を、変数に入れる。そのまま貼り付けて実行します。
+
+   ```bash
+   since=$(aws cloudformation describe-stacks --stack-name "day3-2026-$NAME" --query 'Stacks[0].CreationTime' --output text)
+   RDS_SG=$(aws cloudformation describe-stacks --stack-name "day3-2026-$NAME" --query "Stacks[0].Outputs[?OutputKey=='RdsSecurityGroupId'].OutputValue" --output text)
+   echo "$NAME $since $RDS_SG"
+   ```
+
+   名前、時刻、`sg-` で始まる ID の3つが表示されれば準備できています。CloudShell を開き直したときは、2 からやり直します。
+
+4. 調べたいものごとに、次のコマンドで絞り込む。どれも、そのまま貼り付けて実行します。記録の残り方がものによって違うため、絞り込み方も変わります。
+
+   **Parameter Store の変更**
+
+   パラメータの変更は、一覧の「リソース名」に名前が残りません。イベント名 `PutParameter` で絞ってから、記録の中身にあるパラメータ名で、自分の分だけを取り出します。
+
+   ```bash
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r --arg prefix "/day3-2026/$NAME/" --arg region "$AWS_REGION" '.[] | fromjson | select(.requestParameters.name | startswith($prefix)) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name, "https://\($region).console.aws.amazon.com/cloudtrailv2/home?region=\($region)#/events/\(.eventID)"] | @tsv'
+   ```
+
+   **セキュリティグループの変更**
+
+   セキュリティグループの変更は、「リソース名」にセキュリティグループの ID が残ります。3 で変数に入れた、RDS のセキュリティグループの ID で絞ります。
+
+   ```bash
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username,join('', ['https://$AWS_REGION.console.aws.amazon.com/cloudtrailv2/home?region=$AWS_REGION#/events/', EventId])]" --output text
+   ```
+
+   **IAM の変更**
+
+   IAM は、リージョンを持たないサービスです。記録は、どのリージョンで操作しても **us-east-1** に残ります。リージョンを指定し、ロール名で絞ります。
+
+   ```bash
+   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="day3-2026-ec2-role-$NAME" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username,join('', ['https://us-east-1.console.aws.amazon.com/cloudtrailv2/home?region=us-east-1#/events/', EventId])]" --output text
+   ```
+
+どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。ユーザー名が `SLRManagement` などのものは、AWS のサービスが自動で行った操作です。何も表示されなければ、そのものは変えられていません。
+
+各行の最後は、その記録をコンソールで開く URL です。
+
+5. セキュリティグループのコマンドの結果から、`RevokeSecurityGroupIngress` の行の URL をコピーし、ブラウザで開く。
+
+   記録の全体が JSON で表示されます。項目がたくさんあります。コマンドで取り出したのは、その中のほんの一部です。全部を読む必要はありません。次の項目だけを見ます（値は例です）。
+
+   ```json
+   {
+       "userIdentity": {
+           "type": "IAMUser",
+           "arn": "arn:aws:iam::123456789012:user/instructor",
+           "userName": "instructor"
+       },
+       "eventTime": "2026-11-06T08:31:51Z",
+       "eventSource": "ec2.amazonaws.com",
+       "eventName": "RevokeSecurityGroupIngress",
+       "awsRegion": "us-west-2",
+       "sourceIPAddress": "203.0.113.10",
+       "userAgent": "aws-cli/2.x ... exec-env/CloudShell ... md/command#ec2.revoke-security-group-ingress",
+       "requestParameters": {
+           "groupId": "sg-0rds",
+           "ipPermissions": { "items": [ {
+               "ipProtocol": "tcp", "fromPort": 3306, "toPort": 3306,
+               "groups": { "items": [ { "groupId": "sg-0app" } ] }
+           } ] }
+       },
+       "responseElements": {
+           "revokedSecurityGroupRuleSet": { "items": [ {
+               "groupId": "sg-0rds",
+               "description": "MySQL from app",
+               "fromPort": 3306, "toPort": 3306,
+               "referencedGroupId": "sg-0app"
+           } ] }
+       },
+       "readOnly": false
+   }
+   ```
+
+   | 項目 | 分かること |
+   | --- | --- |
+   | `userIdentity` | **誰が**操作したか。IAM ユーザーなら `userName` に名前が出る |
+   | `eventTime` | **いつ**操作したか。末尾の `Z` は UTC（協定世界時）の意味。日本時間は、これに9時間を足す |
+   | `eventSource`、`eventName` | **どのサービスの、何の操作**か。ここでは EC2 の「インバウンドルールの削除」 |
+   | `sourceIPAddress`、`userAgent` | **どこから、何を使って**操作したか。`userAgent` に `aws-cli` と `CloudShell` があるので、コンソールの画面ではなく、CloudShell からコマンドで操作したと分かる |
+   | `requestParameters` | **何を頼んだか**。どのセキュリティグループ（`groupId`）から、どのルール（3306、相手は `groups` のセキュリティグループ）を消すよう頼んだか |
+   | `responseElements` | **その結果**。実際に消えたルール。`description` の `MySQL from app` から、アプリケーションから MySQL への通信を許可するルールだったと分かる |
+   | `readOnly` | `false` は、何かを変えた操作であること |
+
+   `groupId` が自分の RDS のセキュリティグループ（`echo "$RDS_SG"` で表示した ID）であること、`referencedGroupId` がアプリケーションのセキュリティグループであることを確かめます。この変更が障害の原因かどうかは、手順4で確かめます。
 
 見つけた変更は、時刻・ユーザー名・内容をメモします。ただし、まだ直しません。手順4で、その変更が本当に障害の原因かを確かめてから直します。
 
@@ -300,7 +404,8 @@ docker compose logs --tail 10 app
 | IAM のポリシーを直したのに、`AccessDeniedException` が消えない | 数秒待ってから、`aws ssm get-parameters` をもう一度試したか。`NotResource` の2つのパスを、両方とも直したか |
 | 直したのに、画面が変わらない | 4-0 のコマンドでアプリケーションを起動し直したか。ブラウザを再読み込みしたか |
 | CloudTrail に何も見つからない | コンソール右上のリージョンが、自分のリージョンか。「読み取り専用」を `false` にしたか。時間の範囲が短すぎないか |
-| CloudTrail に記録がたくさんあって分からない | 環境ができた時刻より後の記録に絞る。イベント名とリソース名に、自分の名前が付いたものを探す |
+| CloudTrail に記録がたくさんあって分からない | 3-2 のコマンドで絞り込む |
+| 3-2 のコマンドで何も表示されない | `echo "$NAME $since $RDS_SG"` で3つとも表示されるか。CloudShell を開き直したら、3-2 の 2 からやり直す |
 | `getent hosts` で何も表示されない | `DB_HOST` に、RDS のコンソールからコピーしたエンドポイントを入れたか。前後に空白が入っていないか |
 | 3306 に `届かない` のに、セキュリティグループは正しい | RDS に付いているセキュリティグループと、ネットワークACLも確かめたか |
 | `docker run` でも `Access denied` | コマンドをそのままコピーしたか。`-p` とパスワードの間に空白が入っていないか。それでも同じなら、講師に声をかける |
