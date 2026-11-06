@@ -100,8 +100,6 @@
 1. **CloudWatch** を開き、左メニューの「ログ」→「ログ管理」を選ぶ。「ロググループ」タブが開く。
 2. `/day3-2026/{あなたの名前}/app` を開き、ログストリーム `app` を選ぶ。
 
-ログは時刻の順に並んでいます。検索欄に `Error` と入れると、その文字を含む行だけに絞れます。
-
 設定ファイル `.env` の中身も確かめておきます。
 
 ```bash
@@ -169,12 +167,6 @@ cat .env
    ROLE=day3-2026-ec2-role-$NAME
    ```
 
-   コマンドの結果を、コンソールで開く URL にするための文字列も入れておきます。
-
-   ```bash
-   CT=console.aws.amazon.com/cloudtrailv2/home
-   ```
-
    入った値を確かめます。
 
    ```bash
@@ -194,12 +186,13 @@ cat .env
      --start-time "$since" \
      --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter \
      --output json |
-   jq -r --arg prefix "/day3-2026/$NAME/" --arg r "$AWS_REGION" --arg ct "$CT" '
+   jq -r --arg prefix "/day3-2026/$NAME/" --arg r "$AWS_REGION" '
      .Events[] | .CloudTrailEvent | fromjson
      | select(.requestParameters.name | startswith($prefix))
      | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com")
      | [.eventTime, .userIdentity.userName, .requestParameters.name,
-        "https://\($r).\($ct)?region=\($r)#/events/\(.eventID)"]
+        "https://\($r).console.aws.amazon.com/cloudtrailv2/home"
+        + "?region=\($r)#/events/\(.eventID)"]
      | @tsv'
    ```
 
@@ -212,11 +205,12 @@ cat .env
      --start-time "$since" \
      --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" \
      --output json |
-   jq -r --arg r "$AWS_REGION" --arg ct "$CT" '
+   jq -r --arg r "$AWS_REGION" '
      .Events[]
      | select(.Username != "AWSCloudFormation")
      | [.EventTime, .EventName, .Username,
-        "https://\($r).\($ct)?region=\($r)#/events/\(.EventId)"]
+        "https://\($r).console.aws.amazon.com/cloudtrailv2/home"
+        + "?region=\($r)#/events/\(.EventId)"]
      | @tsv'
    ```
 
@@ -230,11 +224,12 @@ cat .env
      --start-time "$since" \
      --lookup-attributes AttributeKey=ResourceName,AttributeValue="$ROLE" \
      --output json |
-   jq -r --arg r us-east-1 --arg ct "$CT" '
+   jq -r --arg r us-east-1 '
      .Events[]
      | select(.Username != "AWSCloudFormation")
      | [.EventTime, .EventName, .Username,
-        "https://\($r).\($ct)?region=\($r)#/events/\(.EventId)"]
+        "https://\($r).console.aws.amazon.com/cloudtrailv2/home"
+        + "?region=\($r)#/events/\(.EventId)"]
      | @tsv'
    ```
 
@@ -399,7 +394,18 @@ docker compose logs --tail 10 app
 ### 4-2. 障害2：名前を引けない（④）
 
 1. 画面とログに `ENOTFOUND` が出ていることを確かめる。止まっている段階は「名前を引く」です。
-2. ログの最初の行（`DB_SOURCE=ssm host=...`）にある、アプリケーションが使っている接続先をメモする。
+2. アプリケーションが使っている接続先を、ログで確かめる。
+
+   ```bash
+   docker compose logs app | grep 'DB_SOURCE='
+   ```
+
+   表示された行の `host=` のあと、`database=` の手前までが、アプリケーションが使っている接続先です。その値をコピーして、変数に入れる。`{host= の値}` は、コピーした値に置き換える。アプリケーションの画面上部の「接続先」の下にも、同じ接続先（`day3-2026-` で始まり `.rds.amazonaws.com` で終わる名前）が表示されています。そちらからコピーしても構いません。
+
+   ```bash
+   APP_HOST='{host= の値}'
+   ```
+
 3. 本当の接続先と、アプリケーションが使っている接続先の両方で、名前を引いてみる。
 
    本当の接続先：
@@ -408,10 +414,10 @@ docker compose logs --tail 10 app
    getent hosts "$DB_HOST"
    ```
 
-   アプリケーションが使っている接続先（`{ログの host= の値}` は、2 でメモした値に置き換える）：
+   アプリケーションが使っている接続先：
 
    ```bash
-   getent hosts '{ログの host= の値}'
+   getent hosts "$APP_HOST"
    ```
 
    IP アドレスが表示されれば、名前は引けています。何も表示されなければ、その名前は見つかりません。
@@ -423,7 +429,7 @@ docker compose logs --tail 10 app
    docker compose up -d --force-recreate --no-deps app
    ```
 
-   ブラウザを再読み込みする。`ENOTFOUND` が消えて、別のエラーに変われば、障害2は解決です。
+   ブラウザを再読み込みする。ローディングが20秒ほど続いてから、画面が変わります。この段階では、それで正しい動きです。再読み込みを繰り返さずに待ってください。なぜ待たされるのかは、4-3 で確かめます。`ENOTFOUND` が消えて、別のエラーに変われば、障害2は解決です。
 
 <a href="answer-2.html" target="_blank" rel="noopener noreferrer">障害2の答えを見る</a>
 
