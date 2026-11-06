@@ -158,7 +158,7 @@ cat .env
    パラメータの変更は、一覧の「リソース名」に名前が残りません。イベント名 `PutParameter` で絞ってから、記録の中身にあるパラメータ名で、自分の分だけを取り出します。
 
    ```bash
-   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r --arg prefix "/day3-2026/$NAME/" '.[] | fromjson | select(.requestParameters.name | startswith($prefix)) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name] | @tsv'
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r --arg prefix "/day3-2026/$NAME/" --arg region "$AWS_REGION" '.[] | fromjson | select(.requestParameters.name | startswith($prefix)) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name, "https://\($region).console.aws.amazon.com/cloudtrailv2/home?region=\($region)#/events/\(.eventID)"] | @tsv'
    ```
 
    **セキュリティグループの変更**
@@ -166,7 +166,7 @@ cat .env
    セキュリティグループの変更は、「リソース名」にセキュリティグループの ID が残ります。3 で変数に入れた、RDS のセキュリティグループの ID で絞ります。
 
    ```bash
-   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username,join('', ['https://$AWS_REGION.console.aws.amazon.com/cloudtrailv2/home?region=$AWS_REGION#/events/', EventId])]" --output text
    ```
 
    **IAM の変更**
@@ -174,10 +174,12 @@ cat .env
    IAM は、リージョンを持たないサービスです。記録は、どのリージョンで操作しても **us-east-1** に残ります。リージョンを指定し、ロール名で絞ります。
 
    ```bash
-   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="day3-2026-ec2-role-$NAME" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
+   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue="day3-2026-ec2-role-$NAME" --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username,join('', ['https://us-east-1.console.aws.amazon.com/cloudtrailv2/home?region=us-east-1#/events/', EventId])]" --output text
    ```
 
-どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。何も表示されなければ、そのものは変えられていません。
+どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。ユーザー名が `SLRManagement` などのものは、AWS のサービスが自動で行った操作です。何も表示されなければ、そのものは変えられていません。
+
+各行の最後は、その記録をコンソールで開く URL です。気になる記録を1つ選んで、URL をブラウザで開いてみてください。記録の全体（誰が、どこから、何を、どんな値で）が JSON で表示されます。コマンドで取り出したのは、その中のほんの一部だということが分かります。
 
 見つけた変更は、時刻・ユーザー名・内容をメモします。ただし、まだ直しません。手順4で、その変更が本当に障害の原因かを確かめてから直します。
 
