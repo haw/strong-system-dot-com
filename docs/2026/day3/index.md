@@ -429,7 +429,7 @@ docker compose logs --tail 10 app
    docker compose up -d --force-recreate --no-deps app
    ```
 
-   ブラウザを再読み込みする。`ENOTFOUND` が消えて、別のエラーに変われば、障害2は解決です。
+   ブラウザを再読み込みする。ローディングが20秒ほど続いてから、画面が変わります。この段階では、それで正しい動きです。再読み込みを繰り返さずに待ってください。なぜ待たされるのかは、4-3 で確かめます。`ENOTFOUND` が消えて、別のエラーに変われば、障害2は解決です。
 
 <a href="answer-2.html" target="_blank" rel="noopener noreferrer">障害2の答えを見る</a>
 
