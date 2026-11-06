@@ -167,12 +167,6 @@ cat .env
    ROLE=day3-2026-ec2-role-$NAME
    ```
 
-   コマンドの結果を、コンソールで開く URL にするための文字列も入れておきます。
-
-   ```bash
-   CT=console.aws.amazon.com/cloudtrailv2/home
-   ```
-
    入った値を確かめます。
 
    ```bash
@@ -192,12 +186,13 @@ cat .env
      --start-time "$since" \
      --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter \
      --output json |
-   jq -r --arg prefix "/day3-2026/$NAME/" --arg r "$AWS_REGION" --arg ct "$CT" '
+   jq -r --arg prefix "/day3-2026/$NAME/" --arg r "$AWS_REGION" '
      .Events[] | .CloudTrailEvent | fromjson
      | select(.requestParameters.name | startswith($prefix))
      | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com")
      | [.eventTime, .userIdentity.userName, .requestParameters.name,
-        "https://\($r).\($ct)?region=\($r)#/events/\(.eventID)"]
+        "https://\($r).console.aws.amazon.com/cloudtrailv2/home"
+        + "?region=\($r)#/events/\(.eventID)"]
      | @tsv'
    ```
 
@@ -210,11 +205,12 @@ cat .env
      --start-time "$since" \
      --lookup-attributes AttributeKey=ResourceName,AttributeValue="$RDS_SG" \
      --output json |
-   jq -r --arg r "$AWS_REGION" --arg ct "$CT" '
+   jq -r --arg r "$AWS_REGION" '
      .Events[]
      | select(.Username != "AWSCloudFormation")
      | [.EventTime, .EventName, .Username,
-        "https://\($r).\($ct)?region=\($r)#/events/\(.EventId)"]
+        "https://\($r).console.aws.amazon.com/cloudtrailv2/home"
+        + "?region=\($r)#/events/\(.EventId)"]
      | @tsv'
    ```
 
@@ -228,11 +224,12 @@ cat .env
      --start-time "$since" \
      --lookup-attributes AttributeKey=ResourceName,AttributeValue="$ROLE" \
      --output json |
-   jq -r --arg r us-east-1 --arg ct "$CT" '
+   jq -r --arg r us-east-1 '
      .Events[]
      | select(.Username != "AWSCloudFormation")
      | [.EventTime, .EventName, .Username,
-        "https://\($r).\($ct)?region=\($r)#/events/\(.EventId)"]
+        "https://\($r).console.aws.amazon.com/cloudtrailv2/home"
+        + "?region=\($r)#/events/\(.EventId)"]
      | @tsv'
    ```
 
