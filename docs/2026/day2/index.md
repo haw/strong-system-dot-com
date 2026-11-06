@@ -178,7 +178,11 @@ docker compose stop app
 ### 4-3. 移行前の件数を記録する
 
 ```bash
-docker compose exec db mysql -uroot -ppassword --default-character-set=utf8mb4 -e "SELECT COUNT(*) FROM employee_db.employees; SELECT employee_id, last_name, first_name FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
+docker compose exec db mysql -uroot -ppassword \
+  --default-character-set=utf8mb4 \
+  -e "SELECT COUNT(*) FROM employee_db.employees; \
+  SELECT employee_id, last_name, first_name \
+  FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
 ```
 
 `COUNT(*)` の数と、`L-{あなたの名前}` の行をメモしておきます。これはEC2の中のMySQLの、研修用のパスワードです。
@@ -186,7 +190,9 @@ docker compose exec db mysql -uroot -ppassword --default-character-set=utf8mb4 -
 ### 4-4. ダンプを取る
 
 ```bash
-docker compose exec -T db mysqldump -uroot -ppassword --single-transaction --no-tablespaces --databases employee_db > employee_db.sql
+docker compose exec -T db mysqldump -uroot -ppassword \
+  --single-transaction --no-tablespaces \
+  --databases employee_db > employee_db.sql
 ```
 
 ダンプを `employee_db.sql` に保存しました。このファイルには、テーブルを作る `CREATE TABLE` と、データを入れる `INSERT` が含まれます。次のコマンドで先頭20行を確認します。
@@ -211,7 +217,13 @@ head -n 20 employee_db.sql
 
    ```bash
    docker compose cp employee_db.sql db:/tmp/employee_db.sql
-   docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "source /tmp/employee_db.sql"
+   ```
+
+   ```bash
+   docker compose exec db mysql -h "$RDS_HOST" -u admin \
+     -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED \
+     --default-character-set=utf8mb4 \
+     -e "source /tmp/employee_db.sql"
    ```
 
    `mysql: [Warning] Using a password on the command line interface can be insecure.` と1行表示されますが、問題ありません。
@@ -223,7 +235,12 @@ head -n 20 employee_db.sql
 ### 4-6. 移行後の件数を確かめる
 
 ```bash
-docker compose exec db mysql -h "$RDS_HOST" -u admin -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED --default-character-set=utf8mb4 -e "SELECT COUNT(*) FROM employee_db.employees; SELECT employee_id, last_name, first_name FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
+docker compose exec db mysql -h "$RDS_HOST" -u admin \
+  -p'Tr41n-Rds2026-Kq7mZx' --ssl-mode=REQUIRED \
+  --default-character-set=utf8mb4 \
+  -e "SELECT COUNT(*) FROM employee_db.employees; \
+  SELECT employee_id, last_name, first_name \
+  FROM employee_db.employees WHERE employee_id LIKE 'L-%';"
 ```
 
 4-5と同じく、警告が1行表示されますが問題ありません。
