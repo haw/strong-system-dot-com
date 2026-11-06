@@ -118,12 +118,57 @@ cat .env
 
 「昨日まで使えていた」なら、昨日から今日までに何が変わったかが、大きな手掛かりです（事前学習6.3）。
 
+### 3-1. コンソールで見る
+
 1. **CloudTrail** を開き、左メニューの「イベント履歴」を選ぶ。
 2. 検索の条件で「読み取り専用」を選び、`false` を指定する。参照だけの操作が除かれ、何かを作成・変更・削除した操作だけになります。
 3. 右上の時間の範囲を「1日」にする。
 4. 一覧で、「イベント名」「イベント時間」「ユーザー名」「リソース名」を見る。
 
-講師が環境を作ったときの操作（CloudFormation による作成など）も、たくさん並んでいます。環境ができた**後**に、誰かが何かを**変えた**記録を探します。気になるイベントは、選ぶと詳しい内容（何を、どの値に変えたか）を見られます。
+たくさん並んでいて、どれが手掛かりか分からないと思います。それが普通です。講師が環境を作ったときの記録（ユーザー名が `AWSCloudFormation` など）と、そのあとに人が変えた記録が混ざっています。共有のアカウントなので、ほかの受講者の記録も並んでいます。
+
+### 3-2. コマンドで絞り込む
+
+探したいのは、**自分の環境ができた後**に、**人が変えた**記録です。CloudShell で、条件を付けて絞り込みます。
+
+1. コンソール上部の CloudShell のアイコンを選び、CloudShell を開く。リージョンは、自分のリージョンのままにする。
+
+   ![AWSコンソール上部からCloudShellを開く](../day2/images/cloudshell-open.png)
+
+2. 自分の環境ができた時刻を、変数に入れる。
+
+   ```bash
+   since=$(aws cloudformation describe-stacks --stack-name day3-2026-{あなたの名前} --query 'Stacks[0].CreationTime' --output text)
+   echo "$since"
+   ```
+
+3. 調べたいものごとに、次のコマンドで絞り込む。記録の残り方がものによって違うため、絞り込み方も変わります。
+
+   **Parameter Store の変更**
+
+   パラメータの変更は、一覧の「リソース名」に名前が残りません。イベント名 `PutParameter` で絞ってから、記録の中身にあるパラメータ名で、自分の分だけを取り出します。
+
+   ```bash
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=EventName,AttributeValue=PutParameter --query 'Events[].CloudTrailEvent' --output json | jq -r '.[] | fromjson | select(.requestParameters.name | startswith("/day3-2026/{あなたの名前}/")) | select(.userIdentity.invokedBy != "cloudformation.amazonaws.com") | [.eventTime, .userIdentity.userName, .requestParameters.name] | @tsv'
+   ```
+
+   **セキュリティグループの変更**
+
+   セキュリティグループの変更は、「リソース名」にセキュリティグループの ID が残ります。**EC2** の「セキュリティグループ」で `day3-2026-rds-sg-{あなたの名前}` の ID（`sg-` で始まる）を確かめ、その ID で絞ります。
+
+   ```bash
+   aws cloudtrail lookup-events --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue={RDSのセキュリティグループのID} --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
+   ```
+
+   **IAM の変更**
+
+   IAM は、リージョンを持たないサービスです。記録は、どのリージョンで操作しても **us-east-1** に残ります。リージョンを指定し、ロール名で絞ります。
+
+   ```bash
+   aws cloudtrail lookup-events --region us-east-1 --start-time "$since" --lookup-attributes AttributeKey=ResourceName,AttributeValue=day3-2026-ec2-role-{あなたの名前} --query "Events[?Username!='AWSCloudFormation'].[EventTime,EventName,Username]" --output table
+   ```
+
+どのコマンドも、環境ができた時刻より後の記録だけにし、CloudFormation が環境を作ったときの記録を除いています。残ったものが、あとから人が変えた記録です。何も表示されなければ、そのものは変えられていません。
 
 見つけた変更は、時刻・ユーザー名・内容をメモします。ただし、まだ直しません。手順4で、その変更が本当に障害の原因かを確かめてから直します。
 
@@ -300,7 +345,8 @@ docker compose logs --tail 10 app
 | IAM のポリシーを直したのに、`AccessDeniedException` が消えない | 数秒待ってから、`aws ssm get-parameters` をもう一度試したか。`NotResource` の2つのパスを、両方とも直したか |
 | 直したのに、画面が変わらない | 4-0 のコマンドでアプリケーションを起動し直したか。ブラウザを再読み込みしたか |
 | CloudTrail に何も見つからない | コンソール右上のリージョンが、自分のリージョンか。「読み取り専用」を `false` にしたか。時間の範囲が短すぎないか |
-| CloudTrail に記録がたくさんあって分からない | 環境ができた時刻より後の記録に絞る。イベント名とリソース名に、自分の名前が付いたものを探す |
+| CloudTrail に記録がたくさんあって分からない | 3-2 のコマンドで絞り込む |
+| 3-2 のコマンドで何も表示されない | `{あなたの名前}` と、セキュリティグループの ID を置き換えたか。`echo "$since"` で時刻が表示されるか。IAM のコマンドに `--region us-east-1` を付けたか |
 | `getent hosts` で何も表示されない | `DB_HOST` に、RDS のコンソールからコピーしたエンドポイントを入れたか。前後に空白が入っていないか |
 | 3306 に `届かない` のに、セキュリティグループは正しい | RDS に付いているセキュリティグループと、ネットワークACLも確かめたか |
 | `docker run` でも `Access denied` | コマンドをそのままコピーしたか。`-p` とパスワードの間に空白が入っていないか。それでも同じなら、講師に声をかける |
