@@ -81,7 +81,7 @@ export class Day2Stack extends cdk.Stack {
       '/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id',
     );
 
-    const appDir = '/home/ubuntu/strong-system-dot-com/docs/2026/day2/app';
+    const appDir = '/home/ubuntu/strong-system-dot-com/docs/2026/app';
     const userData = ec2.UserData.forLinux();
     userData.addCommands(
       'set -euxo pipefail',

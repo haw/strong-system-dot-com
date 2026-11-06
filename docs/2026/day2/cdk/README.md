@@ -13,7 +13,7 @@
 | IAMロール | `day2-2026-ec2-role-{名前}` | `AmazonSSMManagedInstanceCore` と、`/day2-2026/{名前}/db/*` だけを読める許可。ほかのパラメータは明示的に拒否 |
 | EC2 | `day2-2026-app-{名前}` | Ubuntu 24.04、t3.micro、パブリックサブネット。Session Manager で接続。IMDSv2 必須（ホップ数2） |
 
-EC2 は起動時に Docker を入れ、このリポジトリの `docs/2026/day2/app` を `DB_SOURCE=local` で起動します。起動完了まで数分かかります。ログは EC2 の `/var/log/day2-setup.log` です。
+EC2 は起動時に Docker を入れ、このリポジトリの `docs/2026/app` を `DB_SOURCE=local` で起動します。起動完了まで数分かかります。ログは EC2 の `/var/log/day2-setup.log` です。
 
 環境（アカウントとリージョン）はコードに書いていません。デプロイ先は `AWS_REGION` で決まります。
 
