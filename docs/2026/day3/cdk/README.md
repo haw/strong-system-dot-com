@@ -83,6 +83,12 @@ RDS を作るので、デプロイには時間がかかります。終わって�
 
 ## 削除（受講者1人分）
 
+CloudShell を開き直すと、ホームディレクトリから始まります。CDK のフォルダに移動してから実行します。
+
+```bash
+cd ~/strong-system-dot-com/docs/2026/day3/cdk
+```
+
 ```bash
 AWS_REGION=us-west-2 npx cdk destroy -c userName=tanaka --force
 ```

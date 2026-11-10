@@ -109,6 +109,12 @@ AWS_REGION=ap-northeast-1 npx cdk deploy -c userName=tanaka \
 
 手順書の後片付け（EC2 の終了とロールの削除）を先に済ませます。EC2 が残っていると、セキュリティグループを消せずに失敗します。
 
+CloudShell を開き直すと、ホームディレクトリから始まります。CDK のフォルダに移動してから実行します。
+
+```bash
+cd ~/strong-system-dot-com/docs/2026/day1/cdk
+```
+
 ```bash
 AWS_REGION=ap-northeast-1 npx cdk destroy -c userName=tanaka --force
 ```
