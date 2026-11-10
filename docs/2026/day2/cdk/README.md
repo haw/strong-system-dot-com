@@ -17,6 +17,40 @@ EC2 は起動時に Docker を入れ、このリポジトリの `docs/2026/app` 
 
 環境（アカウントとリージョン）はコードに書いていません。デプロイ先は `AWS_REGION` で決まります。
 
+## Node.js を 24 にする（CloudShell、最初に1回）
+
+CloudShell に最初から入っている Node.js は 20 系です。このまま CDK を動かすと、`NodeVersionSupportWarning` が出ます（2027年1月の第1週より後に出る AWS SDK v3 は、Node.js 22 以上が必要）。いまは警告だけで動きますが、先に 24 にしておきます。
+
+nvm（Node.js のバージョンを切り替えるツール）を入れます。バージョンは v0.41.0 に固定します。
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.41.0/install.sh \
+  | bash
+```
+
+```bash
+. ~/.nvm/nvm.sh
+```
+
+```bash
+nvm install 24
+```
+
+```bash
+nvm alias default 24
+```
+
+```bash
+node -v
+```
+
+`v24.` で始まる番号が出れば、切り替わっています。
+
+- nvm と Node.js は、ホームディレクトリ（`~/.nvm`）に入ります。CloudShell を開き直しても残り、`~/.bashrc` に追記された設定で 24 が使われます。
+- CloudShell のホームは、リージョンごとに別です。CDK を実行するリージョンの CloudShell で入れます。
+- CloudShell を 120 日使わないと、ホームが消えます。間が空いたら、`node -v` で確かめます。
+- すでに `npm ci` を実行したフォルダは、Node.js を切り替えたあとに `npm ci` をやり直します。
+
 ## 準備（CloudShell）
 
 ```bash
