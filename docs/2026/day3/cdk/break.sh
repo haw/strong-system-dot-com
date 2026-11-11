@@ -18,6 +18,7 @@ STACK="$PREFIX-$NAME"
 POLICY_NAME="$PREFIX-read-my-params"
 APP_DIR='/home/ubuntu/strong-system-dot-com/docs/2026/app'
 IAM_WAIT_SECONDS=30
+WRONG_PASSWORD='Tr41n-Rds2026-Kq7mZX'
 
 command -v jq > /dev/null || { echo 'jq が見つかりません。CloudShell で実行してください。' >&2; exit 1; }
 
@@ -66,17 +67,9 @@ aws ec2 revoke-security-group-ingress --region "$REGION" --group-id "$rds_sg" \
     --ip-permissions "IpProtocol=tcp,FromPort=3306,ToPort=3306,UserIdGroupPairs=[{GroupId=$app_sg}]" \
     > /dev/null 2>&1 || true
 
-# 4. パスワード：最後の1文字の大文字・小文字を入れ替える。
-password=$(aws ssm get-parameter --region "$REGION" --name "$param_path/password" \
-    --with-decryption --query Parameter.Value --output text)
-last=${password: -1}
-case "$last" in
-    [a-z]) wrong="${password%?}$(tr '[:lower:]' '[:upper:]' <<< "$last")" ;;
-    [A-Z]) wrong="${password%?}$(tr '[:upper:]' '[:lower:]' <<< "$last")" ;;
-    *) wrong="${password}0" ;;
-esac
+# 4. パスワード：研修用パスワードの最後の1文字を大文字にした値にする。
 aws ssm put-parameter --region "$REGION" --name "$param_path/password" \
-    --type SecureString --value "$wrong" --overwrite > /dev/null
+    --type SecureString --value "$WRONG_PASSWORD" --overwrite > /dev/null
 
 # IAM の変更が効くのを待ってから、アプリを作り直して設定を読み直させる。
 echo "反映を待っています（${IAM_WAIT_SECONDS}秒）..."
