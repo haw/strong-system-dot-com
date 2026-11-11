@@ -17,7 +17,7 @@ PREFIX='day3-2026'
 STACK="$PREFIX-$NAME"
 POLICY_NAME="$PREFIX-read-my-params"
 APP_DIR='/home/ubuntu/strong-system-dot-com/docs/2026/app'
-IAM_WAIT_SECONDS=15
+IAM_WAIT_SECONDS=30
 
 command -v jq > /dev/null || { echo 'jq が見つかりません。CloudShell で実行してください。' >&2; exit 1; }
 
