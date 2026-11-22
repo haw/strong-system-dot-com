@@ -123,6 +123,7 @@ app.get('/api/employees', requirePool, async (req, res) => {
         const [rows] = await pool.query(
             `SELECT id, ${FIELDS.join(', ')} FROM employees ORDER BY employee_id`
         );
+        console.log(`GET /api/employees ${rows.length} rows`);
         res.json(rows);
     } catch (err) {
         sendDbError(res, err);
