@@ -226,6 +226,17 @@ CPU や RDS の状態だけを見張っていたら、この障害には気付�
 4. もう一度「通知を追加」を選び、アラーム状態トリガー「OK」、SNS トピック「既存の SNS トピックを選択」で `day4-2026-alarm-{あなたの名前}` を選ぶ。直ったときにも知らせてもらうためです。
 5. 「次へ」→「アラームの更新」を選ぶ。
 6. 届いた確認メールの「Confirm subscription」を選ぶ。**確認するまで、通知は届きません。**
+
+   ![件名「AWS Notification - Subscription Confirmation」の確認メールで、「Confirm subscription」を選ぶ](images/sns-confirmation-mail.png)
+
+   ブラウザでページが開くので、「Confirm Subscription」を選ぶ。
+
+   ![「Confirm subscription」のページで、「Confirm Subscription」ボタンを選ぶ](images/sns-confirm-button.png)
+
+   「Subscription confirmed!」と表示されれば、確認は終わりです。下の「click here to unsubscribe」は購読の解除なので、選ばないでください。
+
+   ![「Subscription confirmed!」と表示されたページ。「click here to unsubscribe」は選ばない](images/sns-subscription-confirmed.png)
+
 7. 手順3の1〜3のとおり、RDS のセキュリティグループからルールを消す。アラームが ALARM になると、メールが届きます。ALARM になるまで、数分かかります。
 8. 手順5の1〜3のとおり、ルールを戻す。アラームが OK に戻ると、メールが届きます。これも数分かかります。
 
